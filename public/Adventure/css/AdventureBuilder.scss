@@ -1,0 +1,996 @@
+@import "lib/_bootstrap";
+
+body{
+	background:  url('../img/builder/background-main.png') repeat-x;
+	background-size: auto 100%;
+	background-attachment: fixed;
+}
+
+.outlined-text{
+	color: white;
+	text-shadow: 2px 2px 0 black,
+				 0px 2px 0 black,
+				 -2px 2px 0 black,
+				 -2px 0px 0 black,				 
+				 -2px -2px 0 black,
+				 0px -2px 0 black,
+				 2px -2px 0 black,				 
+				 2px 0px 0 black;					
+}
+
+.truncate{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+h1, h2, h3{
+	@extend .outlined-text;
+	text-align: center;
+}
+
+h2, h3{
+	margin-top: 0px;
+}
+
+form{
+	@extend .form-horizontal;
+}
+
+.errorRow{
+	@extend .row;
+	@extend .outlined-text;
+	margin:10px;
+	clear: both;
+	mix-blend-mode: difference;
+    font-size: 20px;
+}
+
+.has-error{
+	label{
+		color: red;
+	}
+	input, select, textarea{
+		color: red;
+		border-color: red;
+		&::-webkit-input-placeholder{
+		    color: red;
+		}
+		&:-moz-placeholder{
+		   color: red;
+		}
+		&::-moz-placeholder{
+		   color: red;
+		}
+		&:-ms-input-placeholder{ 
+		   color: red;
+		}
+	}
+}
+
+@keyframes popIn {
+	0% {transform: scale(0.01,1.2);}
+	5% {transform: scale(1.2,0.01);}
+	10% {transform: scale(0.01,1.2);}
+	15% {transform: scale(1.2,0.01);}
+	20% {transform: scale(0.8,0.8);}	
+	100% {transform: scale(1,1);}
+}
+@keyframes popOut {
+	0% {transform: scale(1,1);}
+	20% {transform: scale(1,0.01);}
+	50% {transform: scale(0.01,0.01);}	
+	100% {transform: scale(0,0);}
+}	
+.clickable{
+	cursor: pointer;
+	border-color: #000000;
+	background-color: #000000;	
+	background-blend-mode: screen;
+	transform: translate(0px,0px);
+	transition: border-color .5s, background-color .5s, box-shadow .5s, transform .5s;
+}
+.clickable:hover{
+	border-color: #FFFF00;
+	background-color: #888888;	
+	box-shadow: 0px 3px 10px black;
+	transform: translate(0px,-5px);
+}
+
+.contentBox{
+	border: 3px solid black;
+	border-radius: 10px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	background-size: auto 100%;
+	background-attachment: fixed;
+	background-repeat: repeat-x;
+	animation: popIn .5s ease-out 1;
+}
+
+.contentBox-mini{
+	border: 1px solid black;
+	border-radius: 5px;
+	padding: 0px;
+	background-size: auto 100%;
+	background-attachment: fixed;
+	background-repeat: repeat-x;
+	animation: popIn .5s ease-out 1;
+}
+
+figure{
+	@extend .col-xs-1;
+	position:relative;
+	left:0px;
+	top:0px;
+}
+
+.adventure-select, .login{
+	@extend .col-xs-12;
+	@extend .col-xs-offset-0;
+	@extend .col-sm-8;
+	@extend .col-sm-offset-2;
+	@extend .contentBox;
+	background-image: url('../img/builder/background-adventure.png');
+	form{
+		.form-group, .checkbox{
+			@extend .col-xs-11;
+			@extend .col-xs-offset-1;
+			@extend .col-md-10;
+			font-size: 24px;
+		}
+		label{
+			@extend .col-xs-4;
+			padding-top:2px;
+		}
+		.checkbox{
+			label{
+				@extend .col-xs-12;
+			}
+			input{
+				top: 2px;
+			}
+		}
+	}
+}
+
+.selections{
+	@extend .col-xs-12;
+	@extend .col-xs-offset-0;
+	@extend .col-sm-10;
+	@extend .col-sm-offset-1;
+}
+
+.selections-scroll{
+	@extend .selections;
+	max-height:200px;
+	overflow-y:scroll;
+}
+
+.image-label{
+	vertical-align: top;
+}
+.image-button{
+	min-height: 50px;
+	min-width: 50px;
+	max-height: 150px;
+	max-width: 150px;
+	padding: 0px;
+	img{
+		padding:0;
+	}
+}
+
+.test-image{
+	@extend .img-responsive;
+	max-height: 300px;
+}
+
+.select-image{
+	@extend .col-xs-3;
+	@extend .col-sm-2;
+	padding: 0px;
+	img{
+		padding:0;
+	}
+}
+
+.select-description{
+	@extend .col-xs-9;
+	@extend .col-sm-10;
+	p{
+		@extend .truncate;
+		&:last-child{
+			margin: 0;
+		}
+	}	
+}
+
+.adventure-edit{
+	@extend .adventure-select;
+	background-image: url('../img/builder/background-adventure.png');
+	form{
+		background-image: url('../img/builder/icons/adventure.png');
+		background-size: 8% auto;
+		background-repeat: no-repeat;
+	}
+	.row{
+		margin-bottom: 20px;
+	}
+	.page-select{
+		@extend .col-xs-6; 
+		/*@extend .col-xs-offset-1;*/
+		@extend .contentBox;	
+		padding-top: 10px;
+		padding-bottom: 10px;
+		background-image: url('../img/builder/background-page.png');
+		.row{
+			background-image: url('../img/builder/icons/page.png');
+			background-size: 10% auto;
+			background-repeat: no-repeat;
+		}
+		.selection{
+			@extend .col-xs-12;
+			@extend .col-xs-offset-0;
+			@extend .col-sm-10;
+			@extend .col-sm-offset-1;
+			@extend .clickable;
+			@extend .contentBox-mini;
+			background-image: url('../img/builder/background-button.png');
+			box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px black inset;
+			padding-top: 5px;
+			padding-bottom: 5px;
+		}
+		.form-group{
+			@extend .col-xs-12;
+			@extend .col-xs-offset-0;
+			@extend .col-sm-8;
+			@extend .col-sm-offset-2;
+			label{								
+				font-size: 12px;
+				text-shadow: 1px 1px 0 black,
+						 0px 1px 0 black,
+						 -1px 1px 0 black,
+						 -1px 0px 0 black,				 
+						 -1px -1px 0 black,
+						 0px -1px 0 black,
+						 1px -1px 0 black,				 
+						 1px 0px 0 black;
+			}	
+		}
+	}
+}
+
+label{
+	@extend .outlined-text;
+}
+
+.form-label{
+	@extend .col-xs-12; 
+	@extend .col-md-2; 
+	@extend .col-md-offset-1;
+	@extend .outlined-text;
+	@extend .truncate;
+	font-size: 24px;
+}
+
+.form-field{
+	@extend .col-xs-12;
+	@extend .col-md-8;	
+	input, textarea{
+		@extend .col-xs-12;
+	}
+	.form-label{
+		@extend .col-md-offset-0;
+		@extend .col-md-4; 
+	}
+}
+
+.form-field-small{
+	@extend .col-xs-2;
+	input, textarea{
+		@extend .col-xs-12;
+	}
+}
+
+.form-field-image{
+	@extend .col-xs-2;
+	input, textarea{
+		@extend .col-xs-12;
+	}
+}
+
+button{
+	@extend .clickable;
+	@extend .contentBox-mini;
+	background-image: url('../img/builder/background-button.png');
+	box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px black inset;
+}
+
+button img{
+	@extend .col-xs-12;
+}
+
+button.full-button{
+	@extend h3;
+	@extend .col-xs-10;
+	@extend .col-xs-offset-1;
+	@extend .outlined-text;
+	text-align: center;
+}
+
+button.delete-button{
+	background-image: url('../img/builder/background-action.png');
+}
+
+input[type='checkbox']{
+	width: 20px;
+	height: 20px;
+}
+
+.scene-select{
+	@extend .col-xs-6; 
+	/*@extend .col-xs-offset-1;*/
+	@extend .contentBox;	
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background-image: url('../img/builder/background-element.png');
+	.row{
+		background-image: url('../img/builder/icons/scene.png');
+		background-size: 10% auto;
+		background-repeat: no-repeat;
+	}
+	.selection{
+		@extend .col-xs-12;
+		@extend .col-xs-offset-0;
+		@extend .col-sm-10;
+		@extend .col-sm-offset-1;
+		@extend .clickable;
+		@extend .contentBox-mini;
+		background-image: url('../img/builder/background-button.png');
+		box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px black inset;
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+}
+
+.scene-edit{
+	@extend .adventure-select;
+	background-image: url('../img/builder/background-element.png');
+	form{
+		background-image: url('../img/builder/icons/scene.png');
+		background-size: 8% auto;
+		background-repeat: no-repeat;
+	}
+	.row{
+		margin-bottom: 20px;
+	}
+}
+
+.scene-selection{
+	@extend .adventure-select;
+	background-image: url('../img/builder/background-element.png');
+	form{
+		background-image: url('../img/builder/icons/scene.png');
+		background-size: 8% auto;
+		background-repeat: no-repeat;
+	}
+	.row{
+		margin-bottom: 20px;
+	}
+	.selection{		
+		@extend .col-xs-12;
+		@extend .col-xs-offset-0;
+		@extend .col-sm-10;
+		@extend .col-sm-offset-1;
+		@extend .clickable;
+		@extend .contentBox-mini;
+		background-image: url('../img/builder/background-button.png');
+		box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px black inset;
+		padding-top: 5px;
+		padding-bottom: 5px;
+		.select-image{
+			@extend .col-xs-2;
+			@extend .col-sm-2;
+			@extend .col-lg-1;
+		}
+		.select-description{
+			@extend .col-xs-10;
+			@extend .col-sm-10;
+			@extend .col-lg-11;
+		}	
+	}
+}
+
+.image-select{
+	@extend .col-xs-6; 
+	/*@extend .col-xs-offset-1;*/
+	@extend .contentBox;	
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background-image: url('../img/builder/background-element.png');
+	.row{
+		background-image: url('../img/builder/icons/image.png');
+		background-size: 10% auto;
+		background-repeat: no-repeat;		
+	}
+	.selection{		
+		@extend .clickable;
+		@extend .col-xs-3; 
+		@extend .contentBox-mini;
+		display: inline-block;
+		background-image: url('../img/builder/background-button.png');
+		box-shadow:0px 0px 5px 0px black, 0px -1px 10px 0px black inset;
+		padding-top: 5px;
+		padding-bottom: 5px;			
+		img{
+			width: 100%;
+			height: auto;
+		}			
+	}
+}
+
+.image-edit{
+	@extend .adventure-select;
+	background-image: url('../img/builder/background-element.png');
+	form{
+		background-image: url('../img/builder/icons/image.png');
+		background-size: 8% auto;
+		background-repeat: no-repeat;
+	}
+	.row{
+		margin-bottom: 20px;
+	}
+	.image-container{
+		position: relative;
+		display:block;
+		width: 576px;
+		height: 350px;
+		overflow: hidden;
+		background-color: red;
+		img{
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: 100%;
+			vertical-align: middle;
+			-ms-transform: translateX(-50%) translateY(-50%) scale(1.0);
+			-webkit-transform: translateX(-50%) translateY(-50%) scale(1.0);
+			transform: translateX(-50%) translateY(-50%) scale(1.0);
+			-webkit-filter: none;
+			filter: none;
+		}
+	}
+}
+
+.image-selection{
+	@extend .adventure-select;
+	background-image: url('../img/builder/background-element.png');
+	form{
+		background-image: url('../img/builder/icons/image.png');
+		background-size: 8% auto;
+		background-repeat: no-repeat;
+	}
+	.row{
+		margin-bottom: 20px;
+	}
+	.selection{		
+		@extend .clickable;
+		@extend .col-xs-1; 
+		@extend .contentBox-mini;
+		display: inline-block;
+		background-image: url('../img/builder/background-button.png');
+		box-shadow:0px 0px 5px 0px black, 0px -1px 10px 0px black inset;
+		padding-top: 5px;
+		padding-bottom: 5px;			
+		img{
+			width: 100%;
+			height: auto;
+		}			
+	}
+}
+
+.effect-select{
+	@extend .col-xs-6; 
+	/*@extend .col-xs-offset-1;*/
+	@extend .contentBox;	
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background-image: url('../img/builder/background-element.png');
+	.row{
+		background-image: url('../img/builder/icons/effect.png');
+		background-size: 10% auto;
+		background-repeat: no-repeat;
+	}
+	.selection{
+		@extend .col-xs-12;
+		@extend .col-xs-offset-0;
+		@extend .clickable;
+		@extend .contentBox-mini;
+		background-image: url('../img/builder/background-button.png');
+		box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px black inset;
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+}
+
+.effect-edit{
+	@extend .adventure-select;
+	background-image: url('../img/builder/background-element.png');
+	form{
+		background-image: url('../img/builder/icons/effect.png');
+		background-size: 8% auto;
+		background-repeat: no-repeat;
+	}
+	.row{
+		margin-bottom: 20px;
+	}
+	.image-container{
+		position: relative;
+		display:block;
+		width: 576px;
+		height: 350px;
+		overflow: hidden;
+		background-color: red;
+		img{
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: 100%;
+			vertical-align: middle;
+			-ms-transform: translateX(-50%) translateY(-50%) scale(1.0);
+			-webkit-transform: translateX(-50%) translateY(-50%) scale(1.0);
+			transform: translateX(-50%) translateY(-50%) scale(1.0);
+			-webkit-filter: none;
+			filter: none;
+		}
+	}
+}
+
+.effect-selection{
+	@extend .adventure-select;
+	background-image: url('../img/builder/background-element.png');
+	form{
+		background-image: url('../img/builder/icons/effect.png');
+		background-size: 8% auto;
+		background-repeat: no-repeat;
+	}
+	.row{
+		margin-bottom: 20px;
+	}
+	.selection{		
+		@extend .col-xs-12;
+		@extend .col-xs-offset-0;
+		@extend .col-sm-10;
+		@extend .col-sm-offset-1;
+		@extend .clickable;
+		@extend .contentBox-mini;
+		background-image: url('../img/builder/background-button.png');
+		box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px black inset;
+		padding-top: 5px;
+		padding-bottom: 5px;
+		.select-image{
+			@extend .col-xs-2;
+			@extend .col-sm-2;
+			@extend .col-lg-1;
+		}
+		.select-description{
+			@extend .col-xs-10;
+			@extend .col-sm-10;
+			@extend .col-lg-11;
+		}	
+	}
+}
+
+.flag-select{
+	@extend .col-xs-6; 
+	/*@extend .col-xs-offset-1;*/
+	@extend .contentBox;	
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background-image: url('../img/builder/background-element.png');
+	.row{
+		background-image: url('../img/builder/icons/flag.png');
+		background-size: 10% auto;
+		background-repeat: no-repeat;
+	}
+	.selection{
+		@extend .col-xs-12;
+		@extend .col-xs-offset-0;
+		@extend .clickable;
+		@extend .contentBox-mini;
+		background-image: url('../img/builder/background-button.png');
+		box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px black inset;
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+}
+
+.flag-edit{
+	@extend .adventure-select;
+	background-image: url('../img/builder/background-element.png');
+	form{
+		background-image: url('../img/builder/icons/flag.png');
+		background-size: 8% auto;
+		background-repeat: no-repeat;		
+	}
+	.row{
+		margin-bottom: 20px;
+	}
+}
+
+.flag-selection{
+	@extend .adventure-select;
+	background-image: url('../img/builder/background-element.png');
+	form{
+		background-image: url('../img/builder/icons/flag.png');
+		background-size: 8% auto;
+		background-repeat: no-repeat;
+	}
+	.row{
+		margin-bottom: 20px;
+	}
+	.selection{		
+		@extend .col-xs-12;
+		@extend .col-xs-offset-0;
+		@extend .col-sm-10;
+		@extend .col-sm-offset-1;
+		@extend .clickable;
+		@extend .contentBox-mini;
+		background-image: url('../img/builder/background-button.png');
+		box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px black inset;
+		padding-top: 5px;
+		padding-bottom: 5px;
+		.select-image{
+			@extend .col-xs-2;
+			@extend .col-sm-2;
+			@extend .col-lg-1;
+		}
+		.select-description{
+			@extend .col-xs-10;
+			@extend .col-sm-10;
+			@extend .col-lg-11;
+		}	
+	}
+}
+
+.event-select{
+	@extend .col-xs-6; 
+	/*@extend .col-xs-offset-1;*/
+	@extend .contentBox;	
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background-image: url('../img/builder/background-event.png');
+	.row{
+		background-image: url('../img/builder/icons/event.png');
+		background-size: 10% auto;
+		background-repeat: no-repeat;
+	}
+	.selection{
+		@extend .col-xs-12;
+		@extend .col-xs-offset-0;
+		@extend .clickable;
+		@extend .contentBox-mini;
+		background-image: url('../img/builder/background-button.png');
+		box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px black inset;
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+}
+.event-select-full{
+	@extend .event-select;
+	@extend .col-xs-12;
+	@extend .col-xs-offset-0;
+	@extend .col-sm-10;
+	@extend .col-sm-offset-1;
+	.select-image{
+		@extend .col-xs-2;
+		@extend .col-sm-2;
+		@extend .col-lg-1;
+	}
+
+	.select-description{
+		@extend .col-xs-10;
+		@extend .col-sm-10;
+		@extend .col-lg-11;
+	}
+}
+
+.event-edit{
+	@extend .adventure-select;
+	background-image: url('../img/builder/background-element.png');
+	form{
+		background-image: url('../img/builder/icons/event.png');
+		background-size: 8% auto;
+		background-repeat: no-repeat;
+	}
+	.row{
+		margin-bottom: 20px;
+	}
+}
+
+.event-selection{
+	@extend .adventure-select;
+	background-image: url('../img/builder/background-element.png');
+	form{
+		background-image: url('../img/builder/icons/event.png');
+		background-size: 8% auto;
+		background-repeat: no-repeat;
+	}
+	.row{
+		margin-bottom: 20px;
+	}
+	.selection{		
+		@extend .col-xs-12;
+		@extend .col-xs-offset-0;
+		@extend .col-sm-10;
+		@extend .col-sm-offset-1;
+		@extend .clickable;
+		@extend .contentBox-mini;
+		background-image: url('../img/builder/background-button.png');
+		box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px black inset;
+		padding-top: 5px;
+		padding-bottom: 5px;
+		.select-image{
+			@extend .col-xs-2;
+			@extend .col-sm-2;
+			@extend .col-lg-1;
+		}
+		.select-description{
+			@extend .col-xs-10;
+			@extend .col-sm-10;
+			@extend .col-lg-11;
+		}	
+	}
+}
+
+.page-edit{
+	@extend .adventure-select;
+	background-image: url('../img/builder/background-page.png');
+	form{
+		background-image: url('../img/builder/icons/page.png');
+		background-size: 8% auto;
+		background-repeat: no-repeat;
+	}
+	.row{
+		margin-bottom: 20px;
+	}
+}
+
+.action-select{
+	@extend .col-xs-6; 
+	@extend .contentBox;	
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background-image: url('../img/builder/background-action.png');
+	.row{
+		background-image: url('../img/builder/icons/action.png');
+		background-size: 10% auto;
+		background-repeat: no-repeat;
+	}
+	.selection{
+		/*@extend .col-xs-12;
+		@extend .col-xs-offset-0;
+		@extend .col-sm-10;
+		@extend .col-sm-offset-1;
+		@extend .contentBox-mini;*/
+		margin-bottom: 20px; 
+		p{
+			margin-bottom: 0px;
+		}
+		&:last-child{
+			margin-bottom: 0px;
+		}
+		.action-box{
+			@extend .clickable;
+			display: inline-block;
+			border: 3px solid black;
+			background-image: url('../img/builder/background-button.png');
+			box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px #888 inset;
+			padding: 5px 10px 5px 10px;
+		}
+		.speech-bubble{
+			@extend .clickable;
+			display: inline-block;
+			background: #FFFFFF;
+			border: 3px solid black;
+			border-radius: 15px;
+			box-shadow: 0px 0px 5px 0px black, 0px -1px 15px 0px #888 inset;
+			padding: 5px 10px 5px 10px;
+			&:hover{
+				background: #FFFFFF;		
+			}
+			&:before{
+				content: ' ';
+				position: absolute;
+				width: 0;
+				height: 0;
+				left: 17px;
+				top: 100%;
+				border: 10px solid;
+				border-color: black transparent transparent black;
+				transition: border-color .5s;
+			}
+			&:hover:before{
+				border-color: yellow transparent transparent yellow;
+			}
+			&:after{
+				content: ' ';
+				position: absolute;
+				width: 0;
+				height: 0;
+				left: 20px;
+				top: 100%;
+				border: 6px solid;
+				border-color: #bfbfbf transparent transparent #bfbfbf;
+				transition: border-color .5s;
+			}
+			&:hover:after{
+				border-color: white transparent transparent white;
+			}		
+		}
+	}		
+}
+
+.action-edit{
+	@extend .adventure-select;
+	background-image: url('../img/builder/background-action.png');
+	form{
+		background-image: url('../img/builder/icons/action.png');
+		background-size: 8% auto;
+		background-repeat: no-repeat;
+	}
+	.row{
+		margin-bottom: 20px;
+	}
+}
+
+.requirement-select{
+	@extend .col-xs-6; 
+	/*@extend .col-xs-offset-1;*/
+	@extend .contentBox;	
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background-image: url('../img/builder/background-requirement.png');
+	.row{
+		background-image: url('../img/builder/icons/requirement.png');
+		background-size: 10% auto;
+		background-repeat: no-repeat;
+	}
+	.selection{
+		@extend .col-xs-12;
+		@extend .col-xs-offset-0;
+		@extend .clickable;
+		@extend .contentBox-mini; 
+		background-image: url('../img/builder/background-button.png');
+		box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px black inset;
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+} 
+
+.requirement-edit{
+	@extend .adventure-select;
+	background-image: url('../img/builder/background-requirement.png');
+	form{
+		background-image: url('../img/builder/icons/requirement.png');
+		background-size: 8% auto;
+		background-repeat: no-repeat;
+	}
+	.row{
+		margin-bottom: 20px;
+	}
+}
+
+@keyframes successAnim {
+	0% {transform: scale(0) rotate(0deg);}
+	10% {transform: scale(1.2) rotate(0deg);}
+	15% {transform: scale(1) rotate(0deg);}
+	30% {transform: scale(1) rotate(0deg);}
+	40% {transform: scale(1) rotate(-10deg);}
+	60% {transform: scale(1) rotate(10deg);}
+	70% {transform: scale(1) rotate(0deg);}
+	90% {transform: scale(1) rotate(0deg);}
+	100% {transform: scale(0) rotate(0deg);}
+}
+
+@keyframes errorAnim {
+	0% {transform: scale(0) rotate(0deg);}
+	10% {transform: scale(1.4) rotate(0deg);}
+	80% {transform: scale(1) rotate(0deg);}
+	100% {transform: scale(0) rotate(360deg);}
+}
+
+@keyframes loadingAnim {
+	0% {transform: scale(1) rotate(0deg);}
+	100% {transform: scale(1) rotate(360deg);}
+}
+
+.status-icon{
+	display:block;
+	position:fixed;
+	bottom:5%;
+	right:5%;
+	width:40%;
+	height:15%;
+	text-align:right;
+	pointer-events: none;
+	img{
+		height:100%;
+	} 
+	.success{
+		animation: successAnim 3s linear 1;
+		transform: scale(0) rotate(0deg);
+	}
+	.error{
+		animation: errorAnim 5s ease-out 1;
+		transform: scale(0) rotate(0deg);
+	}
+	.loading{
+		animation: loadingAnim 3s linear infinite;
+	}
+}
+
+.options-menu{
+	@extend .contentBox-mini;
+	display:block;
+	position:fixed;
+	bottom:0%;
+	left:0%;
+	width: 130px;
+	background-image: url('../img/builder/background-adventure.png');
+	padding:10px;
+	button{
+		font-size: 16px;
+	}
+}
+/*
+.outOfFocus .overlay-view{
+	-webkit-filter: blur(2px);
+    -moz-filter: blur(2px);
+    filter: blur(2px);    
+}
+*/
+.layer{
+	.overlay{
+		position:fixed;
+		height:100%;
+		width:100%;
+		top:0px;
+	}
+	.layer-view{
+		position: absolute;
+		width:100%;
+		transition: -webkit-filter .5s, -moz-filter .5s, filter .5s;
+	}
+	&:not(:last-child){
+		.layer-view{
+			-webkit-filter: blur(2px);
+		    -moz-filter: blur(2px);
+		    filter: blur(2px); 
+		}  
+	}
+}
+
+.removing{
+	animation: popOut 0.5s ease-out 1;
+}
+
+body.no-effect{
+	.layer{
+		.layer-view{
+			transition: none;
+		}
+		&:not(:last-child){
+			.layer-view{
+				-webkit-filter: none;
+			    -moz-filter: none;
+			    filter: none; 
+			}  
+		}
+	}
+	.removing, .contentBox, .contentBox-mini{
+		animation: none;
+	}
+}
+

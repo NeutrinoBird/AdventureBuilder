@@ -1,0 +1,150 @@
+.adventure-container {
+  display: block;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  line-height: 1.42857;
+  color: #333; }
+  .adventure-container * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box; }
+  .adventure-container p {
+    margin: 0 0 10px; }
+  .adventure-container .clickable, .adventure-container .adventure-box .adventure-content .selection-list .selection .action-box, .adventure-container .adventure-box .adventure-content .selection-list .selection .speech-bubble {
+    cursor: pointer;
+    border-color: #000000;
+    background-color: #000000;
+    background-blend-mode: screen;
+    transform: translate(0px, 0px);
+    transition: border-color .5s, background-color .5s, box-shadow .5s, transform .5s; }
+  .adventure-container .clickable:hover, .adventure-container .adventure-box .adventure-content .selection-list .selection .action-box:hover, .adventure-container .adventure-box .adventure-content .selection-list .selection .speech-bubble:hover {
+    border-color: #FFFF00;
+    background-color: #888888;
+    box-shadow: 0px 3px 10px black;
+    transform: translate(0px, -5px); }
+  .adventure-container .adventure-box {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    max-width: 640px;
+    min-width: 160px;
+    min-height: 160px;
+    box-shadow: 0px 0px 16px black; }
+    .adventure-container .adventure-box .adventure-content {
+      display: block;
+      position: relative;
+      top: 0px;
+      left: 0px;
+      padding: 32px;
+      z-index: 50;
+      font-family: Press Start K, Arial;
+      text-transform: uppercase;
+      text-align: left; }
+      .adventure-container .adventure-box .adventure-content .image-container {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 350px;
+        overflow: hidden;
+        margin-bottom: 16px; }
+        .adventure-container .adventure-box .adventure-content .image-container img {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 100%;
+          vertical-align: middle;
+          -ms-transform: translateX(-50%) translateY(-50%) scale(1);
+          -webkit-transform: translateX(-50%) translateY(-50%) scale(1);
+          transform: translateX(-50%) translateY(-50%) scale(1);
+          -webkit-filter: none;
+          filter: none; }
+      .adventure-container .adventure-box .adventure-content .page-body {
+        background-color: rgba(0, 0, 0, 0.3);
+        color: #FFFFFF;
+        text-shadow: black 2px 2px;
+        padding: 16px;
+        margin-bottom: 16px; }
+        .adventure-container .adventure-box .adventure-content .page-body p:last-child {
+          margin-bottom: 0px; }
+      .adventure-container .adventure-box .adventure-content .selection-list .selection {
+        width: 83.33333%;
+        margin-left: 8.33333%; }
+        .adventure-container .adventure-box .adventure-content .selection-list .selection .action-box {
+          display: inline-block;
+          clear: right;
+          border: 3px solid black;
+          background-image: url("../img/builder/background-button.png");
+          box-shadow: 0px 0px 5px 0px black, 0px -1px 15px 0px #888 inset;
+          padding: 5px 10px 5px 10px;
+          margin-bottom: 5px; }
+        .adventure-container .adventure-box .adventure-content .selection-list .selection .speech-bubble {
+          display: inline-block;
+          clear: right;
+          background: #FFFFFF;
+          border: 3px solid black;
+          border-radius: 15px;
+          box-shadow: 0px 0px 5px 0px black, 0px -1px 15px 0px #888 inset;
+          padding: 5px 10px 5px 10px;
+          margin-bottom: 15px; }
+          .adventure-container .adventure-box .adventure-content .selection-list .selection .speech-bubble:hover {
+            background: #FFFFFF; }
+          .adventure-container .adventure-box .adventure-content .selection-list .selection .speech-bubble:before {
+            content: ' ';
+            position: absolute;
+            width: 0;
+            height: 0;
+            left: 17px;
+            top: 100%;
+            border: 10px solid;
+            border-color: black transparent transparent black;
+            transition: border-color .5s; }
+          .adventure-container .adventure-box .adventure-content .selection-list .selection .speech-bubble:hover:before {
+            border-color: yellow transparent transparent yellow; }
+          .adventure-container .adventure-box .adventure-content .selection-list .selection .speech-bubble:after {
+            content: ' ';
+            position: absolute;
+            width: 0;
+            height: 0;
+            left: 20px;
+            top: 100%;
+            border: 6px solid;
+            border-color: #bfbfbf transparent transparent #bfbfbf;
+            transition: border-color .5s; }
+          .adventure-container .adventure-box .adventure-content .selection-list .selection .speech-bubble:hover:after {
+            border-color: white transparent transparent white; }
+    .adventure-container .adventure-box .adventure-background, .adventure-container .adventure-box .adventure-background-transition {
+      display: block;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%;
+      border: 16px solid transparent;
+      box-shadow: 0px 0px 32px black inset; }
+    .adventure-container .adventure-box .adventure-background {
+      z-index: 1; }
+    .adventure-container .adventure-box .adventure-background-transition {
+      z-index: 2; }
+    .adventure-container .adventure-box .normal {
+      border-image: url("../img/viewer/border-normal.gif") 16 round;
+      background: url("../img/viewer/background-normal.gif") repeat; }
+    .adventure-container .adventure-box .death {
+      border-image: url("../img/viewer/border-death.gif") 16 round;
+      background: url("../img/viewer/background-death.gif") repeat; }
+    .adventure-container .adventure-box .badEnding {
+      border-image: url("../img/viewer/border-badEnding.gif") 16 round;
+      background: url("../img/viewer/background-badEnding.gif") repeat; }
+    .adventure-container .adventure-box .goodEnding {
+      border-image: url("../img/viewer/border-goodEnding.gif") 16 round;
+      background: url("../img/viewer/background-goodEnding.gif") repeat; }
+
+/*# sourceMappingURL=AdventureViewer.css.map */

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Adventure Builder</title>
+		<!-- <link href="css/lib/bootstrap.min.css" rel="stylesheet"> -->
+		<link href="css/AdventureBuilder.css" rel="stylesheet">
+		<script type="text/javascript" src="js/lib/jquery-1.12.4.min.js"></script>
+		<script type="text/javascript" src="js/lib/json2.js"></script>
+		<script type="text/javascript" src="js/lib/underscore-min.js"></script>
+		<script type="text/javascript" src="js/lib/backbone-min.js"></script>
+		<script type="text/javascript" src="js/lib/backbone.babysitter.js"></script>
+		<script type="text/javascript" src="js/lib/backbone.wreqr.js"></script>
+		<script type="text/javascript" src="js/lib/backbone.marionette.min.js"></script>
+		<script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/validation.js"></script>	
+		<script type="text/javascript" src="js/adventure.js"></script>	
+		<script type="text/javascript" src="js/models/main.js"></script><script type="text/javascript" src="js/models/adventure.js"></script><script type="text/javascript" src="js/models/page.js"></script><script type="text/javascript" src="js/models/action.js"></script><script type="text/javascript" src="js/models/actionFlagRequirement.js"></script><script type="text/javascript" src="js/models/scene.js"></script><script type="text/javascript" src="js/models/flag.js"></script><script type="text/javascript" src="js/models/image.js"></script><script type="text/javascript" src="js/models/effect.js"></script><script type="text/javascript" src="js/models/event.js"></script><script type="text/javascript" src="js/models/static.js"></script><script type="text/javascript" src="js/templates/main.js"></script><script type="text/javascript" src="js/templates/adventure.js"></script><script type="text/javascript" src="js/templates/page.js"></script><script type="text/javascript" src="js/templates/action.js"></script><script type="text/javascript" src="js/templates/actionFlagRequirement.js"></script><script type="text/javascript" src="js/templates/scene.js"></script><script type="text/javascript" src="js/templates/flag.js"></script><script type="text/javascript" src="js/templates/image.js"></script><script type="text/javascript" src="js/templates/effect.js"></script><script type="text/javascript" src="js/templates/event.js"></script><script type="text/javascript" src="js/templates/static.js"></script><script type="text/javascript" src="js/views/main.js"></script><script type="text/javascript" src="js/views/adventure.js"></script><script type="text/javascript" src="js/views/page.js"></script><script type="text/javascript" src="js/views/action.js"></script><script type="text/javascript" src="js/views/actionFlagRequirement.js"></script><script type="text/javascript" src="js/views/scene.js"></script><script type="text/javascript" src="js/views/flag.js"></script><script type="text/javascript" src="js/views/image.js"></script><script type="text/javascript" src="js/views/effect.js"></script><script type="text/javascript" src="js/views/event.js"></script><script type="text/javascript" src="js/views/static.js"></script>
+
+
+	</head>
+	<script type="text/javascript">		
+		$(function(){
+			var AdventureData = new Adventure.AdventureModel({
+				id:2, hashKey: 'Whee', title: 'Test', description: 'None', Author: 'Quack', published: 0
+			});
+			var AdventureData2 = new Adventure.AdventureModel({
+				id:3, hashKey: 'Wheefun', title: 'Horse Teeth Rend Flesh: A Survival Horror Adventure', description: 'This is horses eating you', Author: 'Quack', published: 0
+			});
+			Adventure.Menu = new Adventure.Adventures([AdventureData,AdventureData2]);
+			AdventureData.get('scenes').add({id:1 ,name:'Scene 1'});
+			console.log(AdventureData.toJSON());
+			//AdventureData.save();
+			Adventure.Main = new Adventure.MainView();
+			//Adventure.Main.collection.add({id: 0});
+			//Adventure.Main.render();
+			//Adventure.Main.render();
+			for(var template in Adventure.Templates){
+				//$("body > .container-fluid > .row").append(Adventure.Templates[template]);
+			}
+		});
+	</script>
+	<body>
+		<h1>Adventure Builder</h1>
+		<div class="container-fluid">
+			<div id="main" class="row">					
+			</div>
+		</div>
+		<div class="statusIcon">
+			<img class="success" src="img/icons/thumb.png">
+			<img class="error" src="img/icons/x.png">
+			<img class="loading" src="img/icons/gear.png">
+		</div>
+	</body>
+</html>
