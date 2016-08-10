@@ -24,7 +24,9 @@ In this system, an adventure is comprised of the following elements:
 - Each page contains multiple **Actions**. These are shown to the player in the form of action choices and dialogue boxes. Selecting these will cause the user to change pages or trigger events.
 - A **Requirement** is a condition applied to an action. Multiple requirements can be assigned to an action, and all must be fulfilled for the action to appear.
 - A **Scene** is basically a collection of pages. Actions and events assigned to a scene will be applied on each page.
-- A **Flag** is a variable used in an adventure. By default, it is a true or false value. It can optionally be a numeric counter, or serve as an inventory item visible to the player.
-- An **Event** can be applied to any page, action, or scene. These trigger changes in flags, and can also change pages under the proper conditions.
+- A **Flag** is a variable used in an adventure. By default, it is a true or false value. It can optionally be a numeric counter, or serve as an inventory item visible to the player. A flag's value can influence the conditions of action requirements and events.
+- An **Event** can be applied to any page, action, or scene. These trigger changes in flags, and can also change the current page under the proper conditions.
 - An **Image** can be uploaded to be displayed above any page, or used as an icon for an inventory item.
 - An **Effect** is a CSS animation that is applied to a page image.
+
+The adventure builder manages the above elements in an organized fashion. After creating an adventure, you can create new pages, and from there, you can create new actions, and so on. Whenever you create an element from a parent element, a new form will appear over the parent form. You can proceed to input the attributes of the child element, and then either save it or delete it. With the exception of pages, any element type can be created from another element that utilizes it. From the main adventure edit form, you can access and edit the collections of scenes, images, effects, and flags.
