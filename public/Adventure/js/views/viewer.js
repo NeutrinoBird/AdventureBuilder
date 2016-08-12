@@ -20,7 +20,7 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		this.$el.find(".adventure-background-transition").hide();		
 		this.resizeBox();
 		//Temporary
-		this.$el.find(".adventure-container").click(function(){
+		this.$el.find(".adventure-container").click(function(event){
 			viewHandle.backgroundTransition("goodEnding");
 		});
 	},
@@ -87,7 +87,7 @@ Adventure.ViewerActionButton = Marionette.ItemView.extend({
 	initialize: function() {
 		var actionModel = this.model;
 		this.listenTo(this.model, 'change', this.render);
-		this.$el.click(function(){			
+		this.$el.click(function(event){			
 			//Adventure.Main.renderActionEdit(actionModel);
 		});
 	}
@@ -98,5 +98,7 @@ Adventure.ViewerActionList = Marionette.CollectionView.extend({
 });
 
 /*
-	TODO: Add center coordinates, scale to image editor. Allow service to save these without uploading image.
+
+TODO: Update select boxes to change selection if it no longer exists, and change selection option when creating new object, like you did for Scene.
+
 */

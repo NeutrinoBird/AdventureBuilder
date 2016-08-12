@@ -45,7 +45,10 @@ Adventure.Templates.ActionEdit = `
 	</form>							
 `;
 Adventure.Templates.ActionButton = `
-	<div class="<%= (isSpeech == 1) ? 'speech-bubble' : 'action-box' %>">
+	<div class="action-button <%= (isSpeech == 1) ? 'speech-bubble' : 'action-box' %>">
 		<p><%= text %></p>
-	</div>	
+	</div>
+	<div class="page-jump">
+		<img src="img/builder/icons/page-jump.png" />
+	</div>
 `

@@ -188,7 +188,19 @@
 			return parent::$db->query(
 				'UPDATE tblFlags
 				 SET isActive = 0
-				 WHERE ID = :ID;', 
+				 WHERE ID = :ID;
+
+				 UPDATE tblActionFlagRequirements				 	
+				 SET flagID = 0
+				 WHERE flagID = :ID;
+
+				 UPDATE tblEvents				 	
+				 SET flagID = 0
+				 WHERE flagID = :ID;
+
+				 UPDATE tblEvents				 	
+				 SET conditionFlagID = 0
+				 WHERE conditionFlagID = :ID;', 
 				['ID'=>$this->ID]
 			);
 		}

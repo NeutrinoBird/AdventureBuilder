@@ -11,6 +11,11 @@ Adventure.EffectModel = Backbone.Model.extend({
 	},
 	idAttribute: "ID",
 	urlRoot: 'services/effect.php',
+	initialize: function() {
+		if(!this.get('name')){
+			this.set('name','(New effect #'+this.id+')'); 
+		}
+	},
 	validate: function(){
 		var validation = validate(this.form,[
 			{name:"name",required:true,type:"string",maxLength:50},

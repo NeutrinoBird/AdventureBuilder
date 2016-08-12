@@ -204,7 +204,15 @@
 			return parent::$db->query(
 				'UPDATE tblActions
 				 SET isActive = 0
-				 WHERE ID = :ID;', 
+				 WHERE ID = :ID;
+
+				 UPDATE tblActionFlagRequirements	 
+				 SET isActive = 0
+				 WHERE actionID = :ID;
+
+				 UPDATE tblActionEvents 
+				 SET isActive = 0
+				 WHERE actionID = :ID;', 
 				['ID'=>$this->ID]
 			);
 		}

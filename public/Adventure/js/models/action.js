@@ -12,6 +12,9 @@ Adventure.ActionModel = Backbone.Model.extend({
 	initialize: function() {
 		this.initSubItems();
 		this.form = this.attributes;
+		if(!this.get('text')){
+			this.set('text','(New action #'+this.id+')'); 
+		}
 	},
 	initSubItems: function(){
 		if(Array.isArray(this.get('actionFlagRequirements'))){

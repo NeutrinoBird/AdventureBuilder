@@ -3,7 +3,7 @@ Adventure.EventOption = Marionette.ItemView.extend({
 	tagName: 'option',	
 	initialize: function() {
 		this.listenTo(this.model, 'change', this.render);
-		this.$el.val(this.model.get("ID"));
+		this.$el.val(this.model.id);
 	}
 });
 Adventure.EventSelect = Marionette.CollectionView.extend({	
@@ -78,7 +78,7 @@ Adventure.PageEventButton = Marionette.ItemView.extend({
 	initialize: function() {
 		var pageModel = this.model;
 		this.listenTo(this.model, 'change', this.render);
-		this.$el.click(function(){
+		this.$el.click(function(event){
 			Adventure.Main.renderPageEventEdit(pageModel);	
 		});
 		this.model.updateName();
@@ -98,7 +98,7 @@ Adventure.PageEventEdit = Marionette.LayoutView.extend({
 		if(this.model.get("eventID") > 0){
 			this.showChildView('eventEdit',new Adventure.EventEdit({model: Adventure.activeAdventure.get('events').get(this.model.get("eventID"))}));			
 		}
-		this.$el.find(".save-button").click(function(){			
+		this.$el.find(".save-button").click(function(event){			
 			event.preventDefault();
 			if (viewHandle.$el.find("[name='eventID']").val() == 0){
 				Adventure.handleInvalidInput({errorMsg:'Please choose or create an event.', errorFields:['eventID']});
@@ -111,7 +111,7 @@ Adventure.PageEventEdit = Marionette.LayoutView.extend({
 			}				
 			return false;
 		});
-		this.$el.find(".delete-button").click(function(){			
+		this.$el.find(".delete-button").click(function(event){			
 			event.preventDefault();
 			Adventure.deleteDialog(viewHandle,"event");
 			return false;
@@ -126,7 +126,7 @@ Adventure.ActionEventButton = Marionette.ItemView.extend({
 	initialize: function() {
 		var actionModel = this.model;
 		this.listenTo(this.model, 'change', this.render);
-		this.$el.click(function(){
+		this.$el.click(function(event){
 			Adventure.Main.renderActionEventEdit(actionModel);	
 		});
 		this.model.updateName();
@@ -146,7 +146,7 @@ Adventure.ActionEventEdit = Marionette.LayoutView.extend({
 		if(this.model.get("eventID") > 0){
 			this.showChildView('eventEdit',new Adventure.EventEdit({model: Adventure.activeAdventure.get('events').get(this.model.get("eventID"))}));		
 		}
-		this.$el.find(".save-button").click(function(){			
+		this.$el.find(".save-button").click(function(event){			
 			event.preventDefault();
 			if (viewHandle.$el.find("[name='eventID']").val() == 0){
 				Adventure.handleInvalidInput({errorMsg:'Please choose or create an event.', errorFields:['eventID']});
@@ -159,7 +159,7 @@ Adventure.ActionEventEdit = Marionette.LayoutView.extend({
 			}	
 			return false;
 		});
-		this.$el.find(".delete-button").click(function(){			
+		this.$el.find(".delete-button").click(function(event){			
 			event.preventDefault();
 			Adventure.deleteDialog(viewHandle,"event");
 			return false;
@@ -174,7 +174,7 @@ Adventure.SceneEventButton = Marionette.ItemView.extend({
 	initialize: function() {
 		var sceneModel = this.model;
 		this.listenTo(this.model, 'change', this.render);
-		this.$el.click(function(){
+		this.$el.click(function(event){
 			Adventure.Main.renderSceneEventEdit(sceneModel);	
 		});
 		this.model.updateName();
@@ -194,7 +194,7 @@ Adventure.SceneEventEdit = Marionette.LayoutView.extend({
 		if(this.model.get("eventID") > 0){
 			this.showChildView('eventEdit',new Adventure.EventEdit({model: Adventure.activeAdventure.get('events').get(this.model.get("eventID"))}));		
 		}
-		this.$el.find(".save-button").click(function(){			
+		this.$el.find(".save-button").click(function(event){			
 			event.preventDefault();
 			if (viewHandle.$el.find("[name='eventID']").val() == 0){
 				Adventure.handleInvalidInput({errorMsg:'Please choose or create an event.', errorFields:['eventID']});
@@ -207,7 +207,7 @@ Adventure.SceneEventEdit = Marionette.LayoutView.extend({
 			}	
 			return false;
 		});
-		this.$el.find(".delete-button").click(function(){			
+		this.$el.find(".delete-button").click(function(event){			
 			event.preventDefault();
 			Adventure.deleteDialog(viewHandle,"event");
 			return false;

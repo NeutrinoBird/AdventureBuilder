@@ -13,6 +13,9 @@ Adventure.PageModel = Backbone.Model.extend({
 	initialize: function() {
 		this.initSubItems();
 		this.form = this.attributes;
+		if(!this.get('name')){
+			this.set('name','(New page #'+this.id+')'); 
+		}
 	},
 	initSubItems: function(){
 		if(Array.isArray(this.get('actions'))){

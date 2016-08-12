@@ -33,7 +33,10 @@ Adventure.MainView = Marionette.CollectionView.extend({
 		this.addLayer(new Adventure.AdventureEdit({model: adventureModel}));
 	},
 	renderPageEdit: function(pageModel){
-		this.addLayer(new Adventure.PageEdit({model: pageModel}));
+		this.addLayer(new Adventure.PageEdit({model: pageModel}));	
+	},
+	renderPageEditLite: function(pageModel){
+		this.addLayer(new Adventure.PageEdit({model: pageModel, lite: true}));
 	},
 	renderPageEventEdit: function(pageEventModel){
 		this.addLayer(new Adventure.PageEventEdit({model: pageEventModel}));
@@ -176,14 +179,14 @@ Adventure.OptionsMenu = Marionette.LayoutView.extend({
 	el: '#options-menu',
 	onRender: function() {
 		var viewHandle = this;		
-		this.$el.find(".effect-button").click(function(){			
+		this.$el.find(".effect-button").click(function(event){			
 			event.preventDefault();
 			$("body").toggleClass("no-effect");
 			$(this).html($("body.no-effect").length ? "Effects On" : "Effects Off");
 			return false;
 		});
 		if(Adventure.admin){
-			this.$el.find(".new-user-button").click(function(){			
+			this.$el.find(".new-user-button").click(function(event){			
 				event.preventDefault();
 				if(Adventure.admin && $(".login").length == 0){
 					Adventure.Main.renderNewUser();
@@ -201,7 +204,7 @@ Adventure.Login = Marionette.LayoutView.extend({
 	className: 'login',
 	onRender: function() {
 		var viewHandle = this;	
-		this.$el.find(".login-button").click(function(){			
+		this.$el.find(".login-button").click(function(event){			
 			event.preventDefault();
 			$.ajax({
 				type: "POST",
@@ -226,7 +229,7 @@ Adventure.SessionLogin = Marionette.LayoutView.extend({
 	className: 'login',
 	onRender: function() {
 		var viewHandle = this;	
-		this.$el.find(".login-button").click(function(){			
+		this.$el.find(".login-button").click(function(event){			
 			event.preventDefault();
 			$.ajax({
 				type: "POST",
@@ -253,7 +256,7 @@ Adventure.NewUser = Marionette.LayoutView.extend({
 	className: 'login',
 	onRender: function() {
 		var viewHandle = this;	
-		this.$el.find(".login-button").click(function(){			
+		this.$el.find(".login-button").click(function(event){			
 			event.preventDefault();
 			$.ajax({
 				type: "POST",
@@ -268,7 +271,7 @@ Adventure.NewUser = Marionette.LayoutView.extend({
 			});
 			return false;
 		})
-		this.$el.find(".close-button").click(function(){			
+		this.$el.find(".close-button").click(function(event){			
 			event.preventDefault();
 			Adventure.Main.initiateRemoval(viewHandle);
 			return false;

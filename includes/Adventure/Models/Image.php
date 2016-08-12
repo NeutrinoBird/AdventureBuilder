@@ -225,7 +225,19 @@
 			return parent::$db->query(
 				'UPDATE tblImages
 				 SET isActive = 0
-				 WHERE ID = :ID;', 
+				 WHERE ID = :ID;
+
+				 UPDATE tblAdventures				 	
+				 SET imageID = 0
+				 WHERE imageID = :ID;
+
+				 UPDATE tblPages				 	
+				 SET imageID = 0
+				 WHERE imageID = :ID;
+
+				 UPDATE tblFlags				 	
+				 SET imageID = 0
+				 WHERE imageID = :ID;', 
 				['ID'=>$this->ID]
 			);
 		}

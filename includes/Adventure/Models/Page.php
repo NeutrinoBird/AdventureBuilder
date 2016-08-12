@@ -172,7 +172,33 @@
 			return parent::$db->query(
 				'UPDATE tblPages
 				 SET isActive = 0
-				 WHERE ID = :ID;', 
+				 WHERE ID = :ID;
+
+				 UPDATE tblActions		 
+				 SET isActive = 0
+				 WHERE pageID = :ID;
+
+				 UPDATE tblPageEvents			 
+				 SET isActive = 0
+				 WHERE pageID = :ID;
+
+				 UPDATE tblActionFlagRequirements
+				 JOIN tblActions ON tblActions.ID = tblActionFlagRequirements.actionID			 
+				 SET tblActionFlagRequirements.isActive = 0
+				 WHERE tblActions.pageID = :ID;				
+
+				 UPDATE tblActionEvents
+				 JOIN tblActions ON tblActions.ID = tblActionEvents.actionID			 
+				 SET tblActionEvents.isActive = 0
+				 WHERE tblActions.pageID = :ID;
+
+				 UPDATE tblActions			 
+				 SET nextPageID = 0
+				 WHERE nextPageID = :ID;
+
+				 UPDATE tblEvents			 
+				 SET pageID = 0
+				 WHERE pageID = :ID;', 
 				['ID'=>$this->ID]
 			);
 		}

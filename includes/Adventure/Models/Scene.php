@@ -137,7 +137,19 @@
 			return parent::$db->query(
 				'UPDATE tblScenes
 				 SET isActive = 0
-				 WHERE ID = :ID;', 
+				 WHERE ID = :ID;
+
+				 UPDATE tblPages				 	
+				 SET sceneID = 0
+				 WHERE sceneID = :ID;
+
+				 UPDATE tblActions 
+				 SET isActive = 0
+				 WHERE sceneID = :ID;
+
+				 UPDATE tblSceneEvents	 
+				 SET isActive = 0
+				 WHERE sceneID = :ID;', 
 				['ID'=>$this->ID]
 			);
 		}

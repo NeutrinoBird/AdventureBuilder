@@ -44,17 +44,17 @@ Adventure.FlagEdit = Marionette.LayoutView.extend({
 		this.$el.find("[name='isCounter']").change(function(){
 			viewHandle.$el.find(".counter-group").toggle(viewHandle.$el.find("[name='isCounter']:checked").length == 1);
 		}).change();
-		this.$el.find(".image-button").click(function(){			
+		this.$el.find(".image-button").click(function(event){			
 			event.preventDefault();
 			Adventure.Main.renderImageSelection(Adventure.activeAdventure.get('images'),viewHandle);
 			return false;
 		});
-		this.$el.find(".save-button").click(function(){			
+		this.$el.find(".save-button").click(function(event){			
 			event.preventDefault();
 			viewHandle.model.save(Adventure.generateFormMap(viewHandle.$el.find("form")),Adventure.saveResponseHandlers(viewHandle));				
 			return false;
 		});
-		this.$el.find(".delete-button").click(function(){			
+		this.$el.find(".delete-button").click(function(event){			
 			event.preventDefault();
 			Adventure.deleteDialog(viewHandle,"flag");
 			return false;
@@ -76,7 +76,7 @@ Adventure.FlagButton = Marionette.ItemView.extend({
 	initialize: function() {
 		var flagModel = this.model;
 		this.listenTo(this.model, 'change', this.render);
-		this.$el.click(function(){
+		this.$el.click(function(event){
 			Adventure.Main.renderFlagEdit(flagModel);
 		});
 	}
@@ -91,7 +91,7 @@ Adventure.FlagSelection = Marionette.LayoutView.extend({
 	onRender: function() {
 		var viewHandle = this;
 		this.showChildView('selectionView', new Adventure.FlagList({collection: this.collection}));
-		this.$el.find(".new-button").click(function(){			
+		this.$el.find(".new-button").click(function(event){			
 			event.preventDefault();
 			viewHandle.collection.create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false, 
 				success:function(model){
@@ -100,7 +100,7 @@ Adventure.FlagSelection = Marionette.LayoutView.extend({
 			});
 			return false;
 		});
-		this.$el.find(".close-button").click(function(){			
+		this.$el.find(".close-button").click(function(event){			
 			event.preventDefault();
 			viewHandle.$el.addClass("removing");
 			setTimeout(function(){

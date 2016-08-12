@@ -18,12 +18,12 @@ Adventure.AdventureView = Marionette.ItemView.extend({
 		var el = this.$el;
 		el.addClass('adventure-edit');
 		el.find(".create-adventure").hide();
-		el.find(".create-adventure-start").click(function(){
+		el.find(".create-adventure-start").click(function(event){
 			el.find(".create-adventure-start").hide();
 			el.find(".create-adventure").slideDown();
 			return false;
 		});
-		el.find(".create-adventure button.create").click(function(){
+		el.find(".create-adventure button.create").click(function(event){
 			event.preventDefault();
 			var validation = validate(el.find("form"),[
 				{name:"title",required:true,type:"string",maxLength:100},
@@ -46,7 +46,7 @@ Adventure.AdventureView = Marionette.ItemView.extend({
 	clickAdventureSetup: function() {
 		var adventureModel = this.model;
 		this.$el.addClass('adventure-select clickable');
-		this.$el.click(function(){
+		this.$el.click(function(event){
 			Adventure.activeAdventure = adventureModel;
 			adventureModel.fetch({
 				data:{
@@ -87,20 +87,20 @@ Adventure.AdventureEdit = Marionette.LayoutView.extend({
 	onRender: function() {
 		var viewHandle = this;
 		this.model.form = this.$el.find("form");
-		this.$el.find(".saveClose").click(function(){			
+		this.$el.find(".saveClose").click(function(event){			
 			event.preventDefault();
 			viewHandle.model.save(Adventure.generateFormMap(viewHandle.$el.find("form")),Adventure.saveResponseHandlers(viewHandle));		
 			return false;
 		});		
 		this.setImage(this.model.get("imageID"));
-		this.$el.find(".image-button").click(function(){
+		this.$el.find(".image-button").click(function(event){
 			event.preventDefault();
 			Adventure.Main.renderImageSelection(viewHandle.model.get('images'),viewHandle);
 			return false;
 		});
 		this.showChildView('pageList', new Adventure.PageList({collection: this.model.get("pages")}));
 		this.showChildView('sceneFilter', new Adventure.SceneSelect({filterBase: this.$el, filterElement: ".page-select .selection"}));
-		this.$el.find(".page-select button").click(function(){
+		this.$el.find(".page-select button").click(function(event){
 			event.preventDefault();
 			viewHandle.model.get("pages").create({adventureID:viewHandle.model.id},{wait: true, validate: false, 
 				success:function(model){
@@ -110,22 +110,22 @@ Adventure.AdventureEdit = Marionette.LayoutView.extend({
 			});
 			return false;
 		});
-		this.$el.find(".scene-select button").click(function(){
+		this.$el.find(".scene-select button").click(function(event){
 			event.preventDefault();
 			Adventure.Main.renderSceneSelection(viewHandle.model.get('scenes'));
 			return false;
 		});
-		this.$el.find(".image-select button").click(function(){
+		this.$el.find(".image-select button").click(function(event){
 			event.preventDefault();
 			Adventure.Main.renderImageSelection(viewHandle.model.get('images'));
 			return false;
 		});
-		this.$el.find(".flag-select button").click(function(){
+		this.$el.find(".flag-select button").click(function(event){
 			event.preventDefault();
 			Adventure.Main.renderFlagSelection(viewHandle.model.get('flags'));
 			return false;
 		});
-		this.$el.find(".effect-select button").click(function(){
+		this.$el.find(".effect-select button").click(function(event){
 			event.preventDefault();
 			Adventure.Main.renderEffectSelection(viewHandle.model.get('effects'));
 			return false;

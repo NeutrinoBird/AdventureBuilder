@@ -181,7 +181,15 @@
 			return parent::$db->query(
 				'UPDATE tblEffects
 				 SET isActive = 0
-				 WHERE ID = :ID;', 
+				 WHERE ID = :ID;
+
+				 UPDATE tblPages				 	
+				 SET effectID = 0
+				 WHERE effectID = :ID;
+
+				 UPDATE tblActions			 	
+				 SET effectID = 0
+				 WHERE effectID = :ID;', 
 				['ID'=>$this->ID]
 			);
 		}

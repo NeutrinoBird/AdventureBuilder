@@ -39,6 +39,7 @@ Adventure.SceneSelect = Marionette.CollectionView.extend({
 							model.initSubItems();
 							Adventure.Main.renderSceneEdit(model);
 							$(selectHandle).val(model.id);
+							sceneSelectView.options.selected = model.id;
 						}
 					});
 				}
@@ -51,10 +52,14 @@ Adventure.SceneSelect = Marionette.CollectionView.extend({
 			this.$el.val(this.filterSelection);
 			this.$el.change();				
 		}else{
+			this.$el.find("[value='0'],[value='new']").remove();
 			this.$el.prepend("<option value='0'>Select Scene</option>");
 			this.$el.append("<option value='new'>New Scene...</option>");
 			if(this.getOption("selected") !== ""){
 				this.$el.val(this.getOption("selected"));
+				if(!this.$el.find(":selected").length){ 
+					this.$el.val(0);
+				}
 			}
 		}
 	}
@@ -65,7 +70,7 @@ Adventure.SceneButton = Marionette.ItemView.extend({
 	initialize: function() {
 		var sceneModel = this.model;
 		this.listenTo(this.model, 'change', this.render);
-		this.$el.click(function(){
+		this.$el.click(function(event){
 			Adventure.Main.renderSceneEdit(sceneModel);
 		});
 	}
@@ -73,7 +78,6 @@ Adventure.SceneButton = Marionette.ItemView.extend({
 Adventure.SceneList = Marionette.CollectionView.extend({
 	childView: Adventure.SceneButton,
 	initialize: function() {
-		console.log(this);
 		this.collection.on('add', this.append);
 	}
 });
@@ -84,7 +88,7 @@ Adventure.SceneSelection = Marionette.LayoutView.extend({
 	onRender: function() {
 		var viewHandle = this;
 		this.showChildView('selectionView', new Adventure.SceneList({collection: this.collection}));
-		this.$el.find(".new-button").click(function(){			
+		this.$el.find(".new-button").click(function(event){			
 			event.preventDefault();
 			viewHandle.collection.create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false, 
 				success:function(model){
@@ -94,7 +98,7 @@ Adventure.SceneSelection = Marionette.LayoutView.extend({
 			});
 			return false;
 		});
-		this.$el.find(".close-button").click(function(){			
+		this.$el.find(".close-button").click(function(event){			
 			event.preventDefault();
 			viewHandle.$el.addClass("removing");
 			setTimeout(function(){
@@ -114,7 +118,7 @@ Adventure.SceneEdit = Marionette.LayoutView.extend({
 		this.model.form = this.$el.find("form");
 		this.showChildView('actionSelection', new Adventure.ActionList({collection: this.model.get('actions')}));
 		this.showChildView('eventSelection', new Adventure.SceneEventList({collection: this.model.get('sceneEvents')}));
-		this.$el.find(".new-action-button").click(function(){			
+		this.$el.find(".new-action-button").click(function(event){			
 			event.preventDefault();
 			viewHandle.model.get("actions").create({sceneID:viewHandle.model.id},{wait: true, validate: false, 
 				success:function(model){
@@ -124,7 +128,7 @@ Adventure.SceneEdit = Marionette.LayoutView.extend({
 			});						
 			return false;
 		});
-		this.$el.find(".new-event-button").click(function(){			
+		this.$el.find(".new-event-button").click(function(event){			
 			event.preventDefault();
 			viewHandle.model.get('sceneEvents').create({sceneID:viewHandle.model.id},{wait: true, validate: false, 
 				success:function(model){
@@ -133,12 +137,12 @@ Adventure.SceneEdit = Marionette.LayoutView.extend({
 			});					
 			return false;
 		});
-		this.$el.find(".save-button").click(function(){			
+		this.$el.find(".save-button").click(function(event){			
 			event.preventDefault();
 			viewHandle.model.save(Adventure.generateFormMap(viewHandle.$el.find("form")),Adventure.saveResponseHandlers(viewHandle));				
 			return false;
 		});
-		this.$el.find(".delete-button").click(function(){			
+		this.$el.find(".delete-button").click(function(event){			
 			event.preventDefault();
 			Adventure.deleteDialog(viewHandle,"scene");
 			return false;

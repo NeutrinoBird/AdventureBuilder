@@ -54,12 +54,10 @@ Adventure.Templates.AdventureEdit = `
 				<div class="page-select">
 					<div class="row">
 						<h3>Pages</h3>
-						<div class="page-options">
-							<div class="form-group">
-								<label for="filterByScene">Filter by Scene</label>
-								<div class="form-field scene-selectbox"></div>
-							</div>	
-						</div>
+						<div class="form-group">
+							<label for="filterByScene">Filter by Scene</label>
+							<div class="form-field scene-selectbox"></div>
+						</div>	
 						<div class="selections"></div>
 						<button class="new-button full-button">New Page</button>
 					</div>								

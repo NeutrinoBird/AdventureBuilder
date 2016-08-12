@@ -16,6 +16,16 @@ Adventure.saveResponseHandlers = function(viewHandle, callback){
 		validate: false
 	};
 }
+Adventure.saveResponseHandlersWithoutRemoval = function(callback){
+	callback = (typeof callback == 'function') ? callback : null;
+	return {
+		success: callback,
+		error: function(model, response, options){
+			Adventure.handleInvalidInput(response.responseJSON);
+		},
+		validate: false
+	};
+}
 Adventure.saveImageUploadResponseHandlers = function(viewHandle, formMap){
 	var response = Adventure.saveResponseHandlers(viewHandle,function(){Adventure.Main.renderImageEdit(viewHandle.model);});
 	response['iframe'] = true;

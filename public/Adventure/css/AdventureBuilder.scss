@@ -35,15 +35,20 @@ h2, h3{
 
 form{
 	@extend .form-horizontal;
+	&.form-inline > .form-group{
+		margin-bottom: 10px;
+	}
 }
 
 .errorRow{
-	@extend .row;
 	@extend .outlined-text;
 	margin:10px;
 	clear: both;
 	mix-blend-mode: difference;
     font-size: 20px;
+    &:empty{
+    	margin: 0px;
+    }
 }
 
 .has-error{
@@ -105,7 +110,7 @@ form{
 	background-size: auto 100%;
 	background-attachment: fixed;
 	background-repeat: repeat-x;
-	animation: popIn .5s ease-out 1;
+	animation: popIn .5s ease-out 1;	
 }
 
 .contentBox-mini{
@@ -258,6 +263,10 @@ figure{
 						 1px 0px 0 black;
 			}	
 		}
+		.full-button{
+			margin-top: 15px;
+			margin-bottom: 0px;
+		}
 	}
 }
 
@@ -315,8 +324,9 @@ button.full-button{
 	@extend h3;
 	@extend .col-xs-10;
 	@extend .col-xs-offset-1;
-	@extend .outlined-text;
 	text-align: center;
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
 
 button.delete-button{
@@ -351,6 +361,10 @@ input[type='checkbox']{
 		box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px black inset;
 		padding-top: 5px;
 		padding-bottom: 5px;
+	}
+	.full-button{
+		margin-top: 15px;
+		margin-bottom: 0px;
 	}
 }
 
@@ -427,6 +441,10 @@ input[type='checkbox']{
 			width: 100%;
 			height: auto;
 		}			
+	}
+	.full-button{
+		margin-top: 15px;
+		margin-bottom: 0px;
 	}
 }
 
@@ -511,6 +529,10 @@ input[type='checkbox']{
 		box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px black inset;
 		padding-top: 5px;
 		padding-bottom: 5px;
+	}
+	.full-button{
+		margin-top: 15px;
+		margin-bottom: 0px;
 	}
 }
 
@@ -604,6 +626,10 @@ input[type='checkbox']{
 		padding-top: 5px;
 		padding-bottom: 5px;
 	}
+	.full-button{
+		margin-top: 15px;
+		margin-bottom: 0px;
+	}
 }
 
 .flag-edit{
@@ -675,6 +701,10 @@ input[type='checkbox']{
 		box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px black inset;
 		padding-top: 5px;
 		padding-bottom: 5px;
+	}
+	.full-button{
+		margin-top: 15px;
+		margin-bottom: 0px;
 	}
 }
 .event-select-full{
@@ -768,35 +798,60 @@ input[type='checkbox']{
 		background-size: 10% auto;
 		background-repeat: no-repeat;
 	}
+	.header-key{
+		@extend .col-xs-12;
+		@extend .col-xs-offset-0;
+		@extend .col-sm-10;
+		@extend .col-sm-offset-1;
+		position: relative;
+		margin-right: 0px;
+   		height: 10px;
+		label{	
+			position: absolute;
+		    right: 0px;
+		    bottom: 0px;		
+			width: 73px;
+		    padding: 0px;
+		    text-align: center;					
+			font-size: 12px;
+			text-shadow: 1px 1px 0 black,
+					 0px 1px 0 black,
+					 -1px 1px 0 black,
+					 -1px 0px 0 black,				 
+					 -1px -1px 0 black,
+					 0px -1px 0 black,
+					 1px -1px 0 black,				 
+					 1px 0px 0 black;
+		}
+	}
 	.selection{
 		/*@extend .col-xs-12;
 		@extend .col-xs-offset-0;
 		@extend .col-sm-10;
 		@extend .col-sm-offset-1;
 		@extend .contentBox-mini;*/
-		margin-bottom: 20px; 
+		position:relative;
+		margin-bottom: 20px; 		
 		p{
 			margin-bottom: 0px;
 		}
 		&:last-child{
 			margin-bottom: 0px;
 		}
-		.action-box{
+		.action-button{
 			@extend .clickable;
 			display: inline-block;
+			max-width: 80%;
 			border: 3px solid black;
-			background-image: url('../img/builder/background-button.png');
 			box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px #888 inset;
 			padding: 5px 10px 5px 10px;
 		}
+		.action-box{			
+			background-image: url('../img/builder/background-button.png');			
+		}
 		.speech-bubble{
-			@extend .clickable;
-			display: inline-block;
 			background: #FFFFFF;
-			border: 3px solid black;
 			border-radius: 15px;
-			box-shadow: 0px 0px 5px 0px black, 0px -1px 15px 0px #888 inset;
-			padding: 5px 10px 5px 10px;
 			&:hover{
 				background: #FFFFFF;		
 			}
@@ -829,7 +884,22 @@ input[type='checkbox']{
 				border-color: white transparent transparent white;
 			}		
 		}
-	}		
+		.page-jump{
+			@extend .contentBox-mini;
+			@extend .clickable;
+			background-image: url('../img/builder/background-button.png');	
+			position: absolute;
+			right: 0px;
+			top: 0px;
+			img{
+				height:40px;
+			}
+		}
+	}	
+	.full-button{
+		margin-top: 15px;
+		margin-bottom: 0px;
+	}	
 }
 
 .action-edit{
@@ -866,6 +936,10 @@ input[type='checkbox']{
 		box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px black inset;
 		padding-top: 5px;
 		padding-bottom: 5px;
+	}
+	.full-button{
+		margin-top: 15px;
+		margin-bottom: 0px;
 	}
 } 
 

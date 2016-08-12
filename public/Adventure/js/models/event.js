@@ -24,15 +24,14 @@ Adventure.EventModel = Backbone.Model.extend({
 		switch(parseInt(this.get("eventTypeID"))){
 			case 1: 
 				newName = 'Display Text: ';
-				if (this.get("textBefore") != '' && this.get("textAfter") != ''){
+				if (this.get("textBefore") && this.get("textAfter")){
 					newName += '"'+this.get("textBefore").substring(0,15)+(this.get("textBefore").length > 15 ? '...' : '')+'" / "'+this.get("textAfter").substring(0,15)+(this.get("textAfter").length > 15 ? '...' : '')+'"';
-				}else if (this.get("textBefore") != ''){
+				}else if (this.get("textBefore")){
 					newName += '"'+this.get("textBefore").substring(0,15)+(this.get("textBefore").length > 15 ? '...' : '')+'"';
-				}else if (this.get("textAfter") != ''){
+				}else if (this.get("textAfter")){
 					newName += '"'+this.get("textAfter").substring(0,15)+(this.get("textAfter").length > 15 ? '...' : '')+'"';
 				}else{
-					if(this.get("name") == '(New Event)')return;
-					newName += '(Undefined)';
+					newName = '(Undefined Event)';
 				}
 				break;
 			case 2: 
@@ -119,6 +118,8 @@ Adventure.SceneEventModel = Backbone.Model.extend({
 	updateName: function(){
 		if(parseInt(this.get('eventID')) > 0){
 			this.set("name", this.get('priority')+': '+Adventure.activeAdventure.get("events").get(this.get('eventID')).get("name"));
+		}else{
+			this.set("name","(Undefined event)");
 		};
 	},
 	urlRoot: 'services/sceneEvent.php',
@@ -151,6 +152,8 @@ Adventure.PageEventModel = Backbone.Model.extend({
 	updateName: function(){
 		if(parseInt(this.get('eventID')) > 0){
 			this.set("name", this.get('priority')+': '+Adventure.activeAdventure.get("events").get(this.get('eventID')).get("name"));
+		}else{
+			this.set("name","(Undefined event)");
 		};
 	},
 	urlRoot: 'services/pageEvent.php',
@@ -183,6 +186,8 @@ Adventure.ActionEventModel = Backbone.Model.extend({
 	updateName: function(){
 		if(parseInt(this.get('eventID')) > 0){
 			this.set("name", this.get('priority')+': '+Adventure.activeAdventure.get("events").get(this.get('eventID')).get("name"));
+		}else{
+			this.set("name","(Undefined event)");
 		};
 	},
 	urlRoot: 'services/actionEvent.php',

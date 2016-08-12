@@ -16,12 +16,12 @@ Adventure.ActionFlagRequirementEdit = Marionette.LayoutView.extend({
 		this.model.form = this.$el.find("form");
 		this.showChildView('flagSelect', new Adventure.FlagSelect({selected: this.model.get("flagID")}));
 		this.showChildView('conditionSelect', new Adventure.ConditionSelect({selected: this.model.get("conditionID"), onChange: this.hideFields}));
-		this.$el.find(".save-button").click(function(){			
+		this.$el.find(".save-button").click(function(event){			
 			event.preventDefault();
 			viewHandle.model.save(Adventure.generateFormMap(viewHandle.$el.find("form")),Adventure.saveResponseHandlers(viewHandle));				
 			return false;
 		});
-		this.$el.find(".delete-button").click(function(){			
+		this.$el.find(".delete-button").click(function(event){			
 			event.preventDefault();
 			Adventure.deleteDialog(viewHandle,"requirement");
 			return false;
@@ -34,7 +34,7 @@ Adventure.ActionFlagRequirementButton = Marionette.ItemView.extend({
 	className: 'selection',
 	initialize: function() {
 		var actionFlagRequirementModel = this.model;
-		this.$el.click(function(){
+		this.$el.click(function(event){
 			Adventure.Main.renderActionFlagRequirementEdit(actionFlagRequirementModel);
 		});
 		this.listenTo(this.model, 'change:name', this.render);

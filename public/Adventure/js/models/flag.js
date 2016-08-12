@@ -12,6 +12,11 @@ Adventure.FlagModel = Backbone.Model.extend({
 	},
 	idAttribute: "ID",
 	urlRoot: 'services/flag.php',
+	initialize: function() {
+		if(!this.get('name')){
+			this.set('name','(New flag #'+this.id+')'); 
+		}
+	},
 	validate: function(){
 		var validation = validate(this.form,[
 			{name:"name",required:true,type:"string",maxLength:50},

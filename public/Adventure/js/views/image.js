@@ -5,13 +5,13 @@ Adventure.ImageButton = Marionette.ItemView.extend({
 		var imageModel = this.model;
 		this.listenTo(this.model, 'change', this.render);
 		if(options.selectionView.options.parentView == undefined){
-			this.$el.click(function(){
+			this.$el.click(function(event){
 				event.preventDefault();
 				Adventure.Main.renderImageEdit(imageModel);
 				return false;
 			});
 		}else{
-			this.$el.click(function(){
+			this.$el.click(function(event){
 				event.preventDefault();
 				options.selectionView.options.parentView.setImage(imageModel.get("ID"));
 				Adventure.Main.initiateRemoval(options.selectionView);
@@ -35,7 +35,7 @@ Adventure.ImageSelection = Marionette.LayoutView.extend({
 	onRender: function() {
 		var viewHandle = this;
 		this.showChildView('selectionView', new Adventure.ImageList({collection: this.collection, selectionView: this}));
-		this.$el.find(".new-button").click(function(){			
+		this.$el.find(".new-button").click(function(event){			
 			event.preventDefault();
 			viewHandle.collection.create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false, 
 				success:function(model){
@@ -44,7 +44,7 @@ Adventure.ImageSelection = Marionette.LayoutView.extend({
 			});
 			return false;
 		});
-		this.$el.find(".close-button").click(function(){			
+		this.$el.find(".close-button").click(function(event){			
 			event.preventDefault();
 			Adventure.Main.initiateRemoval(viewHandle);
 			return false;
@@ -57,13 +57,13 @@ Adventure.ImageUpload = Marionette.LayoutView.extend({
 	regions: {selectionView:'.selections'},
 	onRender: function() {
 		var viewHandle = this;
-		this.$el.find(".save-button").click(function(){			
+		this.$el.find(".save-button").click(function(event){			
 			event.preventDefault();
 			var formMap = Adventure.generateFormMap(viewHandle.$el.find("form"));
 			viewHandle.model.save(formMap,Adventure.saveImageUploadResponseHandlers(viewHandle,formMap));				
 			return false;
 		});
-		this.$el.find(".delete-button").click(function(){			
+		this.$el.find(".delete-button").click(function(event){			
 			event.preventDefault();
 			Adventure.deleteDialog(viewHandle,"image");
 			return false;
@@ -78,22 +78,22 @@ Adventure.ImageEdit = Marionette.LayoutView.extend({
 		var viewHandle = this;
 		this.model.form = this.$el.find("form");
 		this.testImage();
-		this.$el.find(".test-button").click(function(){			
+		this.$el.find(".test-button").click(function(event){			
 			event.preventDefault();
 			viewHandle.testImage();
 			return false;
 		});			
-		this.$el.find(".upload-button").click(function(){			
+		this.$el.find(".upload-button").click(function(event){			
 			event.preventDefault();
 			Adventure.Main.initiateRemoval(viewHandle, function(){Adventure.Main.renderImageUpload(viewHandle.model)});
 			return false;
 		});
-		this.$el.find(".save-button").click(function(){			
+		this.$el.find(".save-button").click(function(event){			
 			event.preventDefault();
 			viewHandle.model.save(Adventure.generateFormMap(viewHandle.$el.find("form")),Adventure.saveResponseHandlers(viewHandle));
 			return false;
 		});
-		this.$el.find(".delete-button").click(function(){			
+		this.$el.find(".delete-button").click(function(event){			
 			event.preventDefault();
 			Adventure.deleteDialog(viewHandle,"image");
 			return false;
