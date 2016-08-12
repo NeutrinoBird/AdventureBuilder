@@ -1,5 +1,7 @@
 This is a system for building web adventure games. It is currently a work-in-progress, though the builder portion of the project is fully functional.
 
+The project requires a PHP/MySQL server to function. It implements Backbone.js, Marionette.js, jQuery, and Bootstrap to drive the interface. All stylesheets are compiled via SASS. Eventually, all javascript files in this project will be compiled and minified.
+
 ## SETUP
 
 The folder structure for this project assumes that the DocumentRoot of the server is pointed to the public directory, while the include_path in php.ini is pointed to the includes directory. If you lack the permissions to configure these settings, you will need to move the files to your server's site root and include folders, respectively.
