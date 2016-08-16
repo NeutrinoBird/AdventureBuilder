@@ -21,6 +21,7 @@
 		public $author;
 		public $published;
 		public $imageID;
+		public $imageURL;
 
 		public $pages;
 		public $scenes;
@@ -39,18 +40,19 @@
 			$this->hashKey = NULL;
 			$this->published = NULL;
 			$this->imageID = NULL;
+			$this->imageURL = NULL;
 			$this->ID = NULL;
 			$this->pages = [];
 			$this->scenes = [];
 			$this->images = [];
 			$this->effects = [];
 			$this->flags = [];
-			$this->events = [];		
+			$this->events = [];
 			if($getKey != ''){
 				if(!$this->Load($getKey)){
 					throw new Exception("Adventure not found.");
 				}
-			}				
+			}
 		}
 
 		public static function Create($User, $title, $description){
@@ -71,9 +73,9 @@
 				VALUES
 				(:userID, :title, :description, :hashKey);',
 				[
-					'userID'=>$User->ID, 
-					'title'=>$this->title, 
-					'description'=>$this->description, 
+					'userID'=>$User->ID,
+					'title'=>$this->title,
+					'description'=>$this->description,
 					'hashKey'=>$this->hashKey
 				]
 			);
@@ -114,11 +116,12 @@
 			if(preg_match('/^[0-9a-f]{128}$/', $getKey) === false)
 				return false;
 			$result = parent::$db->queryGetRow(
-				'SELECT tblAdventures.ID, tblAdventures.title, tblAdventures.description, tblAdventures.published, tblUsers.username
+				'SELECT tblAdventures.ID, tblAdventures.title, tblAdventures.description, tblAdventures.published, tblAdventures.imageID, tblUsers.username, tblImages.URL
 				 FROM tblAdventures
 				 JOIN tblUsers ON tblUsers.ID = tblAdventures.userID
+				 LEFT JOIN tblImages ON tblImages.ID = tblAdventures.imageID
 				 WHERE tblAdventures.hashKey = :hashKey
-				 AND tblAdventures.isActive = 1;', 
+				 AND tblAdventures.isActive = 1;',
 				['hashKey'=>$getKey]
 			);
 			if ($result){
@@ -128,6 +131,8 @@
 				$this->author = $result->username;
 				$this->published = $result->published;
 				$this->hashKey = $getKey;
+				$this->imageID = $result->imageID;
+				$this->imageURL = $result->URL;
 				//Load sub-items
 				$this->pages = Page::GetAllPages($this->ID);
 				$this->scenes = Scene::GetAllScenes($this->ID);
@@ -154,7 +159,7 @@
 				}
 				foreach ($actionFlagRequirements as $actionFlagRequirement){
 					array_push($actions[$actionFlagRequirement->actionID]->actionFlagRequirements,$actionFlagRequirement);
-				}				
+				}
 				foreach ($actions as $action){
 					if(intval($action->pageID) > 0){
 						array_push($this->pages[$action->pageID]->actions,$action);
@@ -174,18 +179,20 @@
 		public static function GetList($user){
 			if ($user->isAdmin){
 				return parent::$db->queryGetAll(
-					'SELECT tblAdventures.ID, tblAdventures.title, tblAdventures.description, tblAdventures.published, tblUsers.username as author
+					'SELECT tblAdventures.ID, tblAdventures.title, tblAdventures.description, tblAdventures.published, tblUsers.username as author, tblImages.URL as imageURL
 					 FROM tblAdventures
 					 JOIN tblUsers ON tblUsers.ID = tblAdventures.userID
+					 LEFT JOIN tblImages ON tblImages.ID = tblAdventures.imageID
 					 WHERE tblAdventures.isActive = 1;'
 				);
 			}else{
 				return parent::$db->queryGetAll(
-					'SELECT tblAdventures.ID, tblAdventures.title, tblAdventures.description, tblAdventures.published, tblUsers.username as author
+					'SELECT tblAdventures.ID, tblAdventures.title, tblAdventures.description, tblAdventures.published, tblUsers.username as author, tblImages.URL as imageURL
 					 FROM tblAdventures
 					 JOIN tblUsers ON tblUsers.ID = tblAdventures.userID
+					 LEFT JOIN tblImages ON tblImages.ID = tblAdventures.imageID
 					 WHERE tblAdventures.userID = :userID
-					 AND tblAdventures.isActive = 1;', 
+					 AND tblAdventures.isActive = 1;',
 					['userID'=>$user->ID]
 				);
 			}
@@ -198,15 +205,15 @@
 			$this->imageID = $imageID;
 			return parent::$db->query(
 				'UPDATE tblAdventures
-				 SET title = :title, 
-				 	description = :description, 
+				 SET title = :title,
+				 	description = :description,
 				 	published = :published,
 				 	imageID = :imageID
 				 WHERE tblAdventures.ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
-					'title'=>$this->title, 
-					'description'=>$this->description, 
+					'title'=>$this->title,
+					'description'=>$this->description,
 					'published'=>$this->published,
 					'imageID'=>$this->imageID,
 					'ID'=>$this->ID
@@ -218,11 +225,11 @@
 			return parent::$db->query(
 				'UPDATE tblAdventures
 				 SET isActive = 0
-				 WHERE ID = :ID;', 
+				 WHERE ID = :ID;',
 				['ID'=>$this->ID]
 			);
 		}
-			
+
 	}
 
 ?>

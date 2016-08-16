@@ -8,44 +8,38 @@ Adventure.LayerView = Marionette.LayoutView.extend({
 	}
 });
 Adventure.MainView = Marionette.CollectionView.extend({
-	childView: Adventure.LayerView,	
-	el: '#main',	
+	childView: Adventure.LayerView,
+	el: '#main',
 	collection: new Backbone.Collection(),
 	layerCollection: [],
-	viewLevel: 0,	
+	viewLevel: 0,
 	initialize: function() {
 		this.renderLogin();
 		this.render();
 	},
-	renderLogin: function(){		
+	renderLogin: function(){
 		this.addLayer(new Adventure.Login());
 	},
-	renderSessionLogin: function(){		
+	renderSessionLogin: function(){
 		this.addLayer(new Adventure.SessionLogin());
 	},
-	renderNewUser: function(){		
+	renderNewUser: function(){
 		this.addLayer(new Adventure.NewUser());
 	},
-	renderAdventureList: function(){		
-		this.addLayer(new Adventure.AdventureList({collection: Adventure.Menu}));
+	renderAdventureListFramework: function(){
+		this.addLayer(new Adventure.AdventureListFramework({collection: Adventure.Menu}));
 	},
-	renderAdventureEdit: function(adventureModel){		
+	renderAdventureEdit: function(adventureModel){
 		this.addLayer(new Adventure.AdventureEdit({model: adventureModel}));
 	},
 	renderPageEdit: function(pageModel){
-		this.addLayer(new Adventure.PageEdit({model: pageModel}));	
+		this.addLayer(new Adventure.PageEdit({model: pageModel}));
 	},
 	renderPageEditLite: function(pageModel){
 		this.addLayer(new Adventure.PageEdit({model: pageModel, lite: true}));
 	},
-	renderPageEventEdit: function(pageEventModel){
-		this.addLayer(new Adventure.PageEventEdit({model: pageEventModel}));
-	},
 	renderActionEdit: function(actionModel){
 		this.addLayer(new Adventure.ActionEdit({model: actionModel}));
-	},
-	renderActionEventEdit: function(actionEventModel){
-		this.addLayer(new Adventure.ActionEventEdit({model: actionEventModel}));
 	},
 	renderActionFlagRequirementEdit: function(actionFlagRequirementModel){
 		this.addLayer(new Adventure.ActionFlagRequirementEdit({model: actionFlagRequirementModel}));
@@ -59,8 +53,8 @@ Adventure.MainView = Marionette.CollectionView.extend({
 	renderSceneEdit: function(sceneModel){
 		this.addLayer(new Adventure.SceneEdit({model: sceneModel}));
 	},
-	renderSceneEventEdit: function(sceneEventModel){
-		this.addLayer(new Adventure.SceneEventEdit({model: sceneEventModel}));
+	renderEventLinkEdit: function(eventLinkModel){
+		this.addLayer(new Adventure.EventLinkEdit({model: eventLinkModel}));
 	},
 	renderFlagSelection: function(flagCollection){
 		this.addLayer(new Adventure.FlagSelection({collection: flagCollection}));
@@ -74,7 +68,7 @@ Adventure.MainView = Marionette.CollectionView.extend({
 	renderEffectEdit: function(effectModel){
 		this.addLayer(new Adventure.EffectEdit({model: effectModel}));
 	},
-	renderImageSelection: function(imageCollection, parentView){		
+	renderImageSelection: function(imageCollection, parentView){
 		this.addLayer(new Adventure.ImageSelection({collection: imageCollection, parentView: parentView}));
 	},
 	renderImageEdit: function(imageModel){
@@ -96,30 +90,29 @@ Adventure.MainView = Marionette.CollectionView.extend({
 		var mainView = this;
 		view.$el.addClass("removing");
 		setTimeout(function(){
-			mainView.removeLayer();			
+			mainView.removeLayer();
 			view.remove();
 			if(typeof callback == 'function') callback();
 		}, 495);
-	},	
+	},
 	initiateAdventureList: function(view){
 		var mainView = this;
 		view.$el.addClass("removing");
 		setTimeout(function(){
-			mainView.removeLayer();			
+			mainView.removeLayer();
 			view.remove();
 			Adventure.Menu = new Adventure.Adventures();
 			Adventure.Menu.fetch({
 				success: function(){
-					Adventure.Menu.addNewOption();
 					Adventure.initStatic();
-					mainView.renderAdventureList();
+					mainView.renderAdventureListFramework();
 					Adventure.Options.render();
 				},
 				error: function(model, response, options){
 					Adventure.handleInvalidInput(response.responseJSON);
 				}
 			});
-			
+
 		}, 100);
 	}
 });
@@ -129,7 +122,7 @@ Adventure.StatusDisplay = Marionette.LayoutView.extend({
 	el: '.status-icon',
 	initialize: function() {
 		this.render();
-		var viewHandle = this;		
+		var viewHandle = this;
 		this.$el.find(".success").hide();
 		this.$el.find(".error").hide();
 		this.$el.find(".loading").hide();
@@ -146,7 +139,7 @@ Adventure.StatusDisplay = Marionette.LayoutView.extend({
 		this.errorTimer = setTimeout(function(){}, 10);
 	},
 	showSuccess: function(){
-		var viewHandle = this;	
+		var viewHandle = this;
 		this.$el.find(".loading").hide();
 		this.$el.find(".success").hide(); //reset animation
 		clearTimeout(this.successTimer);
@@ -158,9 +151,9 @@ Adventure.StatusDisplay = Marionette.LayoutView.extend({
 		}, 50);
 	},
 	showError: function(){
-		var viewHandle = this;	
+		var viewHandle = this;
 		this.$el.find(".loading").hide();
-		this.$el.find(".error").hide(); //reset animation		
+		this.$el.find(".error").hide(); //reset animation
 		clearTimeout(this.errorTimer);
 		setTimeout(function(){
 			viewHandle.$el.find(".error").show();
@@ -174,19 +167,19 @@ Adventure.StatusDisplay = Marionette.LayoutView.extend({
 	}
 });
 
-Adventure.OptionsMenu = Marionette.LayoutView.extend({	
+Adventure.OptionsMenu = Marionette.LayoutView.extend({
 	template: 'OptionsMenu',
 	el: '#options-menu',
 	onRender: function() {
-		var viewHandle = this;		
-		this.$el.find(".effect-button").click(function(event){			
+		var viewHandle = this;
+		this.$el.find(".effect-button").click(function(event){
 			event.preventDefault();
 			$("body").toggleClass("no-effect");
 			$(this).html($("body.no-effect").length ? "Effects On" : "Effects Off");
 			return false;
 		});
 		if(Adventure.admin){
-			this.$el.find(".new-user-button").click(function(event){			
+			this.$el.find(".new-user-button").click(function(event){
 				event.preventDefault();
 				if(Adventure.admin && $(".login").length == 0){
 					Adventure.Main.renderNewUser();
@@ -199,12 +192,12 @@ Adventure.OptionsMenu = Marionette.LayoutView.extend({
 	}
 });
 
-Adventure.Login = Marionette.LayoutView.extend({	
+Adventure.Login = Marionette.LayoutView.extend({
 	template: 'Login',
 	className: 'login',
 	onRender: function() {
-		var viewHandle = this;	
-		this.$el.find(".login-button").click(function(event){			
+		var viewHandle = this;
+		this.$el.find(".login-button").click(function(event){
 			event.preventDefault();
 			$.ajax({
 				type: "POST",
@@ -224,12 +217,12 @@ Adventure.Login = Marionette.LayoutView.extend({
 	}
 });
 
-Adventure.SessionLogin = Marionette.LayoutView.extend({	
+Adventure.SessionLogin = Marionette.LayoutView.extend({
 	template: 'SessionLogin',
 	className: 'login',
 	onRender: function() {
-		var viewHandle = this;	
-		this.$el.find(".login-button").click(function(event){			
+		var viewHandle = this;
+		this.$el.find(".login-button").click(function(event){
 			event.preventDefault();
 			$.ajax({
 				type: "POST",
@@ -240,23 +233,23 @@ Adventure.SessionLogin = Marionette.LayoutView.extend({
 						location.reload();
 					}else{
 						Adventure.Main.initiateRemoval(viewHandle);
-					}					
+					}
 				},
 				dataType: 'json'
 			}).fail(function(response){
 				viewHandle.$el.find(".errorRow").html(response.responseJSON.errorMsg);
 			});
 			return false;
-		});		
+		});
 	}
 });
 
-Adventure.NewUser = Marionette.LayoutView.extend({	
+Adventure.NewUser = Marionette.LayoutView.extend({
 	template: 'NewUser',
 	className: 'login',
 	onRender: function() {
-		var viewHandle = this;	
-		this.$el.find(".login-button").click(function(event){			
+		var viewHandle = this;
+		this.$el.find(".login-button").click(function(event){
 			event.preventDefault();
 			$.ajax({
 				type: "POST",
@@ -271,7 +264,7 @@ Adventure.NewUser = Marionette.LayoutView.extend({
 			});
 			return false;
 		})
-		this.$el.find(".close-button").click(function(event){			
+		this.$el.find(".close-button").click(function(event){
 			event.preventDefault();
 			Adventure.Main.initiateRemoval(viewHandle);
 			return false;

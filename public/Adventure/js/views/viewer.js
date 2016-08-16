@@ -1,5 +1,5 @@
 Adventure.Viewer = Marionette.LayoutView.extend({
-	el: '#adventure',	
+	el: '#adventure',
 	template: 'Viewer',
 	currentPageType: "normal",
 	startingPage: 0,
@@ -12,12 +12,12 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 			this.loadPage(this.startingPage);
 		});
 		$(window).resize(this.resizeBox);
-		$(window).load(this.resizeBox);	
-		this.render();			
+		$(window).load(this.resizeBox);
+		this.render();
 	},
 	onRender: function(){
 		var viewHandle = this;
-		this.$el.find(".adventure-background-transition").hide();		
+		this.$el.find(".adventure-background-transition").hide();
 		this.resizeBox();
 		//Temporary
 		this.$el.find(".adventure-container").click(function(event){
@@ -28,7 +28,7 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		this.showChildView('pageView', new Adventure.ViewerPage({model: this.model.get("pages").get(pageID)}));
 	},
 	resizeBox: function(){
-		var boxWidth = Math.min($(".adventure-container").width(), 640);			
+		var boxWidth = Math.min($(".adventure-container").width(), 640);
 		$(".adventure-box").width(Math.max(boxWidth - (boxWidth % 16), 160));
 		var boxHeight = $(".adventure-content").innerHeight();
 		if (boxHeight % 16 > 0){
@@ -41,15 +41,15 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		}
 	},
 	backgroundTransition: function(nextClass){
-		var viewHandle = this;	
+		var viewHandle = this;
 		this.$el.find(".adventure-background-transition").addClass(nextClass);
 		this.$el.find(".adventure-background-transition").fadeIn(400,function(){
-			viewHandle.$el.find(".adventure-background").removeClass(viewHandle.currentPageType);			
+			viewHandle.$el.find(".adventure-background").removeClass(viewHandle.currentPageType);
 			viewHandle.$el.find(".adventure-background").addClass(nextClass);
 			viewHandle.$el.find(".adventure-background-transition").removeClass(nextClass);
-			viewHandle.$el.find(".adventure-background-transition").hide();	
-			viewHandle.currentPageType = nextClass;					
-		});			
+			viewHandle.$el.find(".adventure-background-transition").hide();
+			viewHandle.currentPageType = nextClass;
+		});
 	}
 });
 
@@ -58,10 +58,10 @@ Adventure.ViewerPage = Marionette.LayoutView.extend({
 	currentPageType: "normal",
 	regions: {actionList:'.actions'},
 	/*
-	initialize: function(){		
+	initialize: function(){
 		$(window).resize(this.resizeBox);
-		$(window).load(this.resizeBox);	
-		this.render();	
+		$(window).load(this.resizeBox);
+		this.render();
 	},
 	*/
 	onRender: function(){
@@ -77,7 +77,7 @@ Adventure.ViewerPage = Marionette.LayoutView.extend({
 		this.$el.find(".image-container img").attr("src",Adventure.assetPath+"uploads/"+imageModel.get("URL"));
 		this.$el.find(".image-container img").css("transform","translateX(-"+imageModel.get("centerX")+") translateY(-"+imageModel.get("centerY")+") scale("+imageModel.get("scale")+")");
 		this.$el.find(".image-container img").css("-webkit-transform","translateX(-"+imageModel.get("centerX")+") translateY(-"+imageModel.get("centerY")+") scale("+imageModel.get("scale")+")");
-		this.$el.find(".image-container img").css("-ms-transform","translateX(-"+imageModel.get("centerX")+") translateY(-"+imageModel.get("centerY")+") scale("+imageModel.get("scale")+")");	
+		this.$el.find(".image-container img").css("-ms-transform","translateX(-"+imageModel.get("centerX")+") translateY(-"+imageModel.get("centerY")+") scale("+imageModel.get("scale")+")");
 	}
 });
 
@@ -87,7 +87,7 @@ Adventure.ViewerActionButton = Marionette.ItemView.extend({
 	initialize: function() {
 		var actionModel = this.model;
 		this.listenTo(this.model, 'change', this.render);
-		this.$el.click(function(event){			
+		this.$el.click(function(event){
 			//Adventure.Main.renderActionEdit(actionModel);
 		});
 	}
@@ -99,6 +99,6 @@ Adventure.ViewerActionList = Marionette.CollectionView.extend({
 
 /*
 
-TODO: Update select boxes to change selection if it no longer exists, and change selection option when creating new object, like you did for Scene.
+Update name/text fields of at least the scene and page forms with an onupdate event to update the model name.
 
 */

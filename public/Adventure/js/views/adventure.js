@@ -1,59 +1,56 @@
-Adventure.AdventureView = Marionette.ItemView.extend({
-	initialize: function() {
-		this.template = (this.model.id == 'x') ? 'AdventureCreate' : 'Adventure';		
-		this.setupComplete = false;		
+Adventure.CreateAdventureView = Marionette.ItemView.extend({
+	template: 'AdventureCreate',
+	className: 'adventure-edit',
+	ui: {
+		'createAdventureStart': '.create-adventure-start',
+		'createAdventureButton': '.create-adventure button.create'
 	},
-	onRender: function(){
-		this.setImage(this.model.get("imageID"));
-		if(!this.setupComplete){
-			if(this.model.id == 'x'){
-				this.createAdventureSetup();
-			}else{
-				this.clickAdventureSetup();
-			}
-			this.setupComplete = true;
-		}
+	onRender: function() {
+		this.$el.find(".create-adventure").hide();
 	},
-	createAdventureSetup: function() {
-		var el = this.$el;
-		el.addClass('adventure-edit');
-		el.find(".create-adventure").hide();
-		el.find(".create-adventure-start").click(function(event){
-			el.find(".create-adventure-start").hide();
-			el.find(".create-adventure").slideDown();
-			return false;
-		});
-		el.find(".create-adventure button.create").click(function(event){
+	events: {
+		'change @ui.createAdventureStart': function(event){
 			event.preventDefault();
-			var validation = validate(el.find("form"),[
+			this.$el.find(".create-adventure-start").hide();
+			this.$el.find(".create-adventure").slideDown();
+			return false;
+		},
+		'change @ui.createAdventureButton': function(event){
+			event.preventDefault();
+			var viewHandle = this;
+			var validation = validate(this.$el.find("form"),[
 				{name:"title",required:true,type:"string",maxLength:100},
 				{name:"description",required:true,type:"string",maxLength:500}
 			]);
 			if (validation.error){
-				el.find(".create-adventure .errorRow").html("<ul>"+validation.errorMsg+"</ul>");
+				this.$el.find(".create-adventure .errorRow").html("<ul>"+validation.errorMsg+"</ul>");
 			}else{
-				var NewAdventure = new Adventure.AdventureModel({
-					hashKey: Math.floor((Math.random() * 10000) + 10), title: validation.form.title, description: validation.form.description
-					//TODO: Remove the hashKey when using AJAX
+				Adventure.Menu.create({title: validation.form.title, description: validation.form.description},{wait: true, validate: false,
+					success:function(model){
+						viewHandle.render();
+					},
+					error: function(model, response, options){
+						Adventure.handleInvalidInput(response.responseJSON);
+					}
 				});
-				Adventure.Menu.create(NewAdventure);
-				Adventure.Menu.remove('x');
-				Adventure.Menu.addNewOption();
 			}
 			return false;
-		});
-	},
-	clickAdventureSetup: function() {
-		var adventureModel = this.model;
-		this.$el.addClass('adventure-select clickable');
-		this.$el.click(function(event){
-			Adventure.activeAdventure = adventureModel;
-			adventureModel.fetch({
+		}
+	}
+});
+Adventure.AdventureView = Marionette.ItemView.extend({
+	template: 'Adventure',
+	className: 'adventure-select clickable',
+	events: {
+		'click': function(event){
+			event.preventDefault();
+			Adventure.activeAdventure = this.model;
+			this.model.fetch({
 				data:{
-					ID:adventureModel.get("ID")
+					ID:this.model.get("ID")
 				},
-				success: function(){
-					Adventure.Main.renderAdventureEdit(adventureModel);
+				success: function(model){
+					Adventure.Main.renderAdventureEdit(model);
 				},
 				error: function(model, response, options){
 					if (response.responseJSON.sessionExpired != undefined){
@@ -62,81 +59,108 @@ Adventure.AdventureView = Marionette.ItemView.extend({
 						alert("An error occurred while trying to load the adventure.");
 					}
 				}
-			});			
-		});
-		this.listenTo(this.model, 'change', function(){
-			this.render();
-		});
-	},
-	setImage: function(imageID){
-		if (imageID == 0 || imageID == '' || imageID == null){
-			this.$el.find(".select-image").attr("src",'img/builder/icons/adventure.png');
-		}else{
-			this.$el.find(".select-image").attr("src",'uploads/'+this.model.get('images').get(imageID).get('URL'));
+			});
+			return false
 		}
+	},
+	modelEvents: {
+		'sync': 'render'
 	}
 });
 Adventure.AdventureList = Marionette.CollectionView.extend({
 	childView: Adventure.AdventureView,
-	className: 'adventure-list'
+	className: 'adventure-list',
+	onRender: function(){
+		this.$el.append();
+	}
 });
+
+Adventure.AdventureListFramework = Marionette.LayoutView.extend({
+	template: 'AdventureListFramework',
+	regions: {adventureList:'.adventure-list', newAdventure:'.new-adventure'},
+	onRender: function() {
+		this.showChildView('adventureList', new Adventure.AdventureList({collection: this.collection}));
+		this.showChildView('newAdventure', new Adventure.CreateAdventureView());
+	}
+});
+
 Adventure.AdventureEdit = Marionette.LayoutView.extend({
 	template: 'AdventureEdit',
 	className: 'adventure-edit',
 	regions: {pageList:'.page-select .selections', sceneFilter:'.page-select .scene-selectbox'},
+	ui: {
+		'saveButton': '.saveClose',
+		'imageButton': '.image-button',
+		'newPageButton': '.page-select button',
+		'newSceneButton': '.scene-select button',
+		'newImageButton': '.image-select button',
+		'newFlagButton': '.flag-select button',
+		'newEffectButton': '.effect-select button'
+	},
 	onRender: function() {
 		var viewHandle = this;
 		this.model.form = this.$el.find("form");
-		this.$el.find(".saveClose").click(function(event){			
-			event.preventDefault();
-			viewHandle.model.save(Adventure.generateFormMap(viewHandle.$el.find("form")),Adventure.saveResponseHandlers(viewHandle));		
-			return false;
-		});		
 		this.setImage(this.model.get("imageID"));
-		this.$el.find(".image-button").click(function(event){
-			event.preventDefault();
-			Adventure.Main.renderImageSelection(viewHandle.model.get('images'),viewHandle);
-			return false;
+		this.listenTo(Adventure.activeAdventure.get('images'), 'change destroy', function(model){
+			viewHandle.setImage(model.id);
 		});
 		this.showChildView('pageList', new Adventure.PageList({collection: this.model.get("pages")}));
 		this.showChildView('sceneFilter', new Adventure.SceneSelect({filterBase: this.$el, filterElement: ".page-select .selection"}));
-		this.$el.find(".page-select button").click(function(event){
+	},
+	events: {
+		'click @ui.saveButton': function(event){
 			event.preventDefault();
-			viewHandle.model.get("pages").create({adventureID:viewHandle.model.id},{wait: true, validate: false, 
+			this.model.save(Adventure.generateFormMap(this.$el.find("form")),Adventure.saveResponseHandlers(this));
+			return false;
+		},
+		'click @ui.imageButton': function(event){
+			event.preventDefault();
+			Adventure.Main.renderImageSelection(this.model.get('images'),this);
+			return false;
+		},
+		'click @ui.newPageButton': function(event){
+			event.preventDefault();
+			this.model.get("pages").create({adventureID:this.model.id},{wait: true, validate: false,
 				success:function(model){
 					model.initSubItems();
 					Adventure.Main.renderPageEdit(model);
+				},
+				error: function(model, response, options){
+					Adventure.handleInvalidInput(response.responseJSON);
 				}
 			});
 			return false;
-		});
-		this.$el.find(".scene-select button").click(function(event){
+		},
+		'click @ui.newSceneButton': function(event){
 			event.preventDefault();
-			Adventure.Main.renderSceneSelection(viewHandle.model.get('scenes'));
+			Adventure.Main.renderSceneSelection(this.model.get('scenes'));
 			return false;
-		});
-		this.$el.find(".image-select button").click(function(event){
+		},
+		'click @ui.newImageButton': function(event){
 			event.preventDefault();
-			Adventure.Main.renderImageSelection(viewHandle.model.get('images'));
+			Adventure.Main.renderImageSelection(this.model.get('images'));
 			return false;
-		});
-		this.$el.find(".flag-select button").click(function(event){
+		},
+		'click @ui.newFlagButton': function(event){
 			event.preventDefault();
-			Adventure.Main.renderFlagSelection(viewHandle.model.get('flags'));
+			Adventure.Main.renderFlagSelection(this.model.get('flags'));
 			return false;
-		});
-		this.$el.find(".effect-select button").click(function(event){
+		},
+		'click @ui.newEffectButton': function(event){
 			event.preventDefault();
-			Adventure.Main.renderEffectSelection(viewHandle.model.get('effects'));
+			Adventure.Main.renderEffectSelection(this.model.get('effects'));
 			return false;
-		});
+		}
 	},
 	setImage: function(imageID){
-		if (imageID == 0 || imageID == '' || imageID == null){
+		if (imageID == 0 || imageID == '' || imageID == null || !this.model.get('images').get(imageID)){
+			this.$el.find(".image-button > img").attr("src",'img/builder/icons/image.png');
+		}else if(!this.model.get('images').get(imageID).get('URL')){
 			this.$el.find(".image-button > img").attr("src",'img/builder/icons/image.png');
 		}else{
 			this.model.set("imageID",imageID);
-			this.$el.find(".image-button > img").attr("src",'uploads/'+this.model.get('images').get(imageID).get('URL'));
+			this.model.set("imageURL",this.model.get('images').get(imageID).get('URL'));
+			this.$el.find(".image-button > img").attr("src",'uploads/'+this.model.get("imageURL"));
 		}
 	}
 });

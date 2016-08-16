@@ -11,11 +11,11 @@ body{
 	text-shadow: 2px 2px 0 black,
 				 0px 2px 0 black,
 				 -2px 2px 0 black,
-				 -2px 0px 0 black,				 
+				 -2px 0px 0 black,
 				 -2px -2px 0 black,
 				 0px -2px 0 black,
-				 2px -2px 0 black,				 
-				 2px 0px 0 black;					
+				 2px -2px 0 black,
+				 2px 0px 0 black;
 }
 
 .truncate{
@@ -37,6 +37,9 @@ form{
 	@extend .form-horizontal;
 	&.form-inline > .form-group{
 		margin-bottom: 10px;
+		textarea{
+			width: 100%;
+		}
 	}
 }
 
@@ -67,7 +70,7 @@ form{
 		&::-moz-placeholder{
 		   color: red;
 		}
-		&:-ms-input-placeholder{ 
+		&:-ms-input-placeholder{
 		   color: red;
 		}
 	}
@@ -78,26 +81,26 @@ form{
 	5% {transform: scale(1.2,0.01);}
 	10% {transform: scale(0.01,1.2);}
 	15% {transform: scale(1.2,0.01);}
-	20% {transform: scale(0.8,0.8);}	
+	20% {transform: scale(0.8,0.8);}
 	100% {transform: scale(1,1);}
 }
 @keyframes popOut {
 	0% {transform: scale(1,1);}
 	20% {transform: scale(1,0.01);}
-	50% {transform: scale(0.01,0.01);}	
+	50% {transform: scale(0.01,0.01);}
 	100% {transform: scale(0,0);}
-}	
+}
 .clickable{
 	cursor: pointer;
 	border-color: #000000;
-	background-color: #000000;	
+	background-color: #000000;
 	background-blend-mode: screen;
 	transform: translate(0px,0px);
 	transition: border-color .5s, background-color .5s, box-shadow .5s, transform .5s;
 }
 .clickable:hover{
 	border-color: #FFFF00;
-	background-color: #888888;	
+	background-color: #888888;
 	box-shadow: 0px 3px 10px black;
 	transform: translate(0px,-5px);
 }
@@ -110,7 +113,7 @@ form{
 	background-size: auto 100%;
 	background-attachment: fixed;
 	background-repeat: repeat-x;
-	animation: popIn .5s ease-out 1;	
+	animation: popIn .5s ease-out 1;
 }
 
 .contentBox-mini{
@@ -208,7 +211,7 @@ figure{
 		&:last-child{
 			margin: 0;
 		}
-	}	
+	}
 }
 
 .adventure-edit{
@@ -223,9 +226,9 @@ figure{
 		margin-bottom: 20px;
 	}
 	.page-select{
-		@extend .col-xs-6; 
+		@extend .col-xs-6;
 		/*@extend .col-xs-offset-1;*/
-		@extend .contentBox;	
+		@extend .contentBox;
 		padding-top: 10px;
 		padding-bottom: 10px;
 		background-image: url('../img/builder/background-page.png');
@@ -251,17 +254,29 @@ figure{
 			@extend .col-xs-offset-0;
 			@extend .col-sm-8;
 			@extend .col-sm-offset-2;
-			label{								
+			margin-bottom: 5px;
+			label{
+				width: 100%;
+				padding: 0;
+				margin-bottom: 0;
 				font-size: 12px;
 				text-shadow: 1px 1px 0 black,
 						 0px 1px 0 black,
 						 -1px 1px 0 black,
-						 -1px 0px 0 black,				 
+						 -1px 0px 0 black,
 						 -1px -1px 0 black,
 						 0px -1px 0 black,
-						 1px -1px 0 black,				 
+						 1px -1px 0 black,
 						 1px 0px 0 black;
-			}	
+			}
+			.form-field{
+				width:100%;
+				padding: 0;
+				select{
+					width: 100%;
+					padding: 0;
+				}
+			}
 		}
 		.full-button{
 			margin-top: 15px;
@@ -275,8 +290,8 @@ label{
 }
 
 .form-label{
-	@extend .col-xs-12; 
-	@extend .col-md-2; 
+	@extend .col-xs-12;
+	@extend .col-md-2;
 	@extend .col-md-offset-1;
 	@extend .outlined-text;
 	@extend .truncate;
@@ -285,13 +300,13 @@ label{
 
 .form-field{
 	@extend .col-xs-12;
-	@extend .col-md-8;	
+	@extend .col-md-8;
 	input, textarea{
 		@extend .col-xs-12;
 	}
 	.form-label{
 		@extend .col-md-offset-0;
-		@extend .col-md-4; 
+		@extend .col-md-4;
 	}
 }
 
@@ -339,9 +354,9 @@ input[type='checkbox']{
 }
 
 .scene-select{
-	@extend .col-xs-6; 
+	@extend .col-xs-6;
 	/*@extend .col-xs-offset-1;*/
-	@extend .contentBox;	
+	@extend .contentBox;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	background-image: url('../img/builder/background-element.png');
@@ -392,7 +407,7 @@ input[type='checkbox']{
 	.row{
 		margin-bottom: 20px;
 	}
-	.selection{		
+	.selection{
 		@extend .col-xs-12;
 		@extend .col-xs-offset-0;
 		@extend .col-sm-10;
@@ -412,35 +427,35 @@ input[type='checkbox']{
 			@extend .col-xs-10;
 			@extend .col-sm-10;
 			@extend .col-lg-11;
-		}	
+		}
 	}
 }
 
 .image-select{
-	@extend .col-xs-6; 
+	@extend .col-xs-6;
 	/*@extend .col-xs-offset-1;*/
-	@extend .contentBox;	
+	@extend .contentBox;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	background-image: url('../img/builder/background-element.png');
 	.row{
 		background-image: url('../img/builder/icons/image.png');
 		background-size: 10% auto;
-		background-repeat: no-repeat;		
+		background-repeat: no-repeat;
 	}
-	.selection{		
+	.selection{
 		@extend .clickable;
-		@extend .col-xs-3; 
+		@extend .col-xs-3;
 		@extend .contentBox-mini;
 		display: inline-block;
 		background-image: url('../img/builder/background-button.png');
 		box-shadow:0px 0px 5px 0px black, 0px -1px 10px 0px black inset;
 		padding-top: 5px;
-		padding-bottom: 5px;			
+		padding-bottom: 5px;
 		img{
 			width: 100%;
 			height: auto;
-		}			
+		}
 	}
 	.full-button{
 		margin-top: 15px;
@@ -492,26 +507,26 @@ input[type='checkbox']{
 	.row{
 		margin-bottom: 20px;
 	}
-	.selection{		
+	.selection{
 		@extend .clickable;
-		@extend .col-xs-1; 
+		@extend .col-xs-1;
 		@extend .contentBox-mini;
 		display: inline-block;
 		background-image: url('../img/builder/background-button.png');
 		box-shadow:0px 0px 5px 0px black, 0px -1px 10px 0px black inset;
 		padding-top: 5px;
-		padding-bottom: 5px;			
+		padding-bottom: 5px;
 		img{
 			width: 100%;
 			height: auto;
-		}			
+		}
 	}
 }
 
 .effect-select{
-	@extend .col-xs-6; 
+	@extend .col-xs-6;
 	/*@extend .col-xs-offset-1;*/
-	@extend .contentBox;	
+	@extend .contentBox;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	background-image: url('../img/builder/background-element.png');
@@ -580,7 +595,7 @@ input[type='checkbox']{
 	.row{
 		margin-bottom: 20px;
 	}
-	.selection{		
+	.selection{
 		@extend .col-xs-12;
 		@extend .col-xs-offset-0;
 		@extend .col-sm-10;
@@ -600,14 +615,14 @@ input[type='checkbox']{
 			@extend .col-xs-10;
 			@extend .col-sm-10;
 			@extend .col-lg-11;
-		}	
+		}
 	}
 }
 
 .flag-select{
-	@extend .col-xs-6; 
+	@extend .col-xs-6;
 	/*@extend .col-xs-offset-1;*/
-	@extend .contentBox;	
+	@extend .contentBox;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	background-image: url('../img/builder/background-element.png');
@@ -638,7 +653,7 @@ input[type='checkbox']{
 	form{
 		background-image: url('../img/builder/icons/flag.png');
 		background-size: 8% auto;
-		background-repeat: no-repeat;		
+		background-repeat: no-repeat;
 	}
 	.row{
 		margin-bottom: 20px;
@@ -656,7 +671,7 @@ input[type='checkbox']{
 	.row{
 		margin-bottom: 20px;
 	}
-	.selection{		
+	.selection{
 		@extend .col-xs-12;
 		@extend .col-xs-offset-0;
 		@extend .col-sm-10;
@@ -676,14 +691,14 @@ input[type='checkbox']{
 			@extend .col-xs-10;
 			@extend .col-sm-10;
 			@extend .col-lg-11;
-		}	
+		}
 	}
 }
 
 .event-select{
-	@extend .col-xs-6; 
+	@extend .col-xs-6;
 	/*@extend .col-xs-offset-1;*/
-	@extend .contentBox;	
+	@extend .contentBox;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	background-image: url('../img/builder/background-event.png');
@@ -750,7 +765,7 @@ input[type='checkbox']{
 	.row{
 		margin-bottom: 20px;
 	}
-	.selection{		
+	.selection{
 		@extend .col-xs-12;
 		@extend .col-xs-offset-0;
 		@extend .col-sm-10;
@@ -770,7 +785,7 @@ input[type='checkbox']{
 			@extend .col-xs-10;
 			@extend .col-sm-10;
 			@extend .col-lg-11;
-		}	
+		}
 	}
 }
 
@@ -788,8 +803,8 @@ input[type='checkbox']{
 }
 
 .action-select{
-	@extend .col-xs-6; 
-	@extend .contentBox;	
+	@extend .col-xs-6;
+	@extend .contentBox;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	background-image: url('../img/builder/background-action.png');
@@ -806,21 +821,21 @@ input[type='checkbox']{
 		position: relative;
 		margin-right: 0px;
    		height: 10px;
-		label{	
+		label{
 			position: absolute;
 		    right: 0px;
-		    bottom: 0px;		
+		    bottom: 0px;
 			width: 73px;
 		    padding: 0px;
-		    text-align: center;					
+		    text-align: center;
 			font-size: 12px;
 			text-shadow: 1px 1px 0 black,
 					 0px 1px 0 black,
 					 -1px 1px 0 black,
-					 -1px 0px 0 black,				 
+					 -1px 0px 0 black,
 					 -1px -1px 0 black,
 					 0px -1px 0 black,
-					 1px -1px 0 black,				 
+					 1px -1px 0 black,
 					 1px 0px 0 black;
 		}
 	}
@@ -831,7 +846,7 @@ input[type='checkbox']{
 		@extend .col-sm-offset-1;
 		@extend .contentBox-mini;*/
 		position:relative;
-		margin-bottom: 20px; 		
+		margin-bottom: 20px;
 		p{
 			margin-bottom: 0px;
 		}
@@ -846,14 +861,14 @@ input[type='checkbox']{
 			box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px #888 inset;
 			padding: 5px 10px 5px 10px;
 		}
-		.action-box{			
-			background-image: url('../img/builder/background-button.png');			
+		.action-box{
+			background-image: url('../img/builder/background-button.png');
 		}
 		.speech-bubble{
 			background: #FFFFFF;
 			border-radius: 15px;
 			&:hover{
-				background: #FFFFFF;		
+				background: #FFFFFF;
 			}
 			&:before{
 				content: ' ';
@@ -882,12 +897,12 @@ input[type='checkbox']{
 			}
 			&:hover:after{
 				border-color: white transparent transparent white;
-			}		
+			}
 		}
 		.page-jump{
 			@extend .contentBox-mini;
 			@extend .clickable;
-			background-image: url('../img/builder/background-button.png');	
+			background-image: url('../img/builder/background-button.png');
 			position: absolute;
 			right: 0px;
 			top: 0px;
@@ -895,11 +910,11 @@ input[type='checkbox']{
 				height:40px;
 			}
 		}
-	}	
+	}
 	.full-button{
 		margin-top: 15px;
 		margin-bottom: 0px;
-	}	
+	}
 }
 
 .action-edit{
@@ -916,9 +931,9 @@ input[type='checkbox']{
 }
 
 .requirement-select{
-	@extend .col-xs-6; 
+	@extend .col-xs-6;
 	/*@extend .col-xs-offset-1;*/
-	@extend .contentBox;	
+	@extend .contentBox;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	background-image: url('../img/builder/background-requirement.png');
@@ -931,7 +946,7 @@ input[type='checkbox']{
 		@extend .col-xs-12;
 		@extend .col-xs-offset-0;
 		@extend .clickable;
-		@extend .contentBox-mini; 
+		@extend .contentBox-mini;
 		background-image: url('../img/builder/background-button.png');
 		box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px black inset;
 		padding-top: 5px;
@@ -941,7 +956,7 @@ input[type='checkbox']{
 		margin-top: 15px;
 		margin-bottom: 0px;
 	}
-} 
+}
 
 .requirement-edit{
 	@extend .adventure-select;
@@ -991,7 +1006,7 @@ input[type='checkbox']{
 	pointer-events: none;
 	img{
 		height:100%;
-	} 
+	}
 	.success{
 		animation: successAnim 3s linear 1;
 		transform: scale(0) rotate(0deg);
@@ -1022,7 +1037,7 @@ input[type='checkbox']{
 .outOfFocus .overlay-view{
 	-webkit-filter: blur(2px);
     -moz-filter: blur(2px);
-    filter: blur(2px);    
+    filter: blur(2px);
 }
 */
 .layer{
@@ -1041,8 +1056,8 @@ input[type='checkbox']{
 		.layer-view{
 			-webkit-filter: blur(2px);
 		    -moz-filter: blur(2px);
-		    filter: blur(2px); 
-		}  
+		    filter: blur(2px);
+		}
 	}
 }
 
@@ -1059,8 +1074,8 @@ body.no-effect{
 			.layer-view{
 				-webkit-filter: none;
 			    -moz-filter: none;
-			    filter: none; 
-			}  
+			    filter: none;
+			}
 		}
 	}
 	.removing, .contentBox, .contentBox-mini{

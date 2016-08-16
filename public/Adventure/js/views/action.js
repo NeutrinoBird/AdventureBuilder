@@ -1,64 +1,88 @@
-Adventure.ActionEdit = Marionette.LayoutView.extend({	
+Adventure.ActionEdit = Marionette.LayoutView.extend({
 	template: 'ActionEdit',
 	className: 'action-edit',
 	regions: {pageSelect:'.page-selectbox',effectSelect:'.effect-selectbox',transitionSelect:'.transition-selectbox',requirementSelection:'.requirement-select .selections',eventSelection:'.event-select .selections'},
+	ui: {
+		'newRequirementButton': '.new-requirement-button',
+		'newEventButton': '.new-event-button',
+		'saveButton': '.save-button',
+		'deleteButton': '.delete-button'
+	},
 	onRender: function() {
-		var viewHandle = this;
 		this.model.form = this.$el.find("form");
 		this.showChildView('pageSelect', new Adventure.PageSelect({name: "nextPageID", selected: this.model.get("nextPageID")}));
 		this.showChildView('effectSelect', new Adventure.EffectSelect({selected: this.model.get("effectID")}));
 		this.showChildView('transitionSelect', new Adventure.TransitionSelect({selected: this.model.get("transitionID")}));
 		this.showChildView('requirementSelection', new Adventure.ActionFlagRequirementList({collection: this.model.get('actionFlagRequirements')}));
-		this.showChildView('eventSelection', new Adventure.ActionEventList({collection: this.model.get('actionEvents')}));
-		this.$el.find(".new-requirement-button").click(function(event){			
+		this.showChildView('eventSelection', new Adventure.EventLinkList({collection: this.model.get('actionEvents')}));
+	},
+	events: {
+		'click @ui.newRequirementButton': function(event){
 			event.preventDefault();
-			viewHandle.model.get("actionFlagRequirements").create({actionID:viewHandle.model.id},{wait: true, validate: false, 
+			this.model.get("actionFlagRequirements").create({actionID:this.model.id},{wait: true, validate: false,
 				success:function(model){
 					Adventure.Main.renderActionFlagRequirementEdit(model);
+				},
+				error: function(model, response, options){
+					Adventure.handleInvalidInput(response.responseJSON);
 				}
-			});						
+			});
 			return false;
-		});
-		this.$el.find(".new-event-button").click(function(event){			
+		},
+		'click @ui.newEventButton': function(event){
 			event.preventDefault();
-			viewHandle.model.get("actionEvents").create({actionID:viewHandle.model.id},{wait: true, validate: false, 
+			this.model.get("actionEvents").create({actionID:this.model.id},{wait: true, validate: false,
 				success:function(model){
-					Adventure.Main.renderActionEventEdit(model);
+					Adventure.Main.renderEventLinkEdit(model);
+				},
+				error: function(model, response, options){
+					Adventure.handleInvalidInput(response.responseJSON);
 				}
-			});				
+			});
 			return false;
-		});
-		this.$el.find(".save-button").click(function(event){			
+		},
+		'click @ui.saveButton': function(event){
 			event.preventDefault();
-			viewHandle.model.save(Adventure.generateFormMap(viewHandle.$el.find("form")),Adventure.saveResponseHandlers(viewHandle));	
+			this.model.save(Adventure.generateFormMap(this.$el.find("form")),Adventure.saveResponseHandlers(this));
 			return false;
-		});
-		this.$el.find(".delete-button").click(function(event){			
+		},
+		'click @ui.deleteButton': function(event){
 			event.preventDefault();
-			Adventure.deleteDialog(viewHandle,"action");
+			Adventure.deleteDialog(this,"action");
 			return false;
-		});
+		}
 	}
 });
 Adventure.ActionButton = Marionette.ItemView.extend({
 	template: 'ActionButton',
 	className: 'selection',
-	initialize: function() {		
-		this.listenTo(this.model, 'change', this.render);		
+	ui: {
+		'pageJump': '.page-jump',
+		'actionButton': '.action-button'
 	},
 	onRender: function(){
-		var viewHandle = this;
-		if(parseInt(this.model.get("nextPageID"))){
+		if(this.getOption("pageView") && Adventure.activeAdventure.get("pages").get(this.model.get("nextPageID"))){
 			this.getOption("pageView").$el.find(".header-key").show();
-			this.$el.find('.page-jump').click(function(event){
-				viewHandle.getOption("pageView").jumpToPage(viewHandle.model.get("nextPageID"));
-			});
 		}else{
 			this.$el.find('.page-jump').hide();
 		}
-		this.$el.find('.action-button').click(function(event){			
-			Adventure.Main.renderActionEdit(viewHandle.model);
-		});
+	},
+	events: {
+		'click @ui.pageJump': function(event){
+			event.preventDefault();
+			if(this.getOption("pageView") && Adventure.activeAdventure.get("pages").get(this.model.get("nextPageID"))){
+				this.getOption("pageView").jumpToPage(this.model.get("nextPageID"));
+			}
+			return false;
+		},
+		'click @ui.actionButton': function(event){
+			event.preventDefault();
+			Adventure.Main.renderActionEdit(this.model);
+			return false;
+		}
+	},
+	modelEvents: {
+		'change': 'render'
 	}
 });
 Adventure.ActionList = Marionette.CollectionView.extend({

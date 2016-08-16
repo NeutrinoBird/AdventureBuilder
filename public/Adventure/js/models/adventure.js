@@ -5,6 +5,7 @@ Adventure.AdventureModel = Backbone.Model.extend({
 		description : '',
 		author : '',
 		imageID : '',
+		imageURL : '',
 		published : 0
 	},
 	idAttribute: "ID",
@@ -43,10 +44,7 @@ Adventure.AdventureModel = Backbone.Model.extend({
 });
 Adventure.Adventures = Backbone.Collection.extend({
 	model: Adventure.AdventureModel,
-	url: 'services/adventures.php',
-	addNewOption: function () {
-		this.add({ID:'x', hashKey: 'NewAdventure', title: 'New Adventure'});
-	}
+	url: 'services/adventures.php'
 });
 
 Adventure.AdventureViewingModel = Backbone.Model.extend({
@@ -68,7 +66,7 @@ Adventure.AdventureViewingModel = Backbone.Model.extend({
 		var modelHandle = this;
 		Adventure.activeAdventure = this;
 		this.fetch({
-			wait:true, 
+			wait:true,
 			data:{
 				hashKey: this.get('hashKey')
 			},
@@ -83,7 +81,7 @@ Adventure.AdventureViewingModel = Backbone.Model.extend({
 			error: function(){
 				alert("An error occurred while loading the adventure.");
 			}
-		});		
+		});
 	},
 	urlRoot: 'services/loadAdventure.php'
 });

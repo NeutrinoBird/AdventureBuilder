@@ -7,16 +7,16 @@ Adventure.Templates.ImageUpload = `
 			<input name="centerX" type="hidden" value="<%= centerX %>" />
 			<input name="centerY" type="hidden" value="<%= centerY %>" />
 			<input name="scale" type="hidden" value="<%= scale %>" />
-		</div>		
-		<div class="errorRow"></div>			
+		</div>
+		<div class="errorRow"></div>
 		<div class="row">
 			<button class="save-button full-button">Save</button>
 			<button class="delete-button full-button">Delete</button>
 		</div>
-	</form>				
+	</form>
 `;
 Adventure.Templates.ImageEdit = `
-	<form class="form-inline">		
+	<form class="form-inline">
 		<div class="form-group">
 			<label for="imageCenterX<%= ID %>">Center X%</label>
 			<input class="form-control" name="centerX" ID="imageCenterX<%= ID %>" type="text" maxlength="10" placeholder="X-Percent of Center" value="<%= centerX %>" />
@@ -31,22 +31,22 @@ Adventure.Templates.ImageEdit = `
 		</div>
 		<input name="URL" type="hidden" value="<%= URL %>" />
 		<input name="width" type="hidden" value="<%= width %>" />
-		<input name="height" type="hidden" value="<%= height %>" />			
+		<input name="height" type="hidden" value="<%= height %>" />
 		<div class="form-group">
 			<div class="row">
 				<button class="full-button test-button">Test</button>
-				<div class="image-container">	
+				<div class="image-container">
 					<img src="<%= (URL=='') ? 'img/builder/icons/image.png' : 'uploads/'+URL %>" />
 				</div>
 			</div>
-		</div>		
-		<div class="errorRow"></div>			
+		</div>
+		<div class="errorRow"></div>
 		<div class="row">
-			<button class="upload-button full-button">Replace Image</button>
+			<button class="upload-button full-button">Select Replacement Image</button>
 			<button class="save-button full-button">Save</button>
 			<button class="delete-button full-button">Delete</button>
 		</div>
-	</form>				
+	</form>
 `;
 Adventure.Templates.ImageButton = `
 	<img src="<%= URL != '' ? 'uploads/'+URL : 'img/builder/icons/image.png' %>" />

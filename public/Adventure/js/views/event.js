@@ -1,42 +1,52 @@
 Adventure.EventOption = Marionette.ItemView.extend({
 	template: 'Option',
-	tagName: 'option',	
+	tagName: 'option',
 	initialize: function() {
-		this.listenTo(this.model, 'change', this.render);
 		this.$el.val(this.model.id);
+	},
+	modelEvents: {
+		'change': 'render'
 	}
 });
-Adventure.EventSelect = Marionette.CollectionView.extend({	
-	tagName: 'select',	
+Adventure.EventSelect = Marionette.CollectionView.extend({
+	tagName: 'select',
 	className: 'form-control',
 	childView: Adventure.EventOption,
 	initialize: function() {
 		this.collection = Adventure.activeAdventure.get('events');
 	},
 	onRender: function(){
-		var eventSelectView = this;
 		this.$el.attr("name","eventID");
 		this.$el.prepend("<option value='0'>Select Event</option>");
 		this.$el.append("<option value='new'>New Event...</option>");
-		this.$el.change(function(){
-			var selectHandle = this;
-			switch($(this).val()){
-				case '': 
-					break;
-				case 'new': 
-					eventSelectView.collection.create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false, 
-						success:function(model){
-							eventSelectView.getOption("parentView").showChildView('eventEdit',new Adventure.EventEdit({model: model}));
-							$(selectHandle).val(model.id);
-						}
-					});	
-					break;
-				default:
-					eventSelectView.getOption("parentView").showChildView('eventEdit',new Adventure.EventEdit({model: eventSelectView.collection.get($(this).val())}));
-			}
-		});
 		if(this.getOption("selected") !== ""){
 			this.$el.val(this.getOption("selected"));
+			if(!this.$el.find(":selected").length){
+				this.$el.val(0);
+			}
+		}
+	},
+	events: {
+		'change': function(event){
+			var viewHandle = this;
+			switch(this.$el.val()){
+				case '':
+					break;
+				case 'new':
+					this.collection.create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false,
+						success:function(model){
+							viewHandle.getOption("parentView").showChildView('eventEdit',new Adventure.EventEdit({model: model}));
+							viewHandle.$el.val(model.id);
+							viewHandle.options.selected = model.id;
+						},
+						error: function(model, response, options){
+							Adventure.handleInvalidInput(response.responseJSON);
+						}
+					});
+					break;
+				default:
+					this.getOption("parentView").showChildView('eventEdit',new Adventure.EventEdit({model: this.collection.get(this.$el.val())}));
+			}
 		}
 	}
 });
@@ -72,145 +82,61 @@ Adventure.EventEdit = Marionette.LayoutView.extend({
 });
 
 
-Adventure.PageEventButton = Marionette.ItemView.extend({
+Adventure.EventLinkButton = Marionette.ItemView.extend({
 	template: 'EventButton',
 	className: 'selection',
 	initialize: function() {
-		var pageModel = this.model;
-		this.listenTo(this.model, 'change', this.render);
-		this.$el.click(function(event){
-			Adventure.Main.renderPageEventEdit(pageModel);	
-		});
 		this.model.updateName();
+	},
+	events: {
+		'click': function(event){
+			event.preventDefault();
+			Adventure.Main.renderEventLinkEdit(this.model);
+			return false;
+		}
+	},
+	modelEvents: {
+		'change': 'render'
 	}
 });
-Adventure.PageEventList = Marionette.CollectionView.extend({
-	childView: Adventure.PageEventButton,
+Adventure.EventLinkList = Marionette.CollectionView.extend({
+	childView: Adventure.EventLinkButton,
 });
-Adventure.PageEventEdit = Marionette.LayoutView.extend({	
+Adventure.EventLinkEdit = Marionette.LayoutView.extend({
 	template: 'EventLink',
 	className: 'event-edit',
+	ui: {
+		'saveButton': '.save-button',
+		'deleteButton': '.delete-button'
+	},
 	regions: {eventSelect:'.event-selectbox',eventEdit:'.event-form'},
 	onRender: function() {
 		var viewHandle = this;
 		this.model.form = this.$el.find(".event-link");
 		this.showChildView('eventSelect', new Adventure.EventSelect({selected: this.model.get("eventID"),parentView: this}));
 		if(this.model.get("eventID") > 0){
-			this.showChildView('eventEdit',new Adventure.EventEdit({model: Adventure.activeAdventure.get('events').get(this.model.get("eventID"))}));			
+			this.showChildView('eventEdit',new Adventure.EventEdit({model: Adventure.activeAdventure.get('events').get(this.model.get("eventID"))}));
 		}
-		this.$el.find(".save-button").click(function(event){			
+	},
+	events: {
+		'click @ui.saveButton': function(event){
 			event.preventDefault();
-			if (viewHandle.$el.find("[name='eventID']").val() == 0){
+			var viewHandle = this;
+			if (this.$el.find("[name='eventID']").val() == 0){
 				Adventure.handleInvalidInput({errorMsg:'Please choose or create an event.', errorFields:['eventID']});
 			}else{
-				Adventure.activeAdventure.get('events').get(viewHandle.$el.find("[name='eventID']").val()).save(Adventure.generateFormMap(viewHandle.$el.find(".event-form")),
-					Adventure.saveEventResponseHandlers(viewHandle,function(){
+				Adventure.activeAdventure.get('events').get(this.$el.find("[name='eventID']").val()).save(Adventure.generateFormMap(this.$el.find(".event-form")),
+					Adventure.saveEventResponseHandlers(this,function(){
 						viewHandle.model.save(Adventure.generateFormMap(viewHandle.$el.find(".event-link")),Adventure.saveResponseHandlers(viewHandle));
 					})
 				);
-			}				
+			}
 			return false;
-		});
-		this.$el.find(".delete-button").click(function(event){			
+		},
+		'click @ui.deleteButton': function(event){
 			event.preventDefault();
-			Adventure.deleteDialog(viewHandle,"event");
+			Adventure.deleteDialog(this,"event");
 			return false;
-		});
-	}
-});
-
-
-Adventure.ActionEventButton = Marionette.ItemView.extend({
-	template: 'EventButton',
-	className: 'selection',
-	initialize: function() {
-		var actionModel = this.model;
-		this.listenTo(this.model, 'change', this.render);
-		this.$el.click(function(event){
-			Adventure.Main.renderActionEventEdit(actionModel);	
-		});
-		this.model.updateName();
-	}
-});
-Adventure.ActionEventList = Marionette.CollectionView.extend({
-	childView: Adventure.ActionEventButton,
-});
-Adventure.ActionEventEdit = Marionette.LayoutView.extend({	
-	template: 'EventLink',
-	className: 'event-edit',
-	regions: {eventSelect:'.event-selectbox',eventEdit:'.event-form'},
-	onRender: function() {
-		var viewHandle = this;
-		this.model.form = this.$el.find(".event-link");
-		this.showChildView('eventSelect', new Adventure.EventSelect({selected: this.model.get("eventID"),parentView: this}));
-		if(this.model.get("eventID") > 0){
-			this.showChildView('eventEdit',new Adventure.EventEdit({model: Adventure.activeAdventure.get('events').get(this.model.get("eventID"))}));		
 		}
-		this.$el.find(".save-button").click(function(event){			
-			event.preventDefault();
-			if (viewHandle.$el.find("[name='eventID']").val() == 0){
-				Adventure.handleInvalidInput({errorMsg:'Please choose or create an event.', errorFields:['eventID']});
-			}else{
-				Adventure.activeAdventure.get('events').get(viewHandle.$el.find("[name='eventID']").val()).save(Adventure.generateFormMap(viewHandle.$el.find(".event-form")),
-					Adventure.saveEventResponseHandlers(viewHandle,function(){
-						viewHandle.model.save(Adventure.generateFormMap(viewHandle.$el.find(".event-link")),Adventure.saveResponseHandlers(viewHandle));
-					})
-				);		
-			}	
-			return false;
-		});
-		this.$el.find(".delete-button").click(function(event){			
-			event.preventDefault();
-			Adventure.deleteDialog(viewHandle,"event");
-			return false;
-		});
-	}
-});
-
-
-Adventure.SceneEventButton = Marionette.ItemView.extend({
-	template: 'EventButton',
-	className: 'selection',
-	initialize: function() {
-		var sceneModel = this.model;
-		this.listenTo(this.model, 'change', this.render);
-		this.$el.click(function(event){
-			Adventure.Main.renderSceneEventEdit(sceneModel);	
-		});
-		this.model.updateName();
-	}
-});
-Adventure.SceneEventList = Marionette.CollectionView.extend({
-	childView: Adventure.SceneEventButton,
-});
-Adventure.SceneEventEdit = Marionette.LayoutView.extend({	
-	template: 'EventLink',
-	className: 'event-edit',
-	regions: {eventSelect:'.event-selectbox',eventEdit:'.event-form'},
-	onRender: function() {
-		var viewHandle = this;
-		this.model.form = this.$el.find(".event-link");
-		this.showChildView('eventSelect', new Adventure.EventSelect({selected: this.model.get("eventID"),parentView: this}));
-		if(this.model.get("eventID") > 0){
-			this.showChildView('eventEdit',new Adventure.EventEdit({model: Adventure.activeAdventure.get('events').get(this.model.get("eventID"))}));		
-		}
-		this.$el.find(".save-button").click(function(event){			
-			event.preventDefault();
-			if (viewHandle.$el.find("[name='eventID']").val() == 0){
-				Adventure.handleInvalidInput({errorMsg:'Please choose or create an event.', errorFields:['eventID']});
-			}else{
-				Adventure.activeAdventure.get('events').get(viewHandle.$el.find("[name='eventID']").val()).save(Adventure.generateFormMap(viewHandle.$el.find(".event-form")),
-					Adventure.saveEventResponseHandlers(viewHandle,function(){
-						viewHandle.model.save(Adventure.generateFormMap(viewHandle.$el.find(".event-link")),Adventure.saveResponseHandlers(viewHandle));
-					})
-				);	
-			}	
-			return false;
-		});
-		this.$el.find(".delete-button").click(function(event){			
-			event.preventDefault();
-			Adventure.deleteDialog(viewHandle,"event");
-			return false;
-		});
 	}
 });

@@ -13,9 +13,8 @@ Adventure.PageModel = Backbone.Model.extend({
 	initialize: function() {
 		this.initSubItems();
 		this.form = this.attributes;
-		if(!this.get('name')){
-			this.set('name','(New page #'+this.id+')'); 
-		}
+		this.handleBlankName();
+		this.on('sync', this.handleBlankName);
 	},
 	initSubItems: function(){
 		if(Array.isArray(this.get('actions'))){
@@ -23,7 +22,12 @@ Adventure.PageModel = Backbone.Model.extend({
 		}
 		if(Array.isArray(this.get('pageEvents'))){
 			this.set('pageEvents', new Adventure.PageEvents(this.get('pageEvents')));
-		}	
+		}
+	},
+	handleBlankName: function(){
+		if(!this.get('name')){
+			this.set('name','(New page #'+this.id+')');
+		}
 	},
 	urlRoot: 'services/page.php',
 	validate: function(){

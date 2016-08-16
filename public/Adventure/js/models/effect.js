@@ -12,8 +12,12 @@ Adventure.EffectModel = Backbone.Model.extend({
 	idAttribute: "ID",
 	urlRoot: 'services/effect.php',
 	initialize: function() {
+		this.handleBlankName();
+		this.on('sync', this.handleBlankName);
+	},
+	handleBlankName: function(){
 		if(!this.get('name')){
-			this.set('name','(New effect #'+this.id+')'); 
+			this.set('name','(New effect #'+this.id+')');
 		}
 	},
 	validate: function(){
@@ -45,7 +49,7 @@ Adventure.EffectModel = Backbone.Model.extend({
 		setTimeout(function(){
 			element.css("animation",animationString);
 			element.css("-webkit-animation",animationString);
-		}, 20);									
+		}, 20);
 	}
 });
 Adventure.Effects = Backbone.Collection.extend({

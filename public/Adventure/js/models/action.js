@@ -12,9 +12,8 @@ Adventure.ActionModel = Backbone.Model.extend({
 	initialize: function() {
 		this.initSubItems();
 		this.form = this.attributes;
-		if(!this.get('text')){
-			this.set('text','(New action #'+this.id+')'); 
-		}
+		this.handleBlankName();
+		this.on('sync', this.handleBlankName);
 	},
 	initSubItems: function(){
 		if(Array.isArray(this.get('actionFlagRequirements'))){
@@ -22,7 +21,12 @@ Adventure.ActionModel = Backbone.Model.extend({
 		}
 		if(Array.isArray(this.get('actionEvents'))){
 			this.set('actionEvents', new Adventure.ActionEvents(this.get('actionEvents')));
-		}	
+		}
+	},
+	handleBlankName: function(){
+		if(!this.get('text')){
+			this.set('text','(New action #'+this.id+')');
+		}
 	},
 	urlRoot: 'services/action.php',
 	validate: function(){

@@ -8,9 +8,8 @@ Adventure.SceneModel = Backbone.Model.extend({
 	initialize: function() {
 		this.initSubItems();
 		this.form = this.attributes;
-		if(!this.get('name')){
-			this.set('name','(New scene #'+this.id+')'); 
-		}
+		this.handleBlankName();
+		this.on('sync', this.handleBlankName);
 	},
 	initSubItems: function(){
 		if(Array.isArray(this.get('actions'))){
@@ -18,7 +17,12 @@ Adventure.SceneModel = Backbone.Model.extend({
 		}
 		if(Array.isArray(this.get('sceneEvents'))){
 			this.set('sceneEvents', new Adventure.SceneEvents(this.get('sceneEvents')));
-		}	
+		}
+	},
+	handleBlankName: function(){
+		if(!this.get('name')){
+			this.set('name','(New scene #'+this.id+')');
+		}
 	},
 	urlRoot: 'services/scene.php',
 	validate: function(){
