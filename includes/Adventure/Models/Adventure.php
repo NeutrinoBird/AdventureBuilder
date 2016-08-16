@@ -119,7 +119,7 @@
 				'SELECT tblAdventures.ID, tblAdventures.title, tblAdventures.description, tblAdventures.published, tblAdventures.imageID, tblUsers.username, tblImages.URL, tblImages.centerX, tblImages.centerY, tblImages.scale
 				 FROM tblAdventures
 				 JOIN tblUsers ON tblUsers.ID = tblAdventures.userID
-				 LEFT JOIN tblImages ON tblImages.ID = tblAdventures.imageID
+				 LEFT JOIN tblImages ON tblImages.ID = tblAdventures.imageID AND tblImages.isActive = 1
 				 WHERE tblAdventures.hashKey = :hashKey
 				 AND tblAdventures.isActive = 1;',
 				['hashKey'=>$getKey]
@@ -185,7 +185,7 @@
 					'SELECT tblAdventures.ID, tblAdventures.title, tblAdventures.description, tblAdventures.published, tblUsers.username as author, tblImages.URL as imageURL, tblImages.centerX as imageX, tblImages.centerY as imageY, tblImages.scale as imageScale
 					 FROM tblAdventures
 					 JOIN tblUsers ON tblUsers.ID = tblAdventures.userID
-					 LEFT JOIN tblImages ON tblImages.ID = tblAdventures.imageID
+					 LEFT JOIN tblImages ON tblImages.ID = tblAdventures.imageID AND tblImages.isActive = 1
 					 WHERE tblAdventures.isActive = 1;'
 				);
 			}else{
@@ -193,7 +193,7 @@
 					'SELECT tblAdventures.ID, tblAdventures.title, tblAdventures.description, tblAdventures.published, tblUsers.username as author, tblImages.URL as imageURL, tblImages.centerX as imageX, tblImages.centerY as imageY, tblImages.scale as imageScale
 					 FROM tblAdventures
 					 JOIN tblUsers ON tblUsers.ID = tblAdventures.userID
-					 LEFT JOIN tblImages ON tblImages.ID = tblAdventures.imageID
+					 LEFT JOIN tblImages ON tblImages.ID = tblAdventures.imageID AND tblImages.isActive = 1
 					 WHERE tblAdventures.userID = :userID
 					 AND tblAdventures.isActive = 1;',
 					['userID'=>$user->ID]
