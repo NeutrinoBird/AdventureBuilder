@@ -116,7 +116,7 @@
 			if(preg_match('/^[0-9a-f]{128}$/', $getKey) === false)
 				return false;
 			$result = parent::$db->queryGetRow(
-				'SELECT tblAdventures.ID, tblAdventures.title, tblAdventures.description, tblAdventures.published, tblAdventures.imageID, tblUsers.username, tblImages.URL
+				'SELECT tblAdventures.ID, tblAdventures.title, tblAdventures.description, tblAdventures.published, tblAdventures.imageID, tblUsers.username, tblImages.URL, tblImages.centerX, tblImages.centerY, tblImages.scale
 				 FROM tblAdventures
 				 JOIN tblUsers ON tblUsers.ID = tblAdventures.userID
 				 LEFT JOIN tblImages ON tblImages.ID = tblAdventures.imageID
@@ -133,6 +133,9 @@
 				$this->hashKey = $getKey;
 				$this->imageID = $result->imageID;
 				$this->imageURL = $result->URL;
+				$this->imageX = $result->centerX;
+				$this->imageY = $result->centerY;
+				$this->imageScale = $result->scale;
 				//Load sub-items
 				$this->pages = Page::GetAllPages($this->ID);
 				$this->scenes = Scene::GetAllScenes($this->ID);
@@ -179,7 +182,7 @@
 		public static function GetList($user){
 			if ($user->isAdmin){
 				return parent::$db->queryGetAll(
-					'SELECT tblAdventures.ID, tblAdventures.title, tblAdventures.description, tblAdventures.published, tblUsers.username as author, tblImages.URL as imageURL
+					'SELECT tblAdventures.ID, tblAdventures.title, tblAdventures.description, tblAdventures.published, tblUsers.username as author, tblImages.URL as imageURL, tblImages.centerX as imageX, tblImages.centerY as imageY, tblImages.scale as imageScale
 					 FROM tblAdventures
 					 JOIN tblUsers ON tblUsers.ID = tblAdventures.userID
 					 LEFT JOIN tblImages ON tblImages.ID = tblAdventures.imageID
@@ -187,7 +190,7 @@
 				);
 			}else{
 				return parent::$db->queryGetAll(
-					'SELECT tblAdventures.ID, tblAdventures.title, tblAdventures.description, tblAdventures.published, tblUsers.username as author, tblImages.URL as imageURL
+					'SELECT tblAdventures.ID, tblAdventures.title, tblAdventures.description, tblAdventures.published, tblUsers.username as author, tblImages.URL as imageURL, tblImages.centerX as imageX, tblImages.centerY as imageY, tblImages.scale as imageScale
 					 FROM tblAdventures
 					 JOIN tblUsers ON tblUsers.ID = tblAdventures.userID
 					 LEFT JOIN tblImages ON tblImages.ID = tblAdventures.imageID

@@ -3,11 +3,11 @@ Adventure.Templates.EffectEdit = `
 		<div class="form-group">
 			<label for="effectName<%= ID %>">Name</label>
 			<input class="form-control" name="name" ID="effectName<%= ID %>" type="text" maxlength="50" placeholder="Effect Name" value="<%= name %>" />
-		</div>	
+		</div>
 		<div class="form-group">
 			<label for="effectKeyframes<%= ID %>">Keyframes</label>
 			<textarea class="form-control" name="keyframes" ID="effectKeyframes<%= ID %>" maxlength="1000" placeholder="CSS Keyframes"><%= keyframes %></textarea>
-		</div>	
+		</div>
 		<div class="form-group">
 			<label for="effectTiming<%= ID %>">Timing</label>
 			<input class="form-control" name="timing" ID="effectTiming<%= ID %>" type="text" maxlength="40" placeholder="CSS Timing Function" value="<%= timing %>" />
@@ -15,11 +15,11 @@ Adventure.Templates.EffectEdit = `
 		<div class="form-group">
 			<label for="effectDuration<%= ID %>">Duration</label>
 			<input class="form-control" name="duration" ID="effectDuration<%= ID %>" type="text" maxlength="5" placeholder="Duration in seconds" value="<%= duration %>" />
-		</div>	
+		</div>
 		<div class="form-group">
 			<label for="effectDelay<%= ID %>">Delay</label>
 			<input class="form-control" name="delay" ID="effectDelay<%= ID %>" type="text" maxlength="5" placeholder="Delay in seconds" value="<%= delay %>" />
-		</div>	
+		</div>
 		<div class="form-group">
 			<label for="effectLoops<%= ID %>">Loops</label>
 			<input class="form-control" name="loops" ID="effectLoops<%= ID %>" type="text" maxlength="5" placeholder="# of loops (0 = ∞)" value="<%= loops %>" />
@@ -37,13 +37,13 @@ Adventure.Templates.EffectEdit = `
 			<div class="form-label">
 				<p>Test</p>
 			</div>
+			<button class="full-button test-image-select">Select Test Image</button>
+			<button class="full-button test-button">Test</button>
 		</div>
-		<div class="form-group">
-			<div class="row">
-				<button class="full-button test-image-select">Select Test Image</button>
-				<button class="full-button test-button">Test</button>
+		<div class="image-row">
+			<div class="image-maximum">
 				<div class="image-container">
-					<style type="text/css" class="test-keyframes"></style>	
+					<style type="text/css" class="test-keyframes"></style>
 					<img src="img/builder/icons/image.png" />
 				</div>
 			</div>
@@ -53,7 +53,7 @@ Adventure.Templates.EffectEdit = `
 			<button class="save-button full-button">Save</button>
 			<button class="delete-button full-button">Delete</button>
 		</div>
-	</form>				
+	</form>
 `;
 Adventure.Templates.EffectButton = `
 	<img src="img/builder/icons/effect.png" class="select-image" />

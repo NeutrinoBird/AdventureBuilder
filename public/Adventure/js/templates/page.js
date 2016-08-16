@@ -7,7 +7,7 @@ Adventure.Templates.PageEdit = `
 		<div class="form-group">
 			<label for="pageText<%= ID %>">Text</label>
 			<textarea class="form-control" name="text" ID="pageText<%= ID %>" maxlength="2000" placeholder="Page Body"><%= text %></textarea>
-		</div>	
+		</div>
 		<div class="form-group">
 			<label>Scene</label>
 			<div class="form-field scene-selectbox"></div>
@@ -18,7 +18,11 @@ Adventure.Templates.PageEdit = `
 		</div>
 		<div class="form-group">
 			<label for="pageImage<%= ID %>" class="image-label">Image</label>
-			<button class="image-button" ID="pageImage<%= ID %>"><img src="img/builder/icons/image.png" /></button>
+			<button class="image-button" ID="pageImage<%= ID %>">
+				<div class="image-container">
+					<img src="img/builder/icons/image.png" />
+				</div>
+			</button>
 			<input class="form-control" name="imageID" ID="pageImageID<%= ID %>" type="hidden" value="<%= imageID %>" />
 		</div>
 		<div class="form-group">
@@ -47,7 +51,7 @@ Adventure.Templates.PageEdit = `
 			<button class="save-button full-button">Save</button>
 			<button class="delete-button full-button">Delete</button>
 		</div>
-	</form>				
+	</form>
 `;
 Adventure.Templates.PageEditLite = `
 	<form class="form-inline">
@@ -58,7 +62,7 @@ Adventure.Templates.PageEditLite = `
 		<div class="form-group">
 			<label for="pageText<%= ID %>">Text</label>
 			<textarea class="form-control" name="text" ID="pageText<%= ID %>" maxlength="2000" placeholder="Page Body"><%= text %></textarea>
-		</div>	
+		</div>
 		<div class="form-group">
 			<label>Scene</label>
 			<div class="form-field scene-selectbox"></div>
@@ -76,7 +80,7 @@ Adventure.Templates.PageEditLite = `
 			<label>Effect</label>
 			<div class="form-field effect-selectbox"></div>
 		</div>
-		<!--		
+		<!--
 		<div class="row">
 			<p>When you are ready to add actions and effects, return to the previous page form and click the Jump to Page button.</p>
 		</div>
@@ -86,10 +90,15 @@ Adventure.Templates.PageEditLite = `
 			<button class="save-button full-button">Save</button>
 			<button class="delete-button full-button">Delete</button>
 		</div>
-	</form>				
+	</form>
 `;
 Adventure.Templates.PageButton = `
-	<img src="img/builder/icons/page.png" class="select-image" />
+	<img src="img/builder/icons/page.png" class="no-thumbnail select-image" />
+	<div class="image-thumbnail select-image">
+		<div class="image-container">
+			<img src="img/builder/icons/page.png" />
+		</div>
+	</div>
 	<div class="select-description">
 		<p><%= name %></p>
 	</div>

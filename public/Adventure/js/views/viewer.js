@@ -84,21 +84,18 @@ Adventure.ViewerPage = Marionette.LayoutView.extend({
 Adventure.ViewerActionButton = Marionette.ItemView.extend({
 	template: 'ViewerActionButton',
 	className: 'selection',
-	initialize: function() {
-		var actionModel = this.model;
-		this.listenTo(this.model, 'change', this.render);
-		this.$el.click(function(event){
-			//Adventure.Main.renderActionEdit(actionModel);
-		});
+	events: {
+		'click': function(event){
+			event.preventDefault();
+			//
+			return false;
+		}
+	},
+	modelEvents: {
+		'change': 'render'
 	}
 });
 Adventure.ViewerActionList = Marionette.CollectionView.extend({
 	className: 'selection-list',
 	childView: Adventure.ViewerActionButton
 });
-
-/*
-
-Update name/text fields of at least the scene and page forms with an onupdate event to update the model name.
-
-*/

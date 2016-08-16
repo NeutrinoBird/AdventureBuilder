@@ -32,9 +32,11 @@ Adventure.Templates.ImageEdit = `
 		<input name="URL" type="hidden" value="<%= URL %>" />
 		<input name="width" type="hidden" value="<%= width %>" />
 		<input name="height" type="hidden" value="<%= height %>" />
-		<div class="form-group">
-			<div class="row">
-				<button class="full-button test-button">Test</button>
+		<div class="row">
+			<button class="full-button test-button">Test</button>
+		</div>
+		<div class="image-row">
+			<div class="image-maximum">
 				<div class="image-container">
 					<img src="<%= (URL=='') ? 'img/builder/icons/image.png' : 'uploads/'+URL %>" />
 				</div>
@@ -49,7 +51,9 @@ Adventure.Templates.ImageEdit = `
 	</form>
 `;
 Adventure.Templates.ImageButton = `
-	<img src="<%= URL != '' ? 'uploads/'+URL : 'img/builder/icons/image.png' %>" />
+	<div class="image-container">
+		<img src="<%= URL != '' ? 'uploads/'+URL : 'img/builder/icons/image.png' %>" />
+	</div>
 `;
 Adventure.Templates.ImageSelection = `
 	<form>

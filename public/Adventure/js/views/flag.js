@@ -84,13 +84,14 @@ Adventure.FlagEdit = Marionette.LayoutView.extend({
 	},
 	setImage: function(imageID){
 		if (imageID == 0 || imageID == '' || imageID == null || !Adventure.activeAdventure.get('images').get(imageID)){
-			this.$el.find(".image-button > img").attr("src",'img/builder/icons/image.png');
+			this.$el.find(".image-button > .image-container > img").attr("src",'img/builder/icons/image.png').removeAttr('style');
 		}else if(!Adventure.activeAdventure.get('images').get(imageID).get('URL')){
-			this.$el.find(".image-button > img").attr("src",'img/builder/icons/image.png');
+			this.$el.find(".image-button > .image-container > img").attr("src",'img/builder/icons/image.png').removeAttr('style');
 		}else{
 			this.model.set("imageID",imageID);
 			this.$el.find("[name=imageID]").val(imageID);
-			this.$el.find(".image-button > img").attr("src",'uploads/'+Adventure.activeAdventure.get('images').get(imageID).get('URL'));
+			this.$el.find(".image-button > .image-container > img").attr("src",'uploads/'+Adventure.activeAdventure.get('images').get(imageID).get('URL'));
+			Adventure.activeAdventure.get('images').get(imageID).applyAdjustment(this.$el.find(".image-button > .image-container > img"));
 		}
 	}
 });

@@ -130,13 +130,14 @@ Adventure.PageEdit = Marionette.LayoutView.extend({
 	},
 	setImage: function(imageID){
 		if (imageID == 0 || imageID == '' || imageID == null || !Adventure.activeAdventure.get('images').get(imageID)){
-			this.$el.find(".image-button > img").attr("src",'img/builder/icons/image.png');
+			this.$el.find(".image-button > .image-container > img").attr("src",'img/builder/icons/image.png').removeAttr('style');
 		}else if(!Adventure.activeAdventure.get('images').get(imageID).get('URL')){
-			this.$el.find(".image-button > img").attr("src",'img/builder/icons/image.png');
+			this.$el.find(".image-button > .image-container > img").attr("src",'img/builder/icons/image.png').removeAttr('style');
 		}else{
 			this.model.set("imageID",imageID);
 			this.$el.find("[name=imageID]").val(imageID);
-			this.$el.find(".image-button > img").attr("src",'uploads/'+Adventure.activeAdventure.get('images').get(imageID).get('URL'));
+			this.$el.find(".image-button > .image-container > img").attr("src",'uploads/'+Adventure.activeAdventure.get('images').get(imageID).get('URL'));
+			Adventure.activeAdventure.get('images').get(imageID).applyAdjustment(this.$el.find(".image-button > .image-container > img"));
 		}
 	},
 	jumpToPage: function(pageID){
@@ -158,11 +159,13 @@ Adventure.PageButton = Marionette.ItemView.extend({
 	},
 	onRender: function(){
 		this.$el.attr("data-scene",this.model.get("sceneID"));
+		this.$el.find(".image-thumbnail").hide();
 		if(parseInt(this.model.get("imageID")) > 0){
 			if (Adventure.activeAdventure.get("images").get(this.model.get("imageID"))){
-				this.$el.find(".select-image").attr("src","uploads/"+Adventure.activeAdventure.get("images").get(this.model.get("imageID")).get("URL"));
-			}else{
-				this.$el.find(".select-image").attr("src","img/builder/icons/page.png");
+				this.$el.find(".no-thumbnail").hide();
+				this.$el.find(".image-thumbnail").show();
+				this.$el.find(".image-thumbnail img").attr("src","uploads/"+Adventure.activeAdventure.get("images").get(this.model.get("imageID")).get("URL"));
+				Adventure.activeAdventure.get('images').get(this.model.get("imageID")).applyAdjustment(this.$el.find(".image-thumbnail img"));
 			}
 		}
 	},

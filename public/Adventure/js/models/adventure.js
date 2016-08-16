@@ -6,6 +6,9 @@ Adventure.AdventureModel = Backbone.Model.extend({
 		author : '',
 		imageID : '',
 		imageURL : '',
+		imageX : '50%',
+		imageY : '50%',
+		imageScale : '1',
 		published : 0
 	},
 	idAttribute: "ID",

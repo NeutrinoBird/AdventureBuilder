@@ -3,7 +3,13 @@ Adventure.Templates.AdventureListFramework = `
 	<div class="new-adventure"></div>
 `;
 Adventure.Templates.Adventure = `
-	<img class="select-image" src="<%= imageURL ? 'uploads/'+imageURL : 'img/builder/icons/adventure.png' %>" />
+	<%
+	if (imageURL){
+		print('<div class="image-thumbnail select-image"><div class="image-container"><img src="uploads/'+imageURL+'" /></div></div>');
+	}else{
+		print('<img class="no-thumbnail select-image" src="img/builder/icons/adventure.png" />');
+	}
+	%>
 	<div class="select-description">
 		<h2><%= title %></h2>
 		<p>By: <%= author %></p>
@@ -48,7 +54,11 @@ Adventure.Templates.AdventureEdit = `
 		</div>
 		<div class="form-group">
 			<label for="adventureImage<%= ID %>" class="image-label">Image</label>
-			<button class="image-button" ID="adventureImage<%= ID %>"><img /></button>
+			<button class="image-button" ID="adventureImage<%= ID %>">
+				<div class="image-container">
+					<img />
+				</div>
+			</button>
 		</div>
 		<div class="row">
 			<div class="col-sm-offset-1 col-sm-10">

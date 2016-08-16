@@ -16,7 +16,7 @@ Adventure.Templates.FlagEdit = `
 		<div class="form-group">
 			<label for="flagDescription<%= ID %>">Description</label>
 			<textarea class="form-control" name="description" ID="flagDescription<%= ID %>" maxlength="200" placeholder="Item Description"><%= description %></textarea>
-		</div>	
+		</div>
 
 		<div class="checkbox">
 			<label>
@@ -27,7 +27,11 @@ Adventure.Templates.FlagEdit = `
 
 		<div class="form-group">
 			<label for="flagImage<%= ID %>" class="image-label">Image</label>
-			<button class="image-button" ID="flagImage<%= ID %>"><img src="img/builder/icons/image.png" /></button>
+			<button class="image-button" ID="flagImage<%= ID %>">
+				<div class="image-container">
+					<img src="img/builder/icons/image.png" />
+				</div>
+			</button>
 			<input class="form-control" name="imageID" ID="flagImageeID<%= ID %>" type="hidden" value="<%= imageID %>" />
 		</div>
 
@@ -59,7 +63,7 @@ Adventure.Templates.FlagEdit = `
 			<button class="save-button full-button">Save</button>
 			<button class="delete-button full-button">Delete</button>
 		</div>
-	</form>				
+	</form>
 `;
 Adventure.Templates.FlagButton = `
 	<img src="img/builder/icons/flag.png" class="select-image" />

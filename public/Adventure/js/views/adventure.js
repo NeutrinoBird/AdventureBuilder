@@ -41,6 +41,13 @@ Adventure.CreateAdventureView = Marionette.ItemView.extend({
 Adventure.AdventureView = Marionette.ItemView.extend({
 	template: 'Adventure',
 	className: 'adventure-select clickable',
+	onRender: function(){
+		if(this.model.get("imageURL")){
+			this.$el.find("img").css("transform","translateX(-"+this.model.get("imageX")+") translateY(-"+this.model.get("imageY")+") scale("+this.model.get("imageScale")+")");
+			this.$el.find("img").css("-webkit-transform","translateX(-"+this.model.get("imageX")+") translateY(-"+this.model.get("imageY")+") scale("+this.model.get("imageScale")+")");
+			this.$el.find("img").css("-ms-transform","translateX(-"+this.model.get("imageX")+") translateY(-"+this.model.get("imageY")+") scale("+this.model.get("imageScale")+")");
+		}
+	},
 	events: {
 		'click': function(event){
 			event.preventDefault();
@@ -154,13 +161,19 @@ Adventure.AdventureEdit = Marionette.LayoutView.extend({
 	},
 	setImage: function(imageID){
 		if (imageID == 0 || imageID == '' || imageID == null || !this.model.get('images').get(imageID)){
-			this.$el.find(".image-button > img").attr("src",'img/builder/icons/image.png');
+			this.$el.find(".image-button > .image-container > img").attr("src",'img/builder/icons/image.png').removeAttr('style');
+			this.model.set("imageURL","");
 		}else if(!this.model.get('images').get(imageID).get('URL')){
-			this.$el.find(".image-button > img").attr("src",'img/builder/icons/image.png');
+			this.$el.find(".image-button > .image-container > img").attr("src",'img/builder/icons/image.png').removeAttr('style');
+			this.model.set("imageURL","");
 		}else{
 			this.model.set("imageID",imageID);
 			this.model.set("imageURL",this.model.get('images').get(imageID).get('URL'));
-			this.$el.find(".image-button > img").attr("src",'uploads/'+this.model.get("imageURL"));
+			this.model.set("imageX",this.model.get('images').get(imageID).get('centerX'));
+			this.model.set("imageY",this.model.get('images').get(imageID).get('centerY'));
+			this.model.set("imageScale",this.model.get('images').get(imageID).get('scale'));
+			this.$el.find(".image-button > .image-container > img").attr("src",'uploads/'+this.model.get("imageURL"));
+			this.model.get('images').get(imageID).applyAdjustment(this.$el.find(".image-button > .image-container > img"));
 		}
 	}
 });

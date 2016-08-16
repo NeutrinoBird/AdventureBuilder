@@ -62,11 +62,13 @@ Adventure.ImageEdit = Marionette.LayoutView.extend({
 		this.$el.find(".image-container img").css("-webkit-transform","translateX(-"+this.$el.find("[name='centerX']").val()+") translateY(-"+this.$el.find("[name='centerY']").val()+") scale("+this.$el.find("[name='scale']").val()+")");
 		this.$el.find(".image-container img").css("-ms-transform","translateX(-"+this.$el.find("[name='centerX']").val()+") translateY(-"+this.$el.find("[name='centerY']").val()+") scale("+this.$el.find("[name='scale']").val()+")");
 	}
-
 });
 Adventure.ImageButton = Marionette.ItemView.extend({
 	template: 'ImageButton',
 	className: 'selection',
+	onRender: function(){
+		this.model.applyAdjustment(this.$el.find("img"));
+	},
 	events: {
 		'click': function(event){
 			event.preventDefault();
