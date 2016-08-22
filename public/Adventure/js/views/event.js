@@ -101,13 +101,19 @@ Adventure.EventLinkButton = Marionette.ItemView.extend({
 });
 Adventure.EventLinkList = Marionette.CollectionView.extend({
 	childView: Adventure.EventLinkButton,
+	viewComparator: function(model){
+		return int(model.get('priority'));
+	},
+	collectionEvents: {
+		"sync": "render"
+	}
 });
 Adventure.EventLinkEdit = Marionette.LayoutView.extend({
 	template: 'EventLink',
 	className: 'event-edit',
 	ui: {
-		'saveButton': '.save-button',
-		'deleteButton': '.delete-button'
+		saveButton: '.save-button',
+		deleteButton: '.delete-button'
 	},
 	regions: {eventSelect:'.event-selectbox',eventEdit:'.event-form'},
 	onRender: function() {

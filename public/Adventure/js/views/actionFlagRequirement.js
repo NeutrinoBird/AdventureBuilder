@@ -3,8 +3,8 @@ Adventure.ActionFlagRequirementEdit = Marionette.LayoutView.extend({
 	className: 'requirement-edit',
 	regions: {flagSelect:'.flag-selectbox',conditionSelect:'.condition-selectbox'},
 	ui: {
-		'saveButton': '.save-button',
-		'deleteButton': '.delete-button'
+		saveButton: '.save-button',
+		deleteButton: '.delete-button'
 	},
 	initialize: function(){
 		viewHandle = this;

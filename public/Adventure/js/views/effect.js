@@ -48,10 +48,10 @@ Adventure.EffectEdit = Marionette.LayoutView.extend({
 	template: 'EffectEdit',
 	className: 'effect-edit',
 	ui: {
-		'imageButton': '.test-image-select',
-		'testButton': '.test-button',
-		'saveButton': '.save-button',
-		'deleteButton': '.delete-button'
+		imageButton: '.test-image-select',
+		testButton: '.test-button',
+		saveButton: '.save-button',
+		deleteButton: '.delete-button'
 	},
 	onRender: function() {
 		this.model.form = this.$el.find("form");
@@ -123,8 +123,8 @@ Adventure.EffectSelection = Marionette.LayoutView.extend({
 	className: 'effect-selection',
 	regions: {selectionView:'.selections'},
 	ui: {
-		'newButton': '.new-button',
-		'closeButton': '.close-button'
+		newButton: '.new-button',
+		closeButton: '.close-button'
 	},
 	onRender: function() {
 		this.showChildView('selectionView', new Adventure.EffectList({collection: this.collection}));

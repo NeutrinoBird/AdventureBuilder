@@ -46,6 +46,20 @@ Adventure.Templates.PageEdit = `
 				<button class="new-event-button full-button">New Event</button>
 			</div>
 		</div>
+		<div class="link-select">
+			<div class="form-group">
+			<label>Linking Pages</label>
+			<div class="form-field">
+				<div class="linkPage-selectbox"></div>
+				<button class="linking-page-button">
+					<img src="img/builder/icons/page-jump.png" class="select-image" />
+					<div class="select-description">
+						Jump to Page
+					</div>
+				</button>
+			</div>
+		</div>
+		</div>
 		<div class="errorRow"></div>
 		<div class="row">
 			<button class="save-button full-button">Save</button>
@@ -73,18 +87,17 @@ Adventure.Templates.PageEditLite = `
 		</div>
 		<div class="form-group">
 			<label for="pageImage<%= ID %>" class="image-label">Image</label>
-			<button class="image-button" ID="pageImage<%= ID %>"><img src="img/builder/icons/image.png" /></button>
+			<button class="image-button" ID="pageImage<%= ID %>">
+				<div class="image-container">
+					<img src="img/builder/icons/image.png" />
+				</div>
+			</button>
 			<input class="form-control" name="imageID" ID="pageImageID<%= ID %>" type="hidden" value="<%= imageID %>" />
 		</div>
 		<div class="form-group">
 			<label>Effect</label>
 			<div class="form-field effect-selectbox"></div>
 		</div>
-		<!--
-		<div class="row">
-			<p>When you are ready to add actions and effects, return to the previous page form and click the Jump to Page button.</p>
-		</div>
-		-->
 		<div class="errorRow"></div>
 		<div class="row">
 			<button class="save-button full-button">Save</button>

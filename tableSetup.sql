@@ -65,7 +65,7 @@ CREATE TABLE tblEffects(
 	name VARCHAR(50) NULL,
 	keyframes VARCHAR(1000) NULL,
 	timing VARCHAR(40) NOT NULL DEFAULT 'linear',
-	duration TINYINT UNSIGNED NOT NULL DEFAULT 1,
+	duration VARCHAR(10) NOT NULL DEFAULT '1',
 	delay TINYINT UNSIGNED NOT NULL DEFAULT 0,
 	loops TINYINT UNSIGNED NOT NULL DEFAULT 0,
 	direction VARCHAR(20) NOT NULL DEFAULT 'normal',
@@ -99,7 +99,7 @@ CREATE TABLE tblPages(
 	sceneID INT UNSIGNED NOT NULL DEFAULT 0,
 	pageTypeID TINYINT UNSIGNED NOT NULL DEFAULT 1,
 	imageID INT UNSIGNED NULL,
-	effectID INT UNSIGNED NOT NULL DEFAULT 0,	
+	effectID INT UNSIGNED NOT NULL DEFAULT 0,
 	dateCreated DATETIME NOT NULL DEFAULT NOW(),
 	isActive TINYINT(1) NOT NULL DEFAULT 1,
 	PRIMARY KEY(ID),
@@ -110,6 +110,20 @@ CREATE TABLE tblPages(
 	FOREIGN KEY (effectID) REFERENCES tblEffects(ID)
 );
 
+CREATE TABLE tblActionTypes(
+	ID TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
+	name VARCHAR(20) NOT NULL,
+	requiresText TINYINT(1) NOT NULL,
+	dateCreated DATETIME NOT NULL DEFAULT NOW(),
+	isActive TINYINT(1) NOT NULL DEFAULT 1,
+	PRIMARY KEY(ID)
+);
+INSERT INTO tblActionTypes (name, requiresText) VALUES
+('Action Box', 1),
+('Speech Bubble', 1),
+('Forward Arrow', 0),
+('Back Arrow', 0);
+
 CREATE TABLE tblTransitions(
 	ID TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
 	name VARCHAR(50) NOT NULL,
@@ -118,8 +132,8 @@ CREATE TABLE tblTransitions(
 	PRIMARY KEY(ID)
 );
 INSERT INTO tblTransitions (name) VALUES
-('None'),
 ('Fade'),
+('Cut'),
 ('Dip to Black'),
 ('Dip to White'),
 ('Pan Left'),
@@ -131,8 +145,8 @@ CREATE TABLE tblActions(
 	ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	pageID INT UNSIGNED NULL,
 	sceneID INT UNSIGNED NULL,
+	actionTypeID TINYINT UNSIGNED NOT NULL DEFAULT 1,
 	text VARCHAR(500) NULL,
-	isSpeech TINYINT(1) NOT NULL DEFAULT 0,
 	nextPageID INT UNSIGNED NOT NULL DEFAULT 0,
 	effectID INT UNSIGNED NOT NULL DEFAULT 0,
 	transitionID TINYINT UNSIGNED NOT NULL DEFAULT 1,
@@ -141,6 +155,7 @@ CREATE TABLE tblActions(
 	PRIMARY KEY(ID),
 	FOREIGN KEY (pageID) REFERENCES tblPages(ID),
 	FOREIGN KEY (sceneID) REFERENCES tblScenes(ID),
+	FOREIGN KEY (actionTypeID) REFERENCES tblActionTypes(ID),
 	FOREIGN KEY (effectID) REFERENCES tblEffects(ID)
 );
 
@@ -148,7 +163,7 @@ CREATE TABLE tblFlags(
 	ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	adventureID INT UNSIGNED NOT NULL,
 	name VARCHAR(50) NULL,
-	isItem TINYINT(1) NOT NULL DEFAULT 0,	
+	isItem TINYINT(1) NOT NULL DEFAULT 0,
 	description VARCHAR(200) NOT NULL DEFAULT '',
 	imageID INT UNSIGNED NULL,
 	isCounter TINYINT(1) NOT NULL DEFAULT 0,
@@ -184,7 +199,7 @@ INSERT INTO tblConditions (name, involvesFlag, involvesCounter, involvesRange) V
 	('Counter Greater Than or Equals', 1, 1, 0),
 	('Counter Within Range', 1, 1, 1),
 	('Counter Out of Range', 1, 1, 1),
-	('Random Chance %', 0, 1, 0);
+	('Random (0-100) Within Range', 0, 1, 1);
 
 CREATE TABLE tblActionFlagRequirements(
 	ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -219,7 +234,8 @@ INSERT INTO tblEventTypes (name, involvesFlag, involvesValue, involvesPage) VALU
 	('Increment Counter', 1, 1, 0),
 	('Jump to Page', 0, 0, 1),
 	('Store Current Page', 0, 0, 0),
-	('Jump to Stored Page', 0, 0, 0);
+	('Jump to Stored Page', 0, 0, 0),
+	('Stop Executing Events', 0, 0, 0);
 
 CREATE TABLE tblEvents(
 	ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -233,7 +249,7 @@ CREATE TABLE tblEvents(
 	conditionID TINYINT UNSIGNED NOT NULL DEFAULT 1,
 	conditionFlagID INT UNSIGNED NOT NULL DEFAULT 0,
 	counterValue INT NULL,
-	counterUpperValue INT NULL,	
+	counterUpperValue INT NULL,
 	dateCreated DATETIME NOT NULL DEFAULT NOW(),
 	isActive TINYINT(1) NOT NULL DEFAULT 1,
 	PRIMARY KEY(ID),

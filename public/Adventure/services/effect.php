@@ -7,11 +7,11 @@
 	try{
 		switch($_SERVER['REQUEST_METHOD']){
 			case 'POST':
-				$input = json_decode(file_get_contents('php://input'));		
+				$input = json_decode(file_get_contents('php://input'));
 				$validation = new Validation();
 				$validation->prime($input, ['adventureID']);
 				$validation->addVariable('adventureID',$input->adventureID ?: '','uint',true);
-				$validation->validate();		
+				$validation->validate();
 				if($validation->result['error'] == 1){
 					$response->JSON = '{"errorMsg":"'.$validation->result['errorMsg'].'","errorFields":'.json_encode($validation->result['errorFields']).'}';
 					$response->error = 1;
@@ -30,7 +30,7 @@
 				$validation->addVariable('name',$input->name,'string',true,50);
 				$validation->addVariable('keyframes',$input->keyframes,'string',true,1000);
 				$validation->addVariable('timing',$input->timing,'string',true,40);
-				$validation->addVariable('duration',$input->duration,'tinyint',true);
+				$validation->addVariable('duration',$input->duration,'decimal',true,10);
 				$validation->addVariable('delay',$input->delay,'tinyint',true);
 				$validation->addVariable('loops',$input->loops,'tinyint',true);
 				$validation->addVariable('direction',$input->direction,'string',true,20);
@@ -45,13 +45,13 @@
 					$effect->Update($valid->name, $valid->keyframes, $valid->timing, $valid->duration, $valid->delay, $valid->loops, $valid->direction, $valid->fillMode);
 				}
 				break;
-			case 'GET':			
+			case 'GET':
 				$input = (object)$_GET;
 				if(!isset($input->ID) || !is_numeric($input->ID)){
 					throw new Exception("Invalid ID.");
 				}
 				$effect = new Effect($userSession->user,$input->ID);
-				$response->JSON = json_encode($effect);				
+				$response->JSON = json_encode($effect);
 				break;
 			case 'DELETE':
 				$deleteID = substr($_SERVER['PATH_INFO'],1);
@@ -65,7 +65,7 @@
 				}
 				break;
 		}
-	} catch (Exception $e) {			
+	} catch (Exception $e) {
 		$response->JSON = '{"errorMsg":"'.$e->getMessage().'","errorFields":[]}';
 		$response->error = 1;
 	}

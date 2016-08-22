@@ -66,7 +66,12 @@ Adventure.Templates.FlagEdit = `
 	</form>
 `;
 Adventure.Templates.FlagButton = `
-	<img src="img/builder/icons/flag.png" class="select-image" />
+	<img src="img/builder/icons/flag.png" class="no-thumbnail select-image" />
+	<div class="image-thumbnail select-image">
+		<div class="image-container">
+			<img src="img/builder/icons/flag.png" />
+		</div>
+	</div>
 	<div class="select-description">
 		<p><%= name %></p>
 	</div>

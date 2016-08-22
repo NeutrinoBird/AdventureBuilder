@@ -25,7 +25,7 @@ Adventure.EffectModel = Backbone.Model.extend({
 			{name:"name",required:true,type:"string",maxLength:50},
 			{name:"keyframes",required:true,type:"string",maxLength:1000},
 			{name:"timing",required:true,type:"string",maxLength:40},
-			{name:"duration",required:true,type:"tinyint"},
+			{name:"duration",required:true,type:"decimal",maxLength:10},
 			{name:"delay",required:true,type:"tinyint"},
 			{name:"loops",required:true,type:"tinyint"},
 			{name:"direction",required:true,type:"string",maxLength:20},

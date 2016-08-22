@@ -41,16 +41,26 @@ form{
 			width: 100%;
 		}
 	}
+	.form-field{
+		label{
+			@extend .col-xs-12;
+			@extend .col-sm-3;
+		}
+	}
 }
 
 .errorRow{
 	@extend .outlined-text;
 	margin:10px;
 	clear: both;
-	mix-blend-mode: difference;
     font-size: 20px;
+    border: 8px solid transparent;
+	border-image: url('../img/viewer/border-inventory.gif') 8 round;
+	background: black;
+	background-clip: content-box;
     &:empty{
     	margin: 0px;
+    	display: none;
     }
 }
 
@@ -786,6 +796,13 @@ input[type='checkbox']{
 	.row{
 		margin-bottom: 20px;
 	}
+	.image-button{
+		width: 100px;
+		height: 100px;
+		.image-container{
+			padding-bottom: 100%;
+		}
+	}
 }
 
 .flag-selection{
@@ -819,6 +836,27 @@ input[type='checkbox']{
 			@extend .col-xs-10;
 			@extend .col-sm-10;
 			@extend .col-lg-11;
+		}
+		.image-thumbnail{
+			.image-container{
+				position: relative;
+				display:block;
+				width:100%;
+				padding-bottom: 100%;
+				overflow: hidden;
+				img{
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					width: 100%;
+					vertical-align: middle;
+					-ms-transform: translateX(-50%) translateY(-50%) scale(1.0);
+					-webkit-transform: translateX(-50%) translateY(-50%) scale(1.0);
+					transform: translateX(-50%) translateY(-50%) scale(1.0);
+					-webkit-filter: none;
+					filter: none;
+				}
+			}
 		}
 	}
 }
@@ -927,6 +965,33 @@ input[type='checkbox']{
 	}
 	.row{
 		margin-bottom: 20px;
+	}
+	.link-select{
+		.form-group{
+			margin-top: 8px;
+			label{
+				@extend .col-xs-12;
+				@extend .col-sm-12;
+				@extend .col-md-3;
+			}
+			.linkPage-selectbox{
+				display:inline-block;
+				vertical-align: middle;
+				margin-bottom: 8px;
+			}
+			button{
+				@extend h3;
+				display:inline-block;
+				vertical-align: middle;
+				height: 36px;
+				width: 175px;
+				margin-bottom: 8px;
+				font-size: 18px;
+				.select-description{
+					margin-top: 4px;
+				}
+			}
+		}
 	}
 }
 

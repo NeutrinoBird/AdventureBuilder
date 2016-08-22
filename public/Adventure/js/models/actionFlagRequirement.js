@@ -13,9 +13,9 @@ Adventure.ActionFlagRequirementModel = Backbone.Model.extend({
 		this.form = this.attributes;
 	},
 	updateName: function(){
-		var flagName = (!parseInt(this.get("flagID"))) ? "New Requirement" : Adventure.activeAdventure.get('flags').get(this.get("flagID")).get("name");
+		var flagName = (!int(this.get("flagID"))) ? "New Requirement" : Adventure.activeAdventure.get('flags').get(this.get("flagID")).get("name");
 		var newName = flagName;
-		switch(parseInt(this.get("conditionID"))){
+		switch(int(this.get("conditionID"))){
 			case 1: newName = 'Always Trigger';	break;
 			case 2: newName = flagName+' Active';	break;
 			case 3: newName = flagName+' Inactive'; break;
@@ -32,9 +32,9 @@ Adventure.ActionFlagRequirementModel = Backbone.Model.extend({
 	},
 	urlRoot: 'services/actionFlagRequirement.php',
 	validate: function(){
-		var flagRequired = (parseInt(this.form.find("[name='conditionID']").val()) > 1 && parseInt(this.form.find("[name='conditionID']").val()) < 11);
-		var counterRequired = parseInt(Adventure.conditions.get(this.form.find("[name='conditionID']").val()).get("involvesCounter"));
-		var rangeRequired = parseInt(Adventure.conditions.get(this.form.find("[name='conditionID']").val()).get("involvesRange"));
+		var flagRequired = (int(this.form.find("[name='conditionID']").val()) > 1 && int(this.form.find("[name='conditionID']").val()) < 11);
+		var counterRequired = int(Adventure.conditions.get(this.form.find("[name='conditionID']").val()).get("involvesCounter"));
+		var rangeRequired = int(Adventure.conditions.get(this.form.find("[name='conditionID']").val()).get("involvesRange"));
 		var validation = validate(this.form,[
 			{name:"flagID",required:flagRequired,type:"uint"},
 			{name:"counterValue",required:counterRequired,type:"int"},

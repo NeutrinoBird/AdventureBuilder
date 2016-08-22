@@ -1,3 +1,14 @@
+@font-face {
+  font-family: PressStartK;
+  src: url("../fonts/prstartk.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal; }
+@font-face {
+  font-family: PressStart;
+  src: url("../fonts/prstart.eot");
+  src: url("../fonts/prstart.eot?#iefix") format("embedded-opentype"), url("../fonts/prstart.woff") format("woff"), url("../fonts/prstart.ttf") format("truetype"), url("../fonts/prstart.svg#PressStart") format("svg");
+  font-weight: normal;
+  font-style: normal; }
 .adventure-container {
   display: block;
   position: fixed;
@@ -19,14 +30,14 @@
     box-sizing: border-box; }
   .adventure-container p {
     margin: 0 0 10px; }
-  .adventure-container .clickable, .adventure-container .adventure-box .adventure-content .selection-list .selection .action-box, .adventure-container .adventure-box .adventure-content .selection-list .selection .speech-bubble {
+  .adventure-container .clickable, .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .action-box, .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .speech-bubble {
     cursor: pointer;
     border-color: #000000;
     background-color: #000000;
     background-blend-mode: screen;
     transform: translate(0px, 0px);
     transition: border-color .5s, background-color .5s, box-shadow .5s, transform .5s; }
-  .adventure-container .clickable:hover, .adventure-container .adventure-box .adventure-content .selection-list .selection .action-box:hover, .adventure-container .adventure-box .adventure-content .selection-list .selection .speech-bubble:hover {
+  .adventure-container .clickable:hover, .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .action-box:hover, .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .speech-bubble:hover {
     border-color: #FFFF00;
     background-color: #888888;
     box-shadow: 0px 3px 10px black;
@@ -46,81 +57,99 @@
       left: 0px;
       padding: 32px;
       z-index: 50;
-      font-family: Press Start K, Arial;
+      font-family: PressStartK, PressStart, Arial;
       text-transform: uppercase;
       text-align: left; }
-      .adventure-container .adventure-box .adventure-content .image-container {
+      .adventure-container .adventure-box .adventure-content .image-manager {
         position: relative;
         display: block;
         width: 100%;
-        height: 350px;
-        overflow: hidden;
+        padding-bottom: 60%;
         margin-bottom: 16px; }
-        .adventure-container .adventure-box .adventure-content .image-container img {
+        .adventure-container .adventure-box .adventure-content .image-manager .image-container {
           position: absolute;
-          top: 50%;
-          left: 50%;
+          display: block;
           width: 100%;
-          vertical-align: middle;
-          -ms-transform: translateX(-50%) translateY(-50%) scale(1);
-          -webkit-transform: translateX(-50%) translateY(-50%) scale(1);
-          transform: translateX(-50%) translateY(-50%) scale(1);
-          -webkit-filter: none;
-          filter: none; }
-      .adventure-container .adventure-box .adventure-content .page-body {
+          padding-bottom: 60%;
+          overflow: hidden; }
+          .adventure-container .adventure-box .adventure-content .image-manager .image-container img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            vertical-align: middle;
+            -ms-transform: translateX(-50%) translateY(-50%) scale(1);
+            -webkit-transform: translateX(-50%) translateY(-50%) scale(1);
+            transform: translateX(-50%) translateY(-50%) scale(1);
+            -webkit-filter: none;
+            filter: none; }
+      .adventure-container .adventure-box .adventure-content .page-manager {
+        position: relative;
         background-color: rgba(0, 0, 0, 0.3);
         color: #FFFFFF;
         text-shadow: black 2px 2px;
-        padding: 16px;
-        margin-bottom: 16px; }
-        .adventure-container .adventure-box .adventure-content .page-body p:last-child {
-          margin-bottom: 0px; }
-      .adventure-container .adventure-box .adventure-content .selection-list .selection {
-        width: 83.33333%;
-        margin-left: 8.33333%; }
-        .adventure-container .adventure-box .adventure-content .selection-list .selection .action-box {
-          display: inline-block;
-          clear: right;
-          border: 3px solid black;
-          background-image: url("../img/builder/background-button.png");
-          box-shadow: 0px 0px 5px 0px black, 0px -1px 15px 0px #888 inset;
-          padding: 5px 10px 5px 10px;
-          margin-bottom: 5px; }
-        .adventure-container .adventure-box .adventure-content .selection-list .selection .speech-bubble {
-          display: inline-block;
-          clear: right;
-          background: #FFFFFF;
-          border: 3px solid black;
-          border-radius: 15px;
-          box-shadow: 0px 0px 5px 0px black, 0px -1px 15px 0px #888 inset;
-          padding: 5px 10px 5px 10px;
-          margin-bottom: 15px; }
-          .adventure-container .adventure-box .adventure-content .selection-list .selection .speech-bubble:hover {
-            background: #FFFFFF; }
-          .adventure-container .adventure-box .adventure-content .selection-list .selection .speech-bubble:before {
-            content: ' ';
-            position: absolute;
-            width: 0;
-            height: 0;
-            left: 17px;
-            top: 100%;
-            border: 10px solid;
-            border-color: black transparent transparent black;
-            transition: border-color .5s; }
-          .adventure-container .adventure-box .adventure-content .selection-list .selection .speech-bubble:hover:before {
-            border-color: yellow transparent transparent yellow; }
-          .adventure-container .adventure-box .adventure-content .selection-list .selection .speech-bubble:after {
-            content: ' ';
-            position: absolute;
-            width: 0;
-            height: 0;
-            left: 20px;
-            top: 100%;
-            border: 6px solid;
-            border-color: #bfbfbf transparent transparent #bfbfbf;
-            transition: border-color .5s; }
-          .adventure-container .adventure-box .adventure-content .selection-list .selection .speech-bubble:hover:after {
-            border-color: white transparent transparent white; }
+        overflow: hidden; }
+        .adventure-container .adventure-box .adventure-content .page-manager .page-body {
+          position: absolute;
+          padding: 16px; }
+          .adventure-container .adventure-box .adventure-content .page-manager .page-body p:last-child {
+            margin-bottom: 0px; }
+      .adventure-container .adventure-box .adventure-content .action-manager {
+        position: relative;
+        overflow: hidden; }
+        .adventure-container .adventure-box .adventure-content .action-manager .actions {
+          position: absolute;
+          width: 100%;
+          margin-top: 16px; }
+          .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection {
+            width: 83.33333%;
+            margin-left: 8.33333%; }
+            .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .action-box {
+              display: inline-block;
+              clear: right;
+              border: 3px solid black;
+              background-image: url("../img/builder/background-button.png");
+              box-shadow: 0px 0px 5px 0px black, 0px -1px 15px 0px #888 inset;
+              padding: 5px 10px 5px 10px;
+              margin-bottom: 5px; }
+              .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .action-box img {
+                height: 14px;
+                vertical-align: middle; }
+            .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .speech-bubble {
+              display: inline-block;
+              clear: right;
+              background: #FFFFFF;
+              border: 3px solid black;
+              border-radius: 15px;
+              box-shadow: 0px 0px 5px 0px black, 0px -1px 15px 0px #888 inset;
+              padding: 5px 10px 5px 10px;
+              margin-bottom: 15px; }
+              .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .speech-bubble:hover {
+                background: #FFFFFF; }
+              .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .speech-bubble:before {
+                content: ' ';
+                position: absolute;
+                width: 0;
+                height: 0;
+                left: 17px;
+                top: 100%;
+                border: 10px solid;
+                border-color: black transparent transparent black;
+                transition: border-color .5s; }
+              .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .speech-bubble:hover:before {
+                border-color: yellow transparent transparent yellow; }
+              .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .speech-bubble:after {
+                content: ' ';
+                position: absolute;
+                width: 0;
+                height: 0;
+                left: 20px;
+                top: 100%;
+                border: 6px solid;
+                border-color: #bfbfbf transparent transparent #bfbfbf;
+                transition: border-color .5s; }
+              .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .speech-bubble:hover:after {
+                border-color: white transparent transparent white; }
     .adventure-container .adventure-box .adventure-background, .adventure-container .adventure-box .adventure-background-transition {
       display: block;
       position: absolute;
@@ -146,5 +175,58 @@
     .adventure-container .adventure-box .goodEnding {
       border-image: url("../img/viewer/border-goodEnding.gif") 16 round;
       background: url("../img/viewer/background-goodEnding.gif") repeat; }
+    .adventure-container .adventure-box .inventory {
+      position: relative;
+      display: inline-block;
+      min-width: 105px;
+      max-width: 83.33333%;
+      min-height: 16px;
+      margin-left: 8.33333%;
+      margin-top: 8px;
+      margin-bottom: 8px;
+      border: 8px solid transparent;
+      border-image: url("../img/viewer/border-inventory.gif") 8 round;
+      background: black;
+      background-clip: content-box; }
+      .adventure-container .adventure-box .inventory .item {
+        position: relative;
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        margin: 8px; }
+        .adventure-container .adventure-box .inventory .item .item-image-container {
+          position: relative;
+          display: block;
+          width: 100%;
+          padding-bottom: 100%;
+          overflow: hidden; }
+          .adventure-container .adventure-box .inventory .item .item-image-container img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            vertical-align: middle;
+            -ms-transform: translateX(-50%) translateY(-50%) scale(1);
+            -webkit-transform: translateX(-50%) translateY(-50%) scale(1);
+            transform: translateX(-50%) translateY(-50%) scale(1);
+            -webkit-filter: none;
+            filter: none; }
+        .adventure-container .adventure-box .inventory .item .quantity {
+          position: absolute;
+          bottom: 0px;
+          right: 0px;
+          font-size: 8px;
+          color: white;
+          font-size: 8px;
+          color: white;
+          text-shadow: black 1px 1px, black -1px 1px, black 1px -1px, black -1px -1px; }
+      .adventure-container .adventure-box .inventory:before {
+        position: absolute;
+        top: -8px;
+        left: 8px;
+        content: "Inventory";
+        font-size: 8px;
+        color: white;
+        text-shadow: black 0px 0px 3px, black 1px 1px, black -1px 1px, black 1px -1px, black -1px -1px; }
 
 /*# sourceMappingURL=AdventureViewer.css.map */

@@ -9,3 +9,6 @@ Adventure.addCSSSupport = function(CSSstring){
 	keyframes = keyframes.replace(/filter: ([^;]+);/g,'filter: $1; -webkit-filter: $1; -moz-filter: $1;');
 	return keyframes;
 };
+function int(value){
+	return parseInt(value) || 0;
+}

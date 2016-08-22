@@ -15,6 +15,7 @@ Adventure.PageModel = Backbone.Model.extend({
 		this.form = this.attributes;
 		this.handleBlankName();
 		this.on('sync', this.handleBlankName);
+		this.set("filteredText",this.get('text').replace(/\r?\n/g,'<br>'));
 	},
 	initSubItems: function(){
 		if(Array.isArray(this.get('actions'))){

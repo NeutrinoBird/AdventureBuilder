@@ -1,9 +1,9 @@
 Adventure.ActionModel = Backbone.Model.extend({
 	defaults: {
-		text : '',
-		isSpeech : 0,
-		nextPageID : 0,
-		effectID : 0,
+		actionTypeID: 1,
+		text: '',
+		nextPageID: 0,
+		effectID: 0,
 		transitionID: 1,
 		actionFlagRequirements: [],
 		actionEvents: []
@@ -31,8 +31,8 @@ Adventure.ActionModel = Backbone.Model.extend({
 	urlRoot: 'services/action.php',
 	validate: function(){
 		var validation = validate(this.form,[
+			{name:"actionTypeID",required:true,type:"tinyint"},
 			{name:"text",required:true,type:"string",maxLength:500},
-			{name:"isSpeech",required:true,type:"bit"},
 			{name:"nextPageID",required:true,type:"uint"},
 			{name:"effectID",required:false,type:"uint"},
 			{name:"transitionID",required:true,type:"tinyint"}

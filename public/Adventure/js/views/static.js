@@ -99,3 +99,32 @@ Adventure.EventTypeSelect = Marionette.CollectionView.extend({
 		}
 	}
 });
+
+Adventure.ActionTypeSelection = Marionette.ItemView.extend({
+	template: 'Option',
+	tagName: 'option',
+	onRender: function() {
+		this.$el.val(this.model.get("ID"));
+	}
+});
+Adventure.ActionTypeSelect = Marionette.CollectionView.extend({
+	tagName: 'select',
+	className: 'form-control',
+	childView: Adventure.ActionTypeSelection,
+	initialize: function(options){
+		this.collection = Adventure.actionTypes;
+		this.$el.attr("name","actionTypeID");
+	},
+	onRender: function(){
+		if(this.getOption("selected") !== ""){
+			this.$el.val(this.getOption("selected"));
+		}
+	},
+	events: {
+		'change': function(action){
+			if(this.getOption('onChange')){
+				this.getOption('onChange')();
+			}
+		}
+	}
+});

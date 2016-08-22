@@ -94,8 +94,8 @@ Adventure.SceneSelection = Marionette.LayoutView.extend({
 	className: 'scene-selection',
 	regions: {selectionView:'.selections'},
 	ui: {
-		'newButton': '.new-button',
-		'closeButton': '.close-button'
+		newButton: '.new-button',
+		closeButton: '.close-button'
 	},
 	onRender: function() {
 		this.showChildView('selectionView', new Adventure.SceneList({collection: this.collection}));
@@ -126,11 +126,11 @@ Adventure.SceneEdit = Marionette.LayoutView.extend({
 	className: 'scene-edit',
 	regions: {actionSelection:'.action-select .selections',eventSelection:'.event-select .selections'},
 	ui: {
-		'nameField': '[name="name"]',
-		'newActionButton': '.new-action-button',
-		'newEventButton': '.new-event-button',
-		'saveButton': '.save-button',
-		'deleteButton': '.delete-button'
+		nameField: '[name="name"]',
+		newActionButton: '.new-action-button',
+		newEventButton: '.new-event-button',
+		saveButton: '.save-button',
+		deleteButton: '.delete-button'
 	},
 	onRender: function() {
 		this.model.form = this.$el.find("form");

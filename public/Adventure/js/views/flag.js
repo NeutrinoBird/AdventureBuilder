@@ -48,10 +48,10 @@ Adventure.FlagEdit = Marionette.LayoutView.extend({
 	template: 'FlagEdit',
 	className: 'flag-edit',
 	ui: {
-		'isCounterBox': '[name="isCounter"]',
-		'imageButton': '.image-button',
-		'saveButton': '.save-button',
-		'deleteButton': '.delete-button'
+		isCounterBox: '[name="isCounter"]',
+		imageButton: '.image-button',
+		saveButton: '.save-button',
+		deleteButton: '.delete-button'
 	},
 	onRender: function() {
 		var viewHandle = this;
@@ -98,12 +98,23 @@ Adventure.FlagEdit = Marionette.LayoutView.extend({
 Adventure.FlagButton = Marionette.ItemView.extend({
 	template: 'FlagButton',
 	className: 'selection',
+	onRender: function(){
+		this.$el.find(".image-thumbnail").hide();
+		if(int(this.model.get("imageID")) > 0){
+			if (Adventure.activeAdventure.get("images").get(this.model.get("imageID"))){
+				this.$el.find(".no-thumbnail").hide();
+				this.$el.find(".image-thumbnail").show();
+				this.$el.find(".image-thumbnail img").attr("src","uploads/"+Adventure.activeAdventure.get("images").get(this.model.get("imageID")).get("URL"));
+				Adventure.activeAdventure.get('images').get(this.model.get("imageID")).applyAdjustment(this.$el.find(".image-thumbnail img"));
+			}
+		}
+	},
 	events: {
 		'click': function(event){
 			event.preventDefault();
 			Adventure.Main.renderFlagEdit(this.model);
 			return false;
-		}
+		}//TODO: Add flag button icons for flags with images
 	},
 	modelEvents: {
 		'change': 'render'
@@ -117,8 +128,8 @@ Adventure.FlagSelection = Marionette.LayoutView.extend({
 	className: 'flag-selection',
 	regions: {selectionView:'.selections'},
 	ui: {
-		'newButton': '.new-button',
-		'closeButton': '.close-button'
+		newButton: '.new-button',
+		closeButton: '.close-button'
 	},
 	onRender: function() {
 		this.showChildView('selectionView', new Adventure.FlagList({collection: this.collection}));

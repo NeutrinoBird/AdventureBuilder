@@ -170,24 +170,28 @@ Adventure.StatusDisplay = Marionette.LayoutView.extend({
 Adventure.OptionsMenu = Marionette.LayoutView.extend({
 	template: 'OptionsMenu',
 	el: '#options-menu',
+	ui: {
+		effectButton: ".effect-button",
+		newUserButton: ".new-user-button"
+	},
 	onRender: function() {
-		var viewHandle = this;
-		this.$el.find(".effect-button").click(function(event){
+		if(!Adventure.admin){
+			this.$el.find(".new-user-button").remove();
+		}
+	},
+	events: {
+		'click @ui.effectButton': function(event){
 			event.preventDefault();
 			$("body").toggleClass("no-effect");
-			$(this).html($("body.no-effect").length ? "Effects On" : "Effects Off");
+			this.$el.find(".effect-button").html($("body.no-effect").length ? "Effects On" : "Effects Off");
 			return false;
-		});
-		if(Adventure.admin){
-			this.$el.find(".new-user-button").click(function(event){
-				event.preventDefault();
-				if(Adventure.admin && $(".login").length == 0){
-					Adventure.Main.renderNewUser();
-				}
-				return false;
-			});
-		}else{
-			this.$el.find(".new-user-button").remove();
+		},
+		'click @ui.newUserButton': function(event){
+			event.preventDefault();
+			if(Adventure.admin && $(".login").length == 0){
+				Adventure.Main.renderNewUser();
+			}
+			return false;
 		}
 	}
 });
@@ -195,14 +199,17 @@ Adventure.OptionsMenu = Marionette.LayoutView.extend({
 Adventure.Login = Marionette.LayoutView.extend({
 	template: 'Login',
 	className: 'login',
-	onRender: function() {
-		var viewHandle = this;
-		this.$el.find(".login-button").click(function(event){
+	ui: {
+		loginButton: ".login-button",
+	},
+	events: {
+		'click @ui.loginButton': function(event){
 			event.preventDefault();
+			var viewHandle = this;
 			$.ajax({
 				type: "POST",
 				url: "services/user.php",
-				data: {username: viewHandle.$el.find("[name='username']").val() ,password: viewHandle.$el.find("[name='password']").val()},
+				data: {username: this.$el.find("[name='username']").val(), password: this.$el.find("[name='password']").val()},
 				success: function(response){
 					Adventure.userID = response.userID;
 					Adventure.admin = response.isAdmin;
@@ -213,21 +220,24 @@ Adventure.Login = Marionette.LayoutView.extend({
 				viewHandle.$el.find(".errorRow").html(response.responseJSON.errorMsg);
 			});
 			return false;
-		})
+		}
 	}
 });
 
 Adventure.SessionLogin = Marionette.LayoutView.extend({
 	template: 'SessionLogin',
 	className: 'login',
-	onRender: function() {
-		var viewHandle = this;
-		this.$el.find(".login-button").click(function(event){
+	ui: {
+		loginButton: ".login-button",
+	},
+	events: {
+		'click @ui.loginButton': function(event){
 			event.preventDefault();
+			var viewHandle = this;
 			$.ajax({
 				type: "POST",
 				url: "services/user.php",
-				data: {username: viewHandle.$el.find("[name='username']").val() ,password: viewHandle.$el.find("[name='password']").val()},
+				data: {username: this.$el.find("[name='username']").val(), password: this.$el.find("[name='password']").val()},
 				success: function(response){
 					if (Adventure.userID != response.userID){
 						location.reload();
@@ -240,21 +250,25 @@ Adventure.SessionLogin = Marionette.LayoutView.extend({
 				viewHandle.$el.find(".errorRow").html(response.responseJSON.errorMsg);
 			});
 			return false;
-		});
+		}
 	}
 });
 
 Adventure.NewUser = Marionette.LayoutView.extend({
 	template: 'NewUser',
 	className: 'login',
-	onRender: function() {
-		var viewHandle = this;
-		this.$el.find(".login-button").click(function(event){
+	ui: {
+		loginButton: ".login-button",
+		closeButton: ".close-button"
+	},
+	events: {
+		'click @ui.loginButton': function(event){
 			event.preventDefault();
+			var viewHandle = this;
 			$.ajax({
 				type: "POST",
 				url: "services/newUser.php",
-				data: {username: viewHandle.$el.find("[name='username']").val() ,password: viewHandle.$el.find("[name='password']").val()},
+				data: {username: this.$el.find("[name='username']").val(), password: this.$el.find("[name='password']").val()},
 				success: function(response){
 					Adventure.Main.initiateRemoval(viewHandle);
 				},
@@ -263,11 +277,11 @@ Adventure.NewUser = Marionette.LayoutView.extend({
 				viewHandle.$el.find(".errorRow").html(response.responseJSON.errorMsg);
 			});
 			return false;
-		})
-		this.$el.find(".close-button").click(function(event){
+		},
+		'click @ui.closeButton': function(event){
 			event.preventDefault();
-			Adventure.Main.initiateRemoval(viewHandle);
+			Adventure.Main.initiateRemoval(this);
 			return false;
-		});
+		}
 	}
 });

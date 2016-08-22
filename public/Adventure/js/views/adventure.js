@@ -2,20 +2,20 @@ Adventure.CreateAdventureView = Marionette.ItemView.extend({
 	template: 'AdventureCreate',
 	className: 'adventure-edit',
 	ui: {
-		'createAdventureStart': '.create-adventure-start',
-		'createAdventureButton': '.create-adventure button.create'
+		createAdventureStart: '.create-adventure-start',
+		createAdventureButton: '.create-adventure button.create'
 	},
 	onRender: function() {
 		this.$el.find(".create-adventure").hide();
 	},
 	events: {
-		'change @ui.createAdventureStart': function(event){
+		'click @ui.createAdventureStart': function(event){
 			event.preventDefault();
 			this.$el.find(".create-adventure-start").hide();
 			this.$el.find(".create-adventure").slideDown();
 			return false;
 		},
-		'change @ui.createAdventureButton': function(event){
+		'click @ui.createAdventureButton': function(event){
 			event.preventDefault();
 			var viewHandle = this;
 			var validation = validate(this.$el.find("form"),[
@@ -96,20 +96,22 @@ Adventure.AdventureEdit = Marionette.LayoutView.extend({
 	className: 'adventure-edit',
 	regions: {pageList:'.page-select .selections', sceneFilter:'.page-select .scene-selectbox'},
 	ui: {
-		'saveButton': '.saveClose',
-		'imageButton': '.image-button',
-		'newPageButton': '.page-select button',
-		'newSceneButton': '.scene-select button',
-		'newImageButton': '.image-select button',
-		'newFlagButton': '.flag-select button',
-		'newEffectButton': '.effect-select button'
+		saveButton: '.saveClose',
+		imageButton: '.image-button',
+		newPageButton: '.page-select button',
+		newSceneButton: '.scene-select button',
+		newImageButton: '.image-select button',
+		newFlagButton: '.flag-select button',
+		newEffectButton: '.effect-select button'
 	},
 	onRender: function() {
 		var viewHandle = this;
 		this.model.form = this.$el.find("form");
 		this.setImage(this.model.get("imageID"));
 		this.listenTo(Adventure.activeAdventure.get('images'), 'change destroy', function(model){
-			viewHandle.setImage(model.id);
+			if(model.id == viewHandle.model.get("imageID")){
+				viewHandle.setImage(model.id);
+			}
 		});
 		this.showChildView('pageList', new Adventure.PageList({collection: this.model.get("pages")}));
 		this.showChildView('sceneFilter', new Adventure.SceneSelect({filterBase: this.$el, filterElement: ".page-select .selection"}));

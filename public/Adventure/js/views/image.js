@@ -3,8 +3,8 @@ Adventure.ImageUpload = Marionette.LayoutView.extend({
 	className: 'image-edit',
 	regions: {selectionView:'.selections'},
 	ui: {
-		'saveButton': '.save-button',
-		'deleteButton': '.delete-button'
+		saveButton: '.save-button',
+		deleteButton: '.delete-button'
 	},
 	events: {
 		'click @ui.saveButton': function(event){
@@ -25,10 +25,10 @@ Adventure.ImageEdit = Marionette.LayoutView.extend({
 	className: 'image-edit',
 	regions: {selectionView:'.selections'},
 	ui: {
-		'testButton': '.test-button',
-		'uploadButton': '.upload-button',
-		'saveButton': '.save-button',
-		'deleteButton': '.delete-button'
+		testButton: '.test-button',
+		uploadButton: '.upload-button',
+		saveButton: '.save-button',
+		deleteButton: '.delete-button'
 	},
 	onRender: function() {
 		this.model.form = this.$el.find("form");
@@ -96,8 +96,8 @@ Adventure.ImageSelection = Marionette.LayoutView.extend({
 	className: 'image-selection',
 	regions: {selectionView:'.selections'},
 	ui: {
-		'newButton': '.new-button',
-		'closeButton': '.close-button'
+		newButton: '.new-button',
+		closeButton: '.close-button'
 	},
 	onRender: function() {
 		this.showChildView('selectionView', new Adventure.ImageList({collection: this.collection, selectionView: this}));

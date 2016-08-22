@@ -33,12 +33,26 @@ Adventure.Conditions = Backbone.Collection.extend({
 
 Adventure.EventTypeModel = Backbone.Model.extend({
 	defaults:{
-		name: ''
+		name: '',
+		involvesFlag: 0,
+		involvesValue: 0,
+		involvesPage: 0
 	},
 	idAttribute: "ID",
 });
 Adventure.EventTypes = Backbone.Collection.extend({
-	model: Adventure.PageTypeModel
+	model: Adventure.EventTypeModel
+});
+
+Adventure.ActionTypeModel = Backbone.Model.extend({
+	defaults:{
+		name: '',
+		requiresText: 0
+	},
+	idAttribute: "ID",
+});
+Adventure.ActionTypes = Backbone.Collection.extend({
+	model: Adventure.ActionTypeModel
 });
 
 Adventure.initStatic = function(){
@@ -50,9 +64,10 @@ Adventure.initStatic = function(){
 			Adventure.transitions = new Adventure.Transitions(response.transitions);
 			Adventure.conditions = new Adventure.Conditions(response.conditions);
 			Adventure.eventTypes = new Adventure.EventTypes(response.eventTypes);
+			Adventure.actionTypes = new Adventure.ActionTypes(response.actionTypes);
 		},
 		dataType: 'json'
 	}).fail(function(response){
 		alert("An error occurred while retrieving static data.");
-	});	
+	});
 }

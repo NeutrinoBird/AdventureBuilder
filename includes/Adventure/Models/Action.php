@@ -5,8 +5,8 @@
 		public $ID;
 		public $pageID;
 		public $sceneID;
+		public $actionTypeID;
 		public $text;
-		public $isSpeech;
 		public $nextPageID;
 		public $effectID;
 		public $transitionID;
@@ -21,8 +21,8 @@
 			$this->ID = NULL;
 			$this->pageID = NULL;
 			$this->sceneID = NULL;
+			$this->actionTypeID = 1;
 			$this->text = '';
-			$this->isSpeech = 0;
 			$this->nextPageID = 0;
 			$this->effectID = 0;
 			$this->transitionID = 1;
@@ -45,7 +45,7 @@
 						 JOIN tblAdventures ON tblAdventures.ID = tblPages.adventureID
 						 WHERE tblPages.ID = :pageID
 						 AND tblAdventures.userID = :userID
-						 AND tblPages.isActive = 1;', 
+						 AND tblPages.isActive = 1;',
 						[
 							'pageID'=>$pageID,
 							'userID'=>$user->ID
@@ -58,7 +58,7 @@
 						 JOIN tblAdventures ON tblAdventures.ID = tblScenes.adventureID
 						 WHERE tblScenes.ID = :sceneID
 						 AND tblAdventures.userID = :userID
-						 AND tblScenes.isActive = 1;', 
+						 AND tblScenes.isActive = 1;',
 						[
 							'sceneID'=>$sceneID,
 							'userID'=>$user->ID
@@ -74,7 +74,7 @@
 			return $newAction;
 		}
 
-		private function Insert($pageID = 0, $sceneID = 0){			
+		private function Insert($pageID = 0, $sceneID = 0){
 			if ($pageID > 0){
 				$this->pageID = $pageID;
 				$this->ID = parent::$db->queryInsertGetID(
@@ -103,12 +103,12 @@
 		public static function GetAllActions($adventureID){
 			$actionSet = [];
 			$actions = parent::$db->queryGetAll(
-				'SELECT tblActions.ID, tblActions.pageID, tblActions.sceneID, tblActions.text, tblActions.isSpeech, tblActions.nextPageID, tblActions.effectID, tblActions.transitionID
+				'SELECT tblActions.ID, tblActions.pageID, tblActions.sceneID, tblActions.actionTypeID, tblActions.text, tblActions.nextPageID, tblActions.effectID, tblActions.transitionID
 				 FROM tblActions
 				 LEFT JOIN tblPages ON tblPages.ID = tblActions.pageID
 				 LEFT JOIN tblScenes ON tblScenes.ID = tblActions.sceneID
 				 WHERE (tblPages.adventureID = :adventureID OR tblScenes.adventureID = :adventureID)
-				 AND tblActions.isActive = 1;', 
+				 AND tblActions.isActive = 1;',
 				[
 					'adventureID'=>$adventureID,
 				]
@@ -118,14 +118,14 @@
 				$actionSet[$action->ID]->ID = $action->ID;
 				$actionSet[$action->ID]->pageID = $action->pageID;
 				$actionSet[$action->ID]->sceneID = $action->sceneID;
+				$actionSet[$action->ID]->actionTypeID = $action->actionTypeID;
 				$actionSet[$action->ID]->text = $action->text;
-				$actionSet[$action->ID]->isSpeech = $action->isSpeech;
 				$actionSet[$action->ID]->nextPageID = $action->nextPageID;
 				$actionSet[$action->ID]->effectID = $action->effectID;
 				$actionSet[$action->ID]->transitionID = $action->transitionID;
 			}
 			return $actionSet;
-		}	
+		}
 
 		private function Load($user, $ID){
 			if(is_null($user) || !is_numeric($ID))
@@ -133,14 +133,14 @@
 			if(!$user->isAdmin){
 				$result = parent::$db->queryGetRow(
 					'SELECT 1
-					 FROM tblActions			 
+					 FROM tblActions
 					 LEFT JOIN tblPages ON tblPages.ID = tblActions.pageID
 					 LEFT JOIN tblScenes ON tblScenes.ID = tblActions.sceneID
 					 JOIN tblAdventures ON tblAdventures.ID = tblPages.adventureID
 					 					OR tblAdventures.ID = tblScenes.adventureID
 					 WHERE tblActions.ID = :ID
 					 AND tblAdventures.userID = :userID
-					 AND tblActions.isActive = 1;', 
+					 AND tblActions.isActive = 1;',
 					[
 						'ID'=>$ID,
 						'userID'=>$user->ID
@@ -151,20 +151,20 @@
 				}
 			}
 			$result = parent::$db->queryGetRow(
-				'SELECT pageID, sceneID, text, isSpeech, nextPageID, effectID, transitionID
+				'SELECT pageID, sceneID, actionTypeID, text, nextPageID, effectID, transitionID
 				 FROM tblActions
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
 					'ID'=>$ID
 				]
-			);			
+			);
 			if ($result){
 				$this->ID = $ID;
-				$this->pageID = $result->pageID;	
-				$this->sceneID = $result->sceneID;	
+				$this->pageID = $result->pageID;
+				$this->sceneID = $result->sceneID;
+				$this->actionTypeID = $result->actionTypeID;
 				$this->text = $result->text;
-				$this->isSpeech = $result->isSpeech;								
 				$this->nextPageID = $result->nextPageID;
 				$this->effectID = $result->effectID;
 				$this->transitionID = $result->transitionID;
@@ -174,26 +174,26 @@
 			}
 		}
 
-		public function Update($text, $isSpeech, $nextPageID, $effectID, $transitionID){
+		public function Update($actionTypeID, $text, $nextPageID, $effectID, $transitionID){
+			$this->actionTypeID = $actionTypeID;
 			$this->text = htmlentities($text);
-			$this->isSpeech = $isSpeech;								
 			$this->nextPageID = $nextPageID;
 			$this->effectID = $effectID;
 			$this->transitionID = $transitionID;
 			return parent::$db->query(
 				'UPDATE tblActions
-				 SET text = :text,
-				 isSpeech = :isSpeech, 
-				 nextPageID = :nextPageID, 
-				 effectID = :effectID, 
+				 SET actionTypeID = :actionTypeID,
+				 text = :text,
+				 nextPageID = :nextPageID,
+				 effectID = :effectID,
 				 transitionID = :transitionID
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
-					'text'=>$this->text, 
-					'isSpeech'=>$this->isSpeech, 
-					'nextPageID'=>$this->nextPageID, 
-					'effectID'=>$this->effectID, 
+					'actionTypeID'=>$this->actionTypeID,
+					'text'=>$this->text,
+					'nextPageID'=>$this->nextPageID,
+					'effectID'=>$this->effectID,
 					'transitionID'=>$this->transitionID,
 					'ID'=>$this->ID
 				]
@@ -206,17 +206,17 @@
 				 SET isActive = 0
 				 WHERE ID = :ID;
 
-				 UPDATE tblActionFlagRequirements	 
+				 UPDATE tblActionFlagRequirements
 				 SET isActive = 0
 				 WHERE actionID = :ID;
 
-				 UPDATE tblActionEvents 
+				 UPDATE tblActionEvents
 				 SET isActive = 0
-				 WHERE actionID = :ID;', 
+				 WHERE actionID = :ID;',
 				['ID'=>$this->ID]
 			);
 		}
-			
+
 	}
 
 ?>
