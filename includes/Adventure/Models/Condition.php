@@ -11,7 +11,7 @@
 
 		public static function GetConditions(){
 			return parent::$db->queryGetAll(
-				'SELECT ID, name, involvesFlag, involvesCounter, involvesRange
+				'SELECT ID, name, involvesFlag, involvesCounter, involvesRange, involvesPage
 				 FROM tblConditions
 				 WHERE isActive = 1;'
 			);

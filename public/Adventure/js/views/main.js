@@ -104,9 +104,10 @@ Adventure.MainView = Marionette.CollectionView.extend({
 			Adventure.Menu = new Adventure.Adventures();
 			Adventure.Menu.fetch({
 				success: function(){
-					Adventure.initStatic();
-					mainView.renderAdventureListFramework();
-					Adventure.Options.render();
+					Adventure.initStatic(function(){
+						mainView.renderAdventureListFramework();
+						Adventure.Options.render();
+					});
 				},
 				error: function(model, response, options){
 					Adventure.handleInvalidInput(response.responseJSON);

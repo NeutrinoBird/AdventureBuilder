@@ -182,7 +182,7 @@
 		public static function GetList($user){
 			if ($user->isAdmin){
 				return parent::$db->queryGetAll(
-					'SELECT tblAdventures.ID, tblAdventures.title, tblAdventures.description, tblAdventures.published, tblUsers.username as author, tblImages.URL as imageURL, tblImages.centerX as imageX, tblImages.centerY as imageY, tblImages.scale as imageScale
+					'SELECT tblAdventures.ID, tblAdventures.title, tblAdventures.description, tblAdventures.hashKey, tblAdventures.published, tblUsers.username as author, tblImages.URL as imageURL, tblImages.centerX as imageX, tblImages.centerY as imageY, tblImages.scale as imageScale
 					 FROM tblAdventures
 					 JOIN tblUsers ON tblUsers.ID = tblAdventures.userID
 					 LEFT JOIN tblImages ON tblImages.ID = tblAdventures.imageID AND tblImages.isActive = 1
@@ -190,7 +190,7 @@
 				);
 			}else{
 				return parent::$db->queryGetAll(
-					'SELECT tblAdventures.ID, tblAdventures.title, tblAdventures.description, tblAdventures.published, tblUsers.username as author, tblImages.URL as imageURL, tblImages.centerX as imageX, tblImages.centerY as imageY, tblImages.scale as imageScale
+					'SELECT tblAdventures.ID, tblAdventures.title, tblAdventures.description, tblAdventures.hashKey, tblAdventures.published, tblUsers.username as author, tblImages.URL as imageURL, tblImages.centerX as imageX, tblImages.centerY as imageY, tblImages.scale as imageScale
 					 FROM tblAdventures
 					 JOIN tblUsers ON tblUsers.ID = tblAdventures.userID
 					 LEFT JOIN tblImages ON tblImages.ID = tblAdventures.imageID AND tblImages.isActive = 1

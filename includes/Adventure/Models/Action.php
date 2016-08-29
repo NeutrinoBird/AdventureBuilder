@@ -5,6 +5,7 @@
 		public $ID;
 		public $pageID;
 		public $sceneID;
+		public $priority;
 		public $actionTypeID;
 		public $text;
 		public $nextPageID;
@@ -21,6 +22,7 @@
 			$this->ID = NULL;
 			$this->pageID = NULL;
 			$this->sceneID = NULL;
+			$this->priority = 1;
 			$this->actionTypeID = 1;
 			$this->text = '';
 			$this->nextPageID = 0;
@@ -77,6 +79,16 @@
 		private function Insert($pageID = 0, $sceneID = 0){
 			if ($pageID > 0){
 				$this->pageID = $pageID;
+				$result = parent::$db->queryGetRow(
+					'SELECT IFNULL(MAX(priority),0)+1 as nextPriority
+					 FROM tblActions
+					 WHERE pageID = :pageID
+					 AND isActive = 1;',
+					[
+						'pageID'=>$this->pageID
+					]
+				);
+				$this->priority = $result->nextPriority;
 				$this->ID = parent::$db->queryInsertGetID(
 					'INSERT INTO tblActions
 					(pageID)
@@ -88,6 +100,16 @@
 				);
 			}elseif ($sceneID > 0){
 				$this->sceneID = $sceneID;
+				$result = parent::$db->queryGetRow(
+					'SELECT IFNULL(MAX(priority),99)+1 as nextPriority
+					 FROM tblActions
+					 WHERE sceneID = :sceneID
+					 AND isActive = 1;',
+					[
+						'sceneID'=>$this->sceneID
+					]
+				);
+				$this->priority = $result->nextPriority;
 				$this->ID = parent::$db->queryInsertGetID(
 					'INSERT INTO tblActions
 					(sceneID)
@@ -103,7 +125,7 @@
 		public static function GetAllActions($adventureID){
 			$actionSet = [];
 			$actions = parent::$db->queryGetAll(
-				'SELECT tblActions.ID, tblActions.pageID, tblActions.sceneID, tblActions.actionTypeID, tblActions.text, tblActions.nextPageID, tblActions.effectID, tblActions.transitionID
+				'SELECT tblActions.ID, tblActions.pageID, tblActions.sceneID, tblActions.priority, tblActions.actionTypeID, tblActions.text, tblActions.nextPageID, tblActions.effectID, tblActions.transitionID
 				 FROM tblActions
 				 LEFT JOIN tblPages ON tblPages.ID = tblActions.pageID
 				 LEFT JOIN tblScenes ON tblScenes.ID = tblActions.sceneID
@@ -118,6 +140,7 @@
 				$actionSet[$action->ID]->ID = $action->ID;
 				$actionSet[$action->ID]->pageID = $action->pageID;
 				$actionSet[$action->ID]->sceneID = $action->sceneID;
+				$actionSet[$action->ID]->priority = $action->priority;
 				$actionSet[$action->ID]->actionTypeID = $action->actionTypeID;
 				$actionSet[$action->ID]->text = $action->text;
 				$actionSet[$action->ID]->nextPageID = $action->nextPageID;
@@ -151,7 +174,7 @@
 				}
 			}
 			$result = parent::$db->queryGetRow(
-				'SELECT pageID, sceneID, actionTypeID, text, nextPageID, effectID, transitionID
+				'SELECT pageID, sceneID, priority, actionTypeID, text, nextPageID, effectID, transitionID
 				 FROM tblActions
 				 WHERE ID = :ID
 				 AND isActive = 1;',
@@ -163,6 +186,7 @@
 				$this->ID = $ID;
 				$this->pageID = $result->pageID;
 				$this->sceneID = $result->sceneID;
+				$this->priority = $result->priority;
 				$this->actionTypeID = $result->actionTypeID;
 				$this->text = $result->text;
 				$this->nextPageID = $result->nextPageID;
@@ -174,7 +198,8 @@
 			}
 		}
 
-		public function Update($actionTypeID, $text, $nextPageID, $effectID, $transitionID){
+		public function Update($priority, $actionTypeID, $text, $nextPageID, $effectID, $transitionID){
+			$this->priority = $priority;
 			$this->actionTypeID = $actionTypeID;
 			$this->text = htmlentities($text);
 			$this->nextPageID = $nextPageID;
@@ -182,7 +207,8 @@
 			$this->transitionID = $transitionID;
 			return parent::$db->query(
 				'UPDATE tblActions
-				 SET actionTypeID = :actionTypeID,
+				 SET priority = :priority,
+				 actionTypeID = :actionTypeID,
 				 text = :text,
 				 nextPageID = :nextPageID,
 				 effectID = :effectID,
@@ -190,6 +216,7 @@
 				 WHERE ID = :ID
 				 AND isActive = 1;',
 				[
+					'priority'=>$this->priority,
 					'actionTypeID'=>$this->actionTypeID,
 					'text'=>$this->text,
 					'nextPageID'=>$this->nextPageID,

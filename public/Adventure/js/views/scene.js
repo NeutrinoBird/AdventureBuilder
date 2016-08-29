@@ -133,6 +133,7 @@ Adventure.SceneEdit = Marionette.LayoutView.extend({
 		deleteButton: '.delete-button'
 	},
 	onRender: function() {
+		Adventure.setupTooltips(this);
 		this.model.form = this.$el.find("form");
 		this.showChildView('actionSelection', new Adventure.ActionList({collection: this.model.get('actions')}));
 		this.showChildView('eventSelection', new Adventure.EventLinkList({collection: this.model.get('sceneEvents')}));

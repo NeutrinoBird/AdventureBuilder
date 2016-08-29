@@ -14,6 +14,7 @@ Adventure.Templates.Adventure = `
 		<h2><%= title %></h2>
 		<p>By: <%= author %></p>
 		<p><%= description %></p>
+		<button class="full-button test-button">Test</button>
 	</div>
 `;
 Adventure.Templates.AdventureCreate = `
@@ -25,7 +26,7 @@ Adventure.Templates.AdventureCreate = `
 				Title
 			</div>
 			<div class="form-field">
-				<input type="text" name="title" value="" />
+				<input type="text" name="title" value="" data-toggle="tooltip" title="The name of the adventure. This is purely for internal use, and will not be seen by others." />
 			</div>
 		</div>
 		<div class="row">
@@ -33,7 +34,7 @@ Adventure.Templates.AdventureCreate = `
 				Description
 			</div>
 			<div class="form-field">
-				<textarea name="description"></textarea>
+				<textarea name="description" data-toggle="tooltip" title="A description for the adventure. This is purely for internal use, and will not be seen by others."></textarea>
 			</div>
 		</div>
 		<div class="errorRow"></div>
@@ -46,15 +47,15 @@ Adventure.Templates.AdventureEdit = `
 	<form class="form-inline">
 		<div class="form-group">
 			<label for="adventureTitle<%= ID %>">Title</label>
-			<input class="form-control" name="title" ID="adventureTitle<%= ID %>" type="text" maxlength="100" placeholder="Adventure Title" value="<%= title %>" />
+			<input class="form-control" name="title" ID="adventureTitle<%= ID %>" type="text" maxlength="100" placeholder="Adventure Title" value="<%= title %>" data-toggle="tooltip" title="The name of the adventure. This is purely for internal use, and will not be seen by others." />
 		</div>
 		<div class="form-group">
 			<label for="adventureDescription<%= ID %>">Description</label>
-			<textarea class="form-control" name="description" ID="adventureDescription<%= ID %>" maxlength="500" placeholder="Adventure Description"><%= description %></textarea>
+			<textarea class="form-control" name="description" ID="adventureDescription<%= ID %>" maxlength="500" placeholder="Adventure Description" data-toggle="tooltip" title="A description for the adventure. This is purely for internal use, and will not be seen by others."><%= description %></textarea>
 		</div>
 		<div class="form-group">
 			<label for="adventureImage<%= ID %>" class="image-label">Image</label>
-			<button class="image-button" ID="adventureImage<%= ID %>">
+			<button class="image-button" ID="adventureImage<%= ID %>" data-toggle="tooltip" title="Choose an image as a cover for the adventure, for internal use.">
 				<div class="image-container">
 					<img />
 				</div>

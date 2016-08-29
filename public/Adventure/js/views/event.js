@@ -52,7 +52,15 @@ Adventure.EventSelect = Marionette.CollectionView.extend({
 });
 Adventure.EventEdit = Marionette.LayoutView.extend({
 	template: 'EventEdit',
-	regions: {eventTypeSelect:'.eventtype-selectbox',flagSelect:'.flag-selectbox',pageSelect:'.page-selectbox',conditionSelect:'.condition-selectbox',conditionFlagSelect:'.condition-flag-selectbox'},
+	regions: {
+		eventTypeSelect:'.eventtype-selectbox',
+		flagSelect:'.flag-selectbox',
+		pageSelect:'.page-selectbox',
+		conditionSelect:'.condition-selectbox',
+		conditionFlagSelect:'.condition-flag-selectbox',
+		conditionOtherFlagSelect:'.other-flag-selectbox',
+		conditionPageSelect:'.condition-page-selectbox'
+	},
 	initialize: function(){
 		var viewHandle = this;
 		this.hideEventTypeFields = function(){
@@ -65,17 +73,22 @@ Adventure.EventEdit = Marionette.LayoutView.extend({
 			var condition = Adventure.conditions.get(viewHandle.$el.find("[name='conditionID']").val());
 			viewHandle.$el.find(".condition-group").toggle(condition.ID != 1);
 			viewHandle.$el.find(".condition-flag-group").toggle(condition.get("involvesFlag") == 1);
+			viewHandle.$el.find(".condition-otherFlag-group").toggle(condition.get("involvesCounter") == 1 && condition.get("involvesRange") == 0);
 			viewHandle.$el.find(".counterValue-group").toggle(condition.get("involvesCounter") == 1);
 			viewHandle.$el.find(".counterUpperValue-group").toggle(condition.get("involvesRange") == 1);
+			viewHandle.$el.find(".condition-page-group").toggle(condition.get("involvesPage") == 1);
 		}
 	},
 	onRender: function() {
+		Adventure.setupTooltips(this);
 		this.model.form = this.$el;
 		this.showChildView('eventTypeSelect', new Adventure.EventTypeSelect({selected: this.model.get("eventTypeID"), onChange: this.hideEventTypeFields}));
 		this.showChildView('flagSelect', new Adventure.FlagSelect({selected: this.model.get("flagID")}));
 		this.showChildView('pageSelect', new Adventure.PageSelect({selected: this.model.get("pageID")}));
 		this.showChildView('conditionSelect', new Adventure.ConditionSelect({selected: this.model.get("conditionID"), onChange: this.hideConditionFields}));
 		this.showChildView('conditionFlagSelect', new Adventure.FlagSelect({selected: this.model.get("conditionFlagID"), name: 'conditionFlagID'}));
+		this.showChildView('conditionOtherFlagSelect', new Adventure.FlagSelect({selected: this.model.get("conditionOtherFlagID"), name: 'conditionOtherFlagID', isOtherFlag: true, valueField: this.$el.find('[name="counterValue"]')}));
+		this.showChildView('conditionPageSelect', new Adventure.PageSelect({selected: this.model.get("conditionPageID"), name: 'conditionPageID', noSame: true}));
 		this.hideEventTypeFields();
 		this.hideConditionFields();
 	}
@@ -118,6 +131,7 @@ Adventure.EventLinkEdit = Marionette.LayoutView.extend({
 	regions: {eventSelect:'.event-selectbox',eventEdit:'.event-form'},
 	onRender: function() {
 		var viewHandle = this;
+		Adventure.setupTooltips(this);
 		this.model.form = this.$el.find(".event-link");
 		this.showChildView('eventSelect', new Adventure.EventSelect({selected: this.model.get("eventID"),parentView: this}));
 		if(this.model.get("eventID") > 0){

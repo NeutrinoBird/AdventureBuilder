@@ -30,7 +30,7 @@
 					 JOIN tblAdventures ON tblAdventures.ID = tblPages.adventureID
 					 WHERE tblPages.ID = :pageID
 					 AND tblAdventures.userID = :userID
-					 AND tblPages.isActive = 1;', 
+					 AND tblPages.isActive = 1;',
 					[
 						'pageID'=>$pageID,
 						'userID'=>$user->ID
@@ -47,13 +47,24 @@
 
 		private function Insert($pageID){
 			$this->pageID = $pageID;
-			$this->ID = parent::$db->queryInsertGetID(
-				'INSERT INTO tblPageEvents
-				(pageID)
-				VALUES
-				(:pageID);',
+			$result = parent::$db->queryGetRow(
+				'SELECT IFNULL(MAX(priority),0)+1 as nextPriority
+				 FROM tblPageEvents
+				 WHERE pageID = :pageID
+				 AND isActive = 1;',
 				[
 					'pageID'=>$this->pageID
+				]
+			);
+			$this->priority = $result->nextPriority;
+			$this->ID = parent::$db->queryInsertGetID(
+				'INSERT INTO tblPageEvents
+				(pageID, priority)
+				VALUES
+				(:pageID, :priority);',
+				[
+					'pageID'=>$this->pageID,
+					'priority'=>$this->priority
 				]
 			);
 		}
@@ -65,7 +76,7 @@
 				 FROM tblPageEvents
 				 JOIN tblPages ON tblPages.ID = tblPageEvents.pageID
 				 WHERE tblPages.adventureID = :adventureID
-				 AND tblPageEvents.isActive = 1;', 
+				 AND tblPageEvents.isActive = 1;',
 				[
 					'adventureID'=>$adventureID,
 				]
@@ -78,7 +89,7 @@
 				$pageEventSet[$pageEvent->ID]->priority = $pageEvent->priority;
 			}
 			return $pageEventSet;
-		}	
+		}
 
 		private function Load($user, $ID){
 			if(is_null($user) || !is_numeric($ID))
@@ -86,12 +97,12 @@
 			if(!$user->isAdmin){
 				$result = parent::$db->queryGetRow(
 					'SELECT 1
-					 FROM tblPageEvents			 
+					 FROM tblPageEvents
 					 JOIN tblPages ON tblPages.ID = tblPageEvents.pageID
 					 JOIN tblAdventures ON tblAdventures.ID = tblPages.adventureID
 					 WHERE tblPageEvents.ID = :ID
 					 AND tblAdventures.userID = :userID
-					 AND tblPageEvents.isActive = 1;', 
+					 AND tblPageEvents.isActive = 1;',
 					[
 						'ID'=>$ID,
 						'userID'=>$user->ID
@@ -105,16 +116,16 @@
 				'SELECT pageID, eventID, priority
 				 FROM tblPageEvents
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
 					'ID'=>$ID
 				]
 			);
 			if ($result){
 				$this->ID = $ID;
-				$this->pageID = $result->pageID;	
+				$this->pageID = $result->pageID;
 				$this->eventID = $result->eventID;
-				$this->priority = $result->priority;					
+				$this->priority = $result->priority;
 				return true;
 			}else{
 				return false;
@@ -129,9 +140,9 @@
 				 SET eventID = :eventID,
 				 priority = :priority
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
-					'eventID'=>$this->eventID, 
+					'eventID'=>$this->eventID,
 					'priority'=>$this->priority,
 					'ID'=>$this->ID
 				]
@@ -142,11 +153,11 @@
 			return parent::$db->query(
 				'UPDATE tblPageEvents
 				 SET isActive = 0
-				 WHERE ID = :ID;', 
+				 WHERE ID = :ID;',
 				['ID'=>$this->ID]
 			);
 		}
-			
+
 	}
 
 ?>

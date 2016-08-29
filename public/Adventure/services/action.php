@@ -25,10 +25,11 @@
 			case 'PUT':
 				$input = json_decode(file_get_contents('php://input'));
 				$validation = new Validation();
-				$validation->prime($input, ['ID','pageID','sceneID','actionTypeID','text','nextPageID','effectID','transitionID']);
+				$validation->prime($input, ['ID','pageID','sceneID','priority','actionTypeID','text','nextPageID','effectID','transitionID']);
 				$validation->addVariable('ID',$input->ID,'uint',true);
 				$validation->addVariable('pageID',$input->pageID,'uint',false);
 				$validation->addVariable('sceneID',$input->sceneID,'uint',false);
+				$validation->addVariable('priority',$input->priority,'tinyint',true);
 				$validation->addVariable('actionTypeID',$input->actionTypeID,'tinyint',true);
 				$validation->addVariable('text',$input->text,'string',true,500);
 				$validation->addVariable('nextPageID',$input->nextPageID,'uint',true);
@@ -41,7 +42,7 @@
 				}else{
 					$valid = (object)$validation->result['validated'];
 					$action = new Action($userSession->user,$valid->ID);
-					$action->Update($valid->actionTypeID, $valid->text, $valid->nextPageID, $valid->effectID, $valid->transitionID);
+					$action->Update($valid->priority, $valid->actionTypeID, $valid->text, $valid->nextPageID, $valid->effectID, $valid->transitionID);
 				}
 				break;
 			case 'GET':

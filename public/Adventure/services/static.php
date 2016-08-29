@@ -1,5 +1,5 @@
 <?php
-	include_once('Adventure\CheckSession.php');
+	//include_once('Adventure\CheckSession.php');
 	include_once('Adventure\Models\PageType.php');
 	include_once('Adventure\Models\Transition.php');
 	include_once('Adventure\Models\Condition.php');

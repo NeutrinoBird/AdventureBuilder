@@ -21,6 +21,7 @@ Adventure.ActionEdit = Marionette.LayoutView.extend({
 		}
 	},
 	onRender: function() {
+		Adventure.setupTooltips(this);
 		this.model.form = this.$el.find("form");
 		this.showChildView('actionTypeSelect', new Adventure.ActionTypeSelect({selected: this.model.get("actionTypeID"), onChange: this.hideTextField}));
 		this.showChildView('pageSelect', new Adventure.PageSelect({name: "nextPageID", selected: this.model.get("nextPageID")}));
@@ -102,7 +103,7 @@ Adventure.ActionButton = Marionette.ItemView.extend({
 Adventure.ActionList = Marionette.CollectionView.extend({
 	childView: Adventure.ActionButton,
 	viewComparator: function(model){
-		return int(model.get('ID'));
+		return int(model.get('priority'));
 	},
 	initialize: function(options){
 		this.childViewOptions = {

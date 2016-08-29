@@ -41,6 +41,9 @@ Adventure.CreateAdventureView = Marionette.ItemView.extend({
 Adventure.AdventureView = Marionette.ItemView.extend({
 	template: 'Adventure',
 	className: 'adventure-select clickable',
+	ui:{
+		testButton: '.test-button'
+	},
 	onRender: function(){
 		if(this.model.get("imageURL")){
 			this.$el.find("img").css("transform","translateX(-"+this.model.get("imageX")+") translateY(-"+this.model.get("imageY")+") scale("+this.model.get("imageScale")+")");
@@ -67,7 +70,12 @@ Adventure.AdventureView = Marionette.ItemView.extend({
 					}
 				}
 			});
-			return false
+			return false;
+		},
+		'click @ui.testButton': function(event){
+			event.preventDefault();
+			window.open('AdventureViewer.php?adventure='+this.model.get('hashKey'),'_blank');
+			return false;
 		}
 	},
 	modelEvents: {
@@ -106,6 +114,7 @@ Adventure.AdventureEdit = Marionette.LayoutView.extend({
 	},
 	onRender: function() {
 		var viewHandle = this;
+		Adventure.setupTooltips(this);
 		this.model.form = this.$el.find("form");
 		this.setImage(this.model.get("imageID"));
 		this.listenTo(Adventure.activeAdventure.get('images'), 'change destroy', function(model){

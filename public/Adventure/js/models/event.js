@@ -7,10 +7,12 @@ Adventure.EventModel = Backbone.Model.extend({
 		textBefore: '',
 		textAfter: '',
 		pageID: 0,
+		conditionID: 1,
 		counterValue: null,
 		counterUpperValue: null,
-		conditionID: 1,
-		conditionFlagID: 0
+		conditionFlagID: 0,
+		conditionPageID: 0,
+		conditionOtherFlagID: 0
 	},
 	idAttribute: "ID",
 	initialize: function(){
@@ -60,18 +62,22 @@ Adventure.EventModel = Backbone.Model.extend({
 		}
 		if (int(this.get("conditionID")) > 1){
 			flagName = (this.get("conditionFlagID") == 0) ? "(Undefined)" : Adventure.activeAdventure.get('flags').get(this.get("conditionFlagID")).get("name");
+			var otherFlagName = (!int(this.get("conditionOtherFlagID"))) ? "" : Adventure.activeAdventure.get('flags').get(this.get("conditionOtherFlagID")).get("name");
 			newName += " if ";
 			switch(int(this.get("conditionID"))){
 				case 2: newName += flagName+' Active';	break;
 				case 3: newName += flagName+' Inactive'; break;
-				case 4: newName += flagName+' = '+this.get("counterValue"); break;
-				case 5: newName += flagName+' < '+this.get("counterValue"); break;
-				case 6: newName += flagName+' <= '+this.get("counterValue"); break;
-				case 7: newName += flagName+' > '+this.get("counterValue"); break;
-				case 8: newName += flagName+' >= '+this.get("counterValue"); break;
-				case 9: newName += flagName+' between '+this.get("counterValue")+' and '+this.get("counterUpperValue"); break;
-				case 10: newName += flagName+' not between '+this.get("counterValue")+' and '+this.get("counterUpperValue"); break;
-				case 11: newName += 'Random number between '+this.get("counterValue")+' and '+this.get("counterUpperValue"); break;
+				case 4: newName += flagName+' = '+(otherFlagName ? otherFlagName : this.get("counterValue")); break;
+				case 5: newName += flagName+' != '+(otherFlagName ? otherFlagName : this.get("counterValue")); break;
+				case 6: newName += flagName+' < '+(otherFlagName ? otherFlagName : this.get("counterValue")); break;
+				case 7: newName += flagName+' <= '+(otherFlagName ? otherFlagName : this.get("counterValue")); break;
+				case 8: newName += flagName+' > '+(otherFlagName ? otherFlagName : this.get("counterValue")); break;
+				case 9: newName += flagName+' >= '+(otherFlagName ? otherFlagName : this.get("counterValue")); break;
+				case 10: newName += flagName+' between '+this.get("counterValue")+' and '+this.get("counterUpperValue"); break;
+				case 11: newName += flagName+' not between '+this.get("counterValue")+' and '+this.get("counterUpperValue"); break;
+				case 12: newName += 'Random number between '+this.get("counterValue")+' and '+this.get("counterUpperValue"); break;
+				case 13: newName += 'Page = '+Adventure.activeAdventure.get('pages').get(this.get("conditionPageID")).get("name"); break;
+				case 14: newName += 'Page != '+Adventure.activeAdventure.get('pages').get(this.get("conditionPageID")).get("name"); break;
 			}
 		}
 		this.set("name",newName);
@@ -84,6 +90,7 @@ Adventure.EventModel = Backbone.Model.extend({
 		var conditionFlagRequired = (int(this.form.find("[name='conditionID']").val()) > 1 && int(this.form.find("[name='conditionID']").val()) < 11);
 		var counterRequired = int(Adventure.conditions.get(this.form.find("[name='conditionID']").val()).get("involvesCounter"));
 		var rangeRequired = int(Adventure.conditions.get(this.form.find("[name='conditionID']").val()).get("involvesRange"));
+		var pageRequired = int(Adventure.conditions.get(this.form.find("[name='conditionID']").val()).get("involvesPage"));
 		var validation = validate(this.form,[
 			{name:"eventTypeID",required:true,type:"tinyint"},
 			{name:"flagID",required:FlagRequired,type:"uint"},
@@ -94,7 +101,9 @@ Adventure.EventModel = Backbone.Model.extend({
 			{name:"conditionID",required:true,type:"tinyint"},
 			{name:"conditionFlagID",required:conditionFlagRequired,type:"uint"},
 			{name:"counterValue",required:counterRequired,type:"int"},
-			{name:"counterUpperValue",required:rangeRequired,type:"int"}
+			{name:"counterUpperValue",required:rangeRequired,type:"int"},
+			{name:"conditionPageID",required:pageRequired,type:"uint"},
+			{name:"conditionOtherFlagID",required:(counterRequired && !rangeRequired),type:"uint"}
 		]);
 		if (validation.error){
 			Adventure.handleInvalidInput(validation);
@@ -137,7 +146,10 @@ Adventure.SceneEventModel = Backbone.Model.extend({
 	}
 });
 Adventure.SceneEvents = Backbone.Collection.extend({
-	model: Adventure.SceneEventModel
+	model: Adventure.SceneEventModel,
+	comparator: function(model){
+		return int(model.get('priority'));
+	}
 });
 
 Adventure.PageEventModel = Backbone.Model.extend({
@@ -171,7 +183,10 @@ Adventure.PageEventModel = Backbone.Model.extend({
 	}
 });
 Adventure.PageEvents = Backbone.Collection.extend({
-	model: Adventure.PageEventModel
+	model: Adventure.PageEventModel,
+	comparator: function(model){
+		return int(model.get('priority'));
+	}
 });
 
 Adventure.ActionEventModel = Backbone.Model.extend({
@@ -205,5 +220,8 @@ Adventure.ActionEventModel = Backbone.Model.extend({
 	}
 });
 Adventure.ActionEvents = Backbone.Collection.extend({
-	model: Adventure.ActionEventModel
+	model: Adventure.ActionEventModel,
+	comparator: function(model){
+		return int(model.get('priority'));
+	}
 });

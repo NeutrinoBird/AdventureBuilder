@@ -8,6 +8,8 @@
 		public $counterValue;
 		public $counterUpperValue;
 		public $conditionID;
+		public $pageID;
+		public $otherFlagID;
 
 		function __construct($user = NULL, $ID = 0){
 			parent::__construct();
@@ -19,6 +21,8 @@
 			$this->counterValue = NULL;
 			$this->counterUpperValue = NULL;
 			$this->conditionID = 1;
+			$this->pageID = 0;
+			$this->otherFlagID = 0;
 			if(!is_null($user) && $ID > 0){
 				if(!$this->Load($user, $ID)){
 					throw new Exception("Requirement not found.");
@@ -30,14 +34,14 @@
 			if(!$user->isAdmin){
 				$result = parent::$db->queryGetRow(
 					'SELECT 1
-					 FROM tblActions			 
+					 FROM tblActions
 					 LEFT JOIN tblPages ON tblPages.ID = tblActions.pageID
 					 LEFT JOIN tblScenes ON tblScenes.ID = tblActions.sceneID
 					 JOIN tblAdventures ON tblAdventures.ID = tblPages.adventureID
 					 					OR tblAdventures.ID = tblScenes.adventureID
 					 WHERE tblActions.ID = :actionID
 					 AND tblAdventures.userID = :userID
-					 AND tblActions.isActive = 1;', 
+					 AND tblActions.isActive = 1;',
 					[
 						'actionID'=>$actionID,
 						'userID'=>$user->ID,
@@ -62,19 +66,19 @@
 				[
 					'actionID'=>$this->actionID
 				]
-			);			
+			);
 		}
 
 		public static function GetAllActionFlagRequirements($adventureID){
 			$actionFlagRequirementSet = [];
 			$actionFlagRequirements = parent::$db->queryGetAll(
-				'SELECT tblActionFlagRequirements.ID, tblActionFlagRequirements.actionID, tblActionFlagRequirements.flagID, tblActionFlagRequirements.counterValue, tblActionFlagRequirements.counterUpperValue, tblActionFlagRequirements.conditionID
+				'SELECT tblActionFlagRequirements.ID, tblActionFlagRequirements.actionID, tblActionFlagRequirements.flagID, tblActionFlagRequirements.counterValue, tblActionFlagRequirements.counterUpperValue, tblActionFlagRequirements.conditionID, tblActionFlagRequirements.pageID, tblActionFlagRequirements.otherFlagID
 				 FROM tblActionFlagRequirements
-				 JOIN tblActions ON tblActions.ID = tblActionFlagRequirements.actionID				 
+				 JOIN tblActions ON tblActions.ID = tblActionFlagRequirements.actionID
 				 LEFT JOIN tblPages ON tblPages.ID = tblActions.pageID
 				 LEFT JOIN tblScenes ON tblScenes.ID = tblActions.sceneID
 				 WHERE (tblPages.adventureID = :adventureID OR tblScenes.adventureID = :adventureID)
-				 AND tblActionFlagRequirements.isActive = 1;', 
+				 AND tblActionFlagRequirements.isActive = 1;',
 				[
 					'adventureID'=>$adventureID,
 				]
@@ -87,9 +91,11 @@
 				$actionFlagRequirementSet[$actionFlagRequirement->ID]->counterValue = $actionFlagRequirement->counterValue;
 				$actionFlagRequirementSet[$actionFlagRequirement->ID]->counterUpperValue = $actionFlagRequirement->counterUpperValue;
 				$actionFlagRequirementSet[$actionFlagRequirement->ID]->conditionID = $actionFlagRequirement->conditionID;
+				$actionFlagRequirementSet[$actionFlagRequirement->ID]->pageID = $actionFlagRequirement->pageID;
+				$actionFlagRequirementSet[$actionFlagRequirement->ID]->otherFlagID = $actionFlagRequirement->otherFlagID;
 			}
 			return $actionFlagRequirementSet;
-		}	
+		}
 
 		private function Load($user, $ID){
 			if(is_null($user) || !is_numeric($ID))
@@ -98,14 +104,14 @@
 				$result = parent::$db->queryGetRow(
 					'SELECT 1
 					 FROM tblActionFlagRequirements
-					 JOIN tblActions ON tblActions.ID = tblActionFlagRequirements.actionID			 
+					 JOIN tblActions ON tblActions.ID = tblActionFlagRequirements.actionID
 					 LEFT JOIN tblPages ON tblPages.ID = tblActions.pageID
 					 LEFT JOIN tblScenes ON tblScenes.ID = tblActions.sceneID
 					 JOIN tblAdventures ON tblAdventures.ID = tblPages.adventureID
 					 					OR tblAdventures.ID = tblScenes.adventureID
 					 WHERE tblActionFlagRequirements.ID = :ID
 					 AND tblAdventures.userID = :userID
-					 AND tblActionFlagRequirements.isActive = 1;', 
+					 AND tblActionFlagRequirements.isActive = 1;',
 					[
 						'ID'=>$ID,
 						'userID'=>$user->ID
@@ -116,45 +122,53 @@
 				}
 			}
 			$result = parent::$db->queryGetRow(
-				'SELECT actionID, flagID, counterValue, counterUpperValue, conditionID
+				'SELECT actionID, flagID, counterValue, counterUpperValue, conditionID, pageID, otherFlagID
 				 FROM tblActionFlagRequirements
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
 					'ID'=>$ID
 				]
 			);
 			if ($result){
 				$this->ID = $ID;
-				$this->actionID = $result->actionID;	
+				$this->actionID = $result->actionID;
 				$this->flagID = $result->flagID;
-				$this->counterValue = $result->counterValue;								
+				$this->counterValue = $result->counterValue;
 				$this->counterUpperValue = $result->counterUpperValue;
 				$this->conditionID = $result->conditionID;
+				$this->pageID = $result->pageID;
+				$this->otherFlagID = $result->otherFlagID;
 				return true;
 			}else{
 				return false;
 			}
 		}
 
-		public function Update($flagID, $counterValue, $counterUpperValue, $conditionID){
+		public function Update($flagID, $counterValue, $counterUpperValue, $conditionID, $pageID, $otherFlagID){
 			$this->flagID = $flagID;
-			$this->counterValue = $counterValue;								
+			$this->counterValue = $counterValue;
 			$this->counterUpperValue = $counterUpperValue;
 			$this->conditionID = $conditionID;
+			$this->pageID = $pageID;
+			$this->otherFlagID = $otherFlagID;
 			return parent::$db->query(
 				'UPDATE tblActionFlagRequirements
 				 SET flagID = :flagID,
-				 counterValue = :counterValue, 
-				 counterUpperValue = :counterUpperValue, 
-				 conditionID = :conditionID
+				 counterValue = :counterValue,
+				 counterUpperValue = :counterUpperValue,
+				 conditionID = :conditionID,
+				 pageID = :pageID,
+				 otherFlagID = :otherFlagID
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
-					'flagID'=>$this->flagID, 
-					'counterValue'=>$this->counterValue, 
-					'counterUpperValue'=>$this->counterUpperValue, 
-					'conditionID'=>$this->conditionID, 
+					'flagID'=>$this->flagID,
+					'counterValue'=>$this->counterValue,
+					'counterUpperValue'=>$this->counterUpperValue,
+					'conditionID'=>$this->conditionID,
+					'pageID'=>$this->pageID,
+					'otherFlagID'=>$this->otherFlagID,
 					'ID'=>$this->ID
 				]
 			);
@@ -164,11 +178,11 @@
 			return parent::$db->query(
 				'UPDATE tblActionFlagRequirements
 				 SET isActive = 0
-				 WHERE ID = :ID;', 
+				 WHERE ID = :ID;',
 				['ID'=>$this->ID]
 			);
 		}
-			
+
 	}
 
 ?>

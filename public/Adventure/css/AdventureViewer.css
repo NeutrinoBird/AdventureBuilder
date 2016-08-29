@@ -9,6 +9,31 @@
   src: url("../fonts/prstart.eot?#iefix") format("embedded-opentype"), url("../fonts/prstart.woff") format("woff"), url("../fonts/prstart.ttf") format("truetype"), url("../fonts/prstart.svg#PressStart") format("svg");
   font-weight: normal;
   font-style: normal; }
+@keyframes popInInventory {
+  0% {
+    transform: translate(-50%, 32px) scale(0.01, 0.8); }
+  5% {
+    transform: translate(-50%, 32px) scale(0.8, 0.01); }
+  10% {
+    transform: translate(-50%, 32px) scale(0.01, 0.8); }
+  15% {
+    transform: translate(-50%, 32px) scale(0.8, 0.01); }
+  20% {
+    transform: translate(-50%, 32px) scale(0.3, 0.8); }
+  100% {
+    transform: translate(-50%, -16px) scale(1, 1); } }
+@keyframes popOut {
+  0% {
+    transform: scale(1, 1); }
+  20% {
+    transform: scale(1, 0.01); }
+  50% {
+    transform: scale(0.01, 0.01); }
+  100% {
+    transform: scale(0, 0); } }
+.closing {
+  animation: popOut 1s linear 1 forwards; }
+
 .adventure-container {
   display: block;
   position: fixed;
@@ -59,7 +84,8 @@
       z-index: 50;
       font-family: PressStartK, PressStart, Arial;
       text-transform: uppercase;
-      text-align: left; }
+      text-align: left;
+      pointer-events: none; }
       .adventure-container .adventure-box .adventure-content .image-manager {
         position: relative;
         display: block;
@@ -72,17 +98,31 @@
           width: 100%;
           padding-bottom: 60%;
           overflow: hidden; }
-          .adventure-container .adventure-box .adventure-content .image-manager .image-container img {
+          .adventure-container .adventure-box .adventure-content .image-manager .image-container div {
             position: absolute;
-            top: 50%;
-            left: 50%;
             width: 100%;
-            vertical-align: middle;
-            -ms-transform: translateX(-50%) translateY(-50%) scale(1);
-            -webkit-transform: translateX(-50%) translateY(-50%) scale(1);
-            transform: translateX(-50%) translateY(-50%) scale(1);
-            -webkit-filter: none;
-            filter: none; }
+            height: 100%;
+            overflow: hidden; }
+            .adventure-container .adventure-box .adventure-content .image-manager .image-container div img {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              width: 100%;
+              vertical-align: middle;
+              -ms-transform: translateX(-50%) translateY(-50%) scale(1);
+              -webkit-transform: translateX(-50%) translateY(-50%) scale(1);
+              transform: translateX(-50%) translateY(-50%) scale(1);
+              -webkit-filter: none;
+              filter: none; }
+          .adventure-container .adventure-box .adventure-content .image-manager .image-container.blank {
+            z-index: 3;
+            width: 100%;
+            height: 100%;
+            display: none; }
+            .adventure-container .adventure-box .adventure-content .image-manager .image-container.blank.black {
+              background-color: black; }
+            .adventure-container .adventure-box .adventure-content .image-manager .image-container.blank.white {
+              background-color: white; }
       .adventure-container .adventure-box .adventure-content .page-manager {
         position: relative;
         background-color: rgba(0, 0, 0, 0.3);
@@ -96,7 +136,8 @@
             margin-bottom: 0px; }
       .adventure-container .adventure-box .adventure-content .action-manager {
         position: relative;
-        overflow: hidden; }
+        overflow: hidden;
+        pointer-events: auto; }
         .adventure-container .adventure-box .adventure-content .action-manager .actions {
           position: absolute;
           width: 100%;
@@ -159,6 +200,14 @@
       height: 100%;
       border: 16px solid transparent;
       box-shadow: 0px 0px 32px black inset; }
+      .adventure-container .adventure-box .adventure-background .close-box, .adventure-container .adventure-box .adventure-background-transition .close-box {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        top: -16px;
+        right: -16px;
+        background-image: url("../img/viewer/close-box.gif");
+        cursor: pointer; }
     .adventure-container .adventure-box .adventure-background {
       z-index: 1; }
     .adventure-container .adventure-box .adventure-background-transition {
@@ -166,15 +215,23 @@
     .adventure-container .adventure-box .normal {
       border-image: url("../img/viewer/border-normal.gif") 16 round;
       background: url("../img/viewer/background-normal.gif") repeat; }
+      .adventure-container .adventure-box .normal .close-box {
+        background-position: 0px 0px; }
     .adventure-container .adventure-box .death {
       border-image: url("../img/viewer/border-death.gif") 16 round;
       background: url("../img/viewer/background-death.gif") repeat; }
+      .adventure-container .adventure-box .death .close-box {
+        background-position: -32px 0px; }
     .adventure-container .adventure-box .badEnding {
       border-image: url("../img/viewer/border-badEnding.gif") 16 round;
       background: url("../img/viewer/background-badEnding.gif") repeat; }
+      .adventure-container .adventure-box .badEnding .close-box {
+        background-position: -64px 0px; }
     .adventure-container .adventure-box .goodEnding {
       border-image: url("../img/viewer/border-goodEnding.gif") 16 round;
       background: url("../img/viewer/background-goodEnding.gif") repeat; }
+      .adventure-container .adventure-box .goodEnding .close-box {
+        background-position: -96px 0px; }
     .adventure-container .adventure-box .inventory {
       position: relative;
       display: inline-block;
@@ -187,7 +244,9 @@
       border: 8px solid transparent;
       border-image: url("../img/viewer/border-inventory.gif") 8 round;
       background: black;
-      background-clip: content-box; }
+      background-clip: content-box;
+      transition: height .5s, width .5s;
+      pointer-events: auto; }
       .adventure-container .adventure-box .inventory .item {
         position: relative;
         display: inline-block;
@@ -220,6 +279,35 @@
           font-size: 8px;
           color: white;
           text-shadow: black 1px 1px, black -1px 1px, black 1px -1px, black -1px -1px; }
+        .adventure-container .adventure-box .inventory .item .description {
+          position: absolute;
+          left: 50%;
+          bottom: 100%;
+          width: 312px;
+          background: rgba(0, 0, 0, 0.8);
+          background-clip: content-box;
+          border: 8px solid transparent;
+          border-image: url("../img/viewer/border-inventory.gif") 8 round;
+          -ms-transform: translate(-50%, -16px);
+          -webkit-transform: translate(-50%, -16px);
+          transform: translate(-50%, -16px);
+          display: none;
+          animation: popInInventory .5s ease-out 1;
+          text-shadow: black 2px 2px; }
+          .adventure-container .adventure-box .inventory .item .description h3 {
+            color: #FFFF00;
+            text-align: center;
+            margin: 8px;
+            font-size: 14px;
+            font-weight: normal;
+            text-decoration: underline; }
+          .adventure-container .adventure-box .inventory .item .description p {
+            color: #DDDDDD;
+            margin: 8px; }
+          .adventure-container .adventure-box .inventory .item .description.clicked {
+            display: block; }
+        .adventure-container .adventure-box .inventory .item:hover .description {
+          display: block; }
       .adventure-container .adventure-box .inventory:before {
         position: absolute;
         top: -8px;

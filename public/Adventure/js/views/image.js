@@ -6,6 +6,9 @@ Adventure.ImageUpload = Marionette.LayoutView.extend({
 		saveButton: '.save-button',
 		deleteButton: '.delete-button'
 	},
+	onRender: function() {
+		Adventure.setupTooltips(this);
+	},
 	events: {
 		'click @ui.saveButton': function(event){
 			event.preventDefault();
@@ -28,18 +31,15 @@ Adventure.ImageEdit = Marionette.LayoutView.extend({
 		testButton: '.test-button',
 		uploadButton: '.upload-button',
 		saveButton: '.save-button',
-		deleteButton: '.delete-button'
+		deleteButton: '.delete-button',
+		inputFields: "input",
 	},
 	onRender: function() {
+		Adventure.setupTooltips(this);
 		this.model.form = this.$el.find("form");
 		this.testImage();
 	},
 	events: {
-		'click @ui.testButton': function(event){
-			event.preventDefault();
-			this.testImage();
-			return false;
-		},
 		'click @ui.uploadButton': function(event){
 			event.preventDefault();
 			var viewHandle = this;
@@ -55,6 +55,9 @@ Adventure.ImageEdit = Marionette.LayoutView.extend({
 			event.preventDefault();
 			Adventure.deleteDialog(this,"image");
 			return false;
+		},
+		'change @ui.inputFields': function(event){
+			this.testImage();
 		}
 	},
 	testImage: function(){

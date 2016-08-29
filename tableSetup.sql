@@ -1,3 +1,5 @@
+SET SESSION SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+
 CREATE TABLE tblUsers(
 	ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	username VARCHAR(20) NOT NULL,
@@ -22,7 +24,7 @@ CREATE TABLE tblUserSessions(
 
 CREATE TABLE tblAdventures(
 	ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	userID INT UNSIGNED NOT NULL,
+	userID INT UNSIGNED NULL,
 	hashKey VARCHAR(128) NOT NULL,
 	title VARCHAR(100) NOT NULL,
 	description VARCHAR(500) NOT NULL,
@@ -33,6 +35,8 @@ CREATE TABLE tblAdventures(
 	PRIMARY KEY(ID),
 	FOREIGN KEY (userID) REFERENCES tblUsers(ID)
 );
+INSERT INTO tblAdventures (ID, hashKey, title, description, isActive)
+VALUES (0, 'X','','',0);
 
 CREATE TABLE tblScenes(
 	ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -43,6 +47,8 @@ CREATE TABLE tblScenes(
 	PRIMARY KEY(ID),
 	FOREIGN KEY (adventureID) REFERENCES tblAdventures(ID)
 );
+INSERT INTO tblScenes (ID, adventureID, isActive)
+VALUES (0,0,0);
 
 CREATE TABLE tblImages(
 	ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -58,6 +64,8 @@ CREATE TABLE tblImages(
 	PRIMARY KEY(ID),
 	FOREIGN KEY (adventureID) REFERENCES tblAdventures(ID)
 );
+INSERT INTO tblImages (ID, adventureID, isActive)
+VALUES (0,0,0);
 
 CREATE TABLE tblEffects(
 	ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -75,6 +83,8 @@ CREATE TABLE tblEffects(
 	PRIMARY KEY(ID),
 	FOREIGN KEY (adventureID) REFERENCES tblAdventures(ID)
 );
+INSERT INTO tblEffects (ID, adventureID, isActive)
+VALUES (0,0,0);
 
 CREATE TABLE tblPageTypes(
 	ID TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -109,6 +119,8 @@ CREATE TABLE tblPages(
 	FOREIGN KEY (imageID) REFERENCES tblImages(ID),
 	FOREIGN KEY (effectID) REFERENCES tblEffects(ID)
 );
+INSERT INTO tblPages (ID, adventureID, isActive)
+VALUES (0,0,0);
 
 CREATE TABLE tblActionTypes(
 	ID TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -145,6 +157,7 @@ CREATE TABLE tblActions(
 	ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	pageID INT UNSIGNED NULL,
 	sceneID INT UNSIGNED NULL,
+	priority TINYINT UNSIGNED NOT NULL DEFAULT 1,
 	actionTypeID TINYINT UNSIGNED NOT NULL DEFAULT 1,
 	text VARCHAR(500) NULL,
 	nextPageID INT UNSIGNED NOT NULL DEFAULT 0,
@@ -158,6 +171,8 @@ CREATE TABLE tblActions(
 	FOREIGN KEY (actionTypeID) REFERENCES tblActionTypes(ID),
 	FOREIGN KEY (effectID) REFERENCES tblEffects(ID)
 );
+INSERT INTO tblActions (ID, isActive)
+VALUES (0,0);
 
 CREATE TABLE tblFlags(
 	ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -177,6 +192,8 @@ CREATE TABLE tblFlags(
 	FOREIGN KEY (adventureID) REFERENCES tblAdventures(ID),
 	FOREIGN KEY (imageID) REFERENCES tblImages(ID)
 );
+INSERT INTO tblFlags (ID, adventureID,isActive)
+VALUES (0,0,0);
 
 CREATE TABLE tblConditions(
 	ID TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -184,36 +201,44 @@ CREATE TABLE tblConditions(
 	involvesFlag TINYINT(1) NOT NULL,
 	involvesCounter TINYINT(1) NOT NULL,
 	involvesRange TINYINT(1) NOT NULL,
+	involvesPage TINYINT(1) NOT NULL,
 	dateCreated DATETIME NOT NULL DEFAULT NOW(),
 	isActive TINYINT(1) NOT NULL DEFAULT 1,
 	PRIMARY KEY(ID)
 );
-INSERT INTO tblConditions (name, involvesFlag, involvesCounter, involvesRange) VALUES
-	('Always Trigger', 0, 0, 0),
-	('Flag Active', 1, 0, 0),
-	('Flag Inactive', 1, 0, 0),
-	('Counter Equals', 1, 1 ,0),
-	('Counter Less Than', 1, 1, 0),
-	('Counter Less Than or Equals', 1, 1, 0),
-	('Counter Greater Than', 1, 1, 0),
-	('Counter Greater Than or Equals', 1, 1, 0),
-	('Counter Within Range', 1, 1, 1),
-	('Counter Out of Range', 1, 1, 1),
-	('Random (0-100) Within Range', 0, 1, 1);
+INSERT INTO tblConditions (name, involvesFlag, involvesCounter, involvesRange, involvesPage) VALUES
+	('Always Trigger', 0, 0, 0, 0),
+	('Flag Active', 1, 0, 0, 0),
+	('Flag Inactive', 1, 0, 0, 0),
+	('Counter Equals', 1, 1 ,0, 0),
+	('Counter Does Not Equal', 1, 1 ,0, 0),
+	('Counter Less Than', 1, 1, 0, 0),
+	('Counter Less Than or Equals', 1, 1, 0, 0),
+	('Counter Greater Than', 1, 1, 0, 0),
+	('Counter Greater Than or Equals', 1, 1, 0, 0),
+	('Counter Within Range', 1, 1, 1, 0),
+	('Counter Out of Range', 1, 1, 1, 0),
+	('Random (0-100) Within Range', 0, 1, 1, 0),
+	('Current Page Is', 0, 0, 0, 1),
+	('Current Page Is Not', 0, 0, 0, 1);
 
 CREATE TABLE tblActionFlagRequirements(
 	ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	actionID INT UNSIGNED NOT NULL,
+	conditionID TINYINT UNSIGNED NOT NULL DEFAULT 1,
 	flagID INT UNSIGNED NOT NULL DEFAULT 0,
 	counterValue INT NULL,
 	counterUpperValue INT NULL,
-	conditionID TINYINT UNSIGNED NOT NULL DEFAULT 1,
+	pageID INT UNSIGNED NOT NULL DEFAULT 0,
 	dateCreated DATETIME NOT NULL DEFAULT NOW(),
+	otherFlagID INT UNSIGNED NOT NULL DEFAULT 0,
 	isActive TINYINT(1) NOT NULL DEFAULT 1,
 	PRIMARY KEY(ID),
 	FOREIGN KEY (actionID) REFERENCES tblActions(ID),
+	FOREIGN KEY (conditionID) REFERENCES tblConditions(ID),
 	FOREIGN KEY (flagID) REFERENCES tblFlags(ID),
-	FOREIGN KEY (conditionID) REFERENCES tblConditions(ID)
+	FOREIGN KEY (pageID) REFERENCES tblPages(ID),
+	FOREIGN KEY (otherFlagID) REFERENCES tblFlags(ID)
 );
 
 CREATE TABLE tblEventTypes(
@@ -250,6 +275,8 @@ CREATE TABLE tblEvents(
 	conditionFlagID INT UNSIGNED NOT NULL DEFAULT 0,
 	counterValue INT NULL,
 	counterUpperValue INT NULL,
+	conditionPageID INT UNSIGNED NOT NULL DEFAULT 0,
+	conditionOtherFlagID INT UNSIGNED NOT NULL DEFAULT 0,
 	dateCreated DATETIME NOT NULL DEFAULT NOW(),
 	isActive TINYINT(1) NOT NULL DEFAULT 1,
 	PRIMARY KEY(ID),
@@ -258,8 +285,12 @@ CREATE TABLE tblEvents(
 	FOREIGN KEY (flagID) REFERENCES tblFlags(ID),
 	FOREIGN KEY (pageID) REFERENCES tblPages(ID),
 	FOREIGN KEY (conditionID) REFERENCES tblConditions(ID),
-	FOREIGN KEY (conditionFlagID) REFERENCES tblFlags(ID)
+	FOREIGN KEY (conditionFlagID) REFERENCES tblFlags(ID),
+	FOREIGN KEY (conditionPageID) REFERENCES tblPages(ID),
+	FOREIGN KEY (conditionOtherFlagID) REFERENCES tblFlags(ID)
 );
+INSERT INTO tblEvents (ID,adventureID,isActive)
+VALUES (0,0,0);
 
 CREATE TABLE tblActionEvents(
 	ID INT UNSIGNED NOT NULL AUTO_INCREMENT,

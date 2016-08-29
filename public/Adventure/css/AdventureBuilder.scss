@@ -41,10 +41,15 @@ form{
 			width: 100%;
 		}
 	}
-	.form-field{
-		label{
-			@extend .col-xs-12;
-			@extend .col-sm-3;
+	.form-group{
+		.form-field{
+			label{
+				@extend .col-xs-12;
+				@extend .col-sm-3;
+			}
+			select{
+				width: 100%;
+			}
 		}
 	}
 }
@@ -580,6 +585,13 @@ input[type='checkbox']{
 					filter: none;
 				}
 			}
+			&.item{
+				width:32px;
+				height:32px;
+				.image-container{
+					padding-bottom: 100%;
+				}
+			}
 		}
 	}
 }
@@ -797,8 +809,8 @@ input[type='checkbox']{
 		margin-bottom: 20px;
 	}
 	.image-button{
-		width: 100px;
-		height: 100px;
+		width: 32px;
+		height: 32px;
 		.image-container{
 			padding-bottom: 100%;
 		}
@@ -1255,7 +1267,7 @@ input[type='checkbox']{
 }
 
 .removing{
-	animation: popOut 0.5s ease-out 1;
+	animation: popOut 0.5s ease-out 1 forwards;
 }
 
 body.no-effect{

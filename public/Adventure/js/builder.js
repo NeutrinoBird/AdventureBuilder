@@ -47,7 +47,7 @@ Adventure.deleteDialog = function(viewHandle, itemName){
 	if(confirm("Are you sure you want to delete this "+itemName+"?")){
 		//viewHandle.model.trigger('destroy',viewHandle.model);
 		Adventure.Main.initiateRemoval(viewHandle);
-		viewHandle.model.destroy();		
+		viewHandle.model.destroy();
 	}
 }
 Adventure.generateFormMap = function(form){
@@ -71,8 +71,11 @@ Adventure.handleInvalidInput = function(validation){
 		}
 	}
 }
+Adventure.setupTooltips = function(viewHandle){
+	viewHandle.$el.find('[data-toggle="tooltip"]').tooltip();
+}
 
-$(function(){			
+$(function(){
 	Adventure.Options = new Adventure.OptionsMenu();
 	Adventure.Status = new Adventure.StatusDisplay();
 	Adventure.Main = new Adventure.MainView();

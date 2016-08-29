@@ -16,6 +16,25 @@
     font-style: normal;
 }
 
+@keyframes popInInventory {
+	0% {transform: translate(-50%,32px) scale(0.01,0.8);}
+	5% {transform: translate(-50%,32px) scale(0.8,0.01);}
+	10% {transform: translate(-50%,32px) scale(0.01,0.8);}
+	15% {transform: translate(-50%,32px) scale(0.8,0.01);}
+	20% {transform: translate(-50%,32px) scale(0.3,0.8);}
+	100% {transform: translate(-50%,-16px) scale(1,1);}
+}
+@keyframes popOut {
+	0% {transform: scale(1,1);}
+	20% {transform: scale(1,0.01);}
+	50% {transform: scale(0.01,0.01);}
+	100% {transform: scale(0,0);}
+}
+
+.closing{
+	animation: popOut 1s linear 1 forwards;
+}
+
 .adventure-container{
 	display: block;
 	position: fixed;
@@ -71,6 +90,7 @@
 			font-family: PressStartK, PressStart, Arial;
 			text-transform: uppercase;
 			text-align: left;
+			pointer-events: none;
 			.image-manager{
 				position: relative;
 				display:block;
@@ -83,17 +103,35 @@
 					width:100%;
 					padding-bottom: 60%;
 					overflow:hidden;
-					img{
+					div{
 						position: absolute;
-						top: 50%;
-						left: 50%;
-						width:100%;
-						vertical-align: middle;
-						-ms-transform: translateX(-50%) translateY(-50%) scale(1.0);
-	    				-webkit-transform: translateX(-50%) translateY(-50%) scale(1.0);
-						transform: translateX(-50%) translateY(-50%) scale(1.0);
-						-webkit-filter: none;
-	    				filter: none;
+						width: 100%;
+						height: 100%;
+						overflow:hidden;
+						img{
+							position: absolute;
+							top: 50%;
+							left: 50%;
+							width:100%;
+							vertical-align: middle;
+							-ms-transform: translateX(-50%) translateY(-50%) scale(1.0);
+		    				-webkit-transform: translateX(-50%) translateY(-50%) scale(1.0);
+							transform: translateX(-50%) translateY(-50%) scale(1.0);
+							-webkit-filter: none;
+		    				filter: none;
+						}
+					}
+					&.blank{
+						z-index: 3;
+						width: 100%;
+						height: 100%;
+						display: none;
+						&.black{
+							background-color: black;
+						}
+						&.white{
+							background-color: white;
+						}
 					}
 				}
 			}
@@ -114,6 +152,7 @@
 			.action-manager{
 				position: relative;
 				overflow: hidden;
+				pointer-events: auto;
 				.actions{
 					position: absolute;
 					width: 100%;
@@ -192,6 +231,15 @@
 			height:100%;
 			border: 16px solid transparent;
 			box-shadow: 0px 0px 32px black inset;
+			.close-box{
+				position: absolute;
+				width: 32px;
+				height: 32px;
+				top: -16px;
+				right: -16px;
+				background-image: url('../img/viewer/close-box.gif');
+				cursor: pointer;
+			}
 		}
 		.adventure-background{
 			z-index: 1;
@@ -202,18 +250,30 @@
 		.normal{
 			border-image: url('../img/viewer/border-normal.gif') 16 round;
 			background: url('../img/viewer/background-normal.gif') repeat;
+			.close-box{
+				background-position: 0px 0px;
+			}
 		}
 		.death{
 			border-image: url('../img/viewer/border-death.gif') 16 round;
 			background: url('../img/viewer/background-death.gif') repeat;
+			.close-box{
+				background-position: -32px 0px;
+			}
 		}
 		.badEnding{
 			border-image: url('../img/viewer/border-badEnding.gif') 16 round;
 			background: url('../img/viewer/background-badEnding.gif') repeat;
+			.close-box{
+				background-position: -64px 0px;
+			}
 		}
 		.goodEnding{
 			border-image: url('../img/viewer/border-goodEnding.gif') 16 round;
 			background: url('../img/viewer/background-goodEnding.gif') repeat;
+			.close-box{
+				background-position: -96px 0px;
+			}
 		}
 		.inventory{
 			position: relative;
@@ -228,6 +288,8 @@
 			border-image: url('../img/viewer/border-inventory.gif') 8 round;
 			background: black;
 			background-clip: content-box;
+			transition: height .5s, width .5s;
+			pointer-events: auto;
 			.item{
 				position: relative;
 				display: inline-block;
@@ -265,6 +327,40 @@
 								black -1px 1px,
 								black 1px -1px,
 								black -1px -1px;
+				}
+				.description{
+					position: absolute;
+					left: 50%;
+					bottom: 100%;
+					width: 312px;
+					background: rgba(0,0,0,0.8);
+					background-clip: content-box;
+					border: 8px solid transparent;
+					border-image: url("../img/viewer/border-inventory.gif") 8 round;
+					-ms-transform: translate(-50%,-16px);
+					-webkit-transform: translate(-50%,-16px);
+					transform: translate(-50%,-16px);
+					display:none;
+					animation: popInInventory .5s ease-out 1;
+					text-shadow: black 2px 2px;
+					h3{
+						color: #FFFF00;
+						text-align:center;
+						margin: 8px;
+						font-size: 14px;
+						font-weight: normal;
+						text-decoration: underline;
+					}
+					p{
+						color: #DDDDDD;
+						margin: 8px;
+					}
+					&.clicked{
+						display:block;
+					}
+				}
+				&:hover .description{
+					display:block;
 				}
 			}
 			&:before{

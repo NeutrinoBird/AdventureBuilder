@@ -20,13 +20,15 @@ Adventure.PageSelect = Marionette.CollectionView.extend({
 	},
 	onRender: function(){
 		if(!this.getOption("justExisting")){
-			this.$el.prepend("<option value='0'>Same Page</option>");
+			if(!this.getOption("noSame")){
+				this.$el.prepend("<option value='0'>Same Page</option>");
+			}
 			this.$el.append("<option value='new'>New Page...</option>");
 		}
 		if(this.getOption("selected") !== ""){
 			this.$el.val(this.getOption("selected"));
 			if(!this.$el.find(":selected").length){
-				this.$el.val(0);
+				this.$el.val(this.$el.find("option:first").val());
 			}
 		}
 	},
@@ -78,6 +80,7 @@ Adventure.PageEdit = Marionette.LayoutView.extend({
 	},
 	onRender: function() {
 		var viewHandle = this;
+		Adventure.setupTooltips(this);
 		this.model.form = this.$el.find("form");
 		this.setImage(this.model.get("imageID"));
 		this.$el.find('.header-key').hide();

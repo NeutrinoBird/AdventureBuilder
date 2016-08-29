@@ -3,6 +3,10 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 	template: 'Viewer',
 	currentPageType: "normal",
 	startingPage: 0,
+	transitionData: {},
+	side: 'A',
+	otherSide: 'B',
+	blankHeight: 0,
 	regions: {
 		imageA: '.image-container.page-A',
 		imageB: '.image-container.page-B',
@@ -12,21 +16,28 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		actionsA: '.actions.page-A',
 		actionsB: '.actions.page-B'
 	},
+	ui: {
+		closeBox: '.adventure-background .close-box'
+	},
 	initialize: function(){
+		var viewHandle = this;
+		Adventure.initStatic(function(){
+			viewHandle.setup();
+		});
+	},
+	setup: function(){
 		this.model = new Adventure.AdventureViewingModel({hashKey: this.$el.attr("data-adventure")});
 		this.variables = {
 			flags: []
 		};
-		this.transitionData = {};
 		this.inventorySet = new Adventure.Flags;
-		this.side  = 'A';
-		this.otherSide  = 'B';
-		this.blankHeight = 0;
 		this.listenTo(this.model, 'sync', function(){
 			this.resetVariables();
 			this.resetTransitionData();
 			this.$el.prepend(this.model.get("effects").assembleKeyframes());
-			this.loadPage(this.variables.startingPage);
+			this.transitionData.nextPageID = this.variables.startingPage;
+			this.loadPage();
+			this.resetTransitionData();
 			this.$el.find('.page-manager').height(this.$el.find('.page-manager .page-'+this.side).innerHeight());
 			this.$el.find('.action-manager').height(this.$el.find('.action-manager .page-'+this.side).outerHeight(true));
 			this.resizeBox();
@@ -41,12 +52,15 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		var viewHandle = this;
 		this.showChildView('inventory', new Adventure.Inventory({collection: this.inventorySet}));
 		this.$el.find(".adventure-background-transition").hide();
-		//this.$el.find(".page-B").hide();
-		//Temporary
-		this.$el.find(".adventure-container").click(function(event){
-			viewHandle.backgroundTransition("goodEnding");
-		});
 		this.resizeBox();
+	},
+	events: {
+		'click @ui.closeBox': function(){
+			this.$el.find(".adventure-box").addClass("closing");
+			_.delay(function(viewHandle){
+				viewHandle.destroy();
+			}, 1000, this);
+		}
 	},
 	resetVariables: function(){
 		var viewHandle = this;
@@ -63,8 +77,9 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 	resetTransitionData: function(){
 		this.transitionData.transitioning = false;
 		this.transitionData.nextPageID = 0;
+		this.transitionData.nextPageClass = "normal";
 		this.transitionData.effectID = 0;
-		this.transitionData.transitionID = 0;
+		this.transitionData.transitionID = 1;
 		this.transitionData.beforePageText = "";
 		this.transitionData.afterPageText = "";
 		this.transitionData.randomRoll = 0;
@@ -74,9 +89,9 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		if(this.transitionData.effectID > 0){
 			var transitionEffect = this.model.get("effects").get(this.transitionData.effectID);
 			if(transitionEffect){
-				transitionEffect.applyEffect(this.$el.find('.image-manager .page-'+this.side));
-				console.log(transitionEffect.get("duration") +' '+ transitionEffect.get("loops") +' '+ 1000);
+				transitionEffect.applyEffect(this.$el.find('.image-manager .page-'+this.side+' img'));
 				_.delay(function(viewHandle){
+					viewHandle.$el.find('.image-manager .page-'+viewHandle.side+' img').css('animation','initial');
 					viewHandle.handleTransition();
 				}, transitionEffect.get("duration") * transitionEffect.get("loops") * 1000, this);
 			}else{
@@ -92,56 +107,127 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		this.otherSide = this.side;
 		this.side = this.side == 'A' ? 'B' : 'A';
 		if(this.transitionData.nextPageID == 0){
-			this.loadPage(this.variables.currentPage);
-		}else{
-			this.loadPage(this.transitionData.nextPageID);
+			this.transitionData.nextPageID = this.variables.currentPage;
 		}
-		this.$el.find('.image-manager .page-'+this.side).css("z-index",2);
-		this.$el.find('.image-manager .page-'+this.otherSide).css("z-index",1);
-		this.$el.find('.image-manager .page-'+this.side).fadeIn(1000,function(){
-			viewHandle.$el.find('.image-manager .page-'+viewHandle.otherSide).hide();
-			viewHandle.resetTransitionData();
-		});
-		//console.log(this.$el.find('.page-manager .page-'+this.side).innerHeight());
-		this.$el.find('.page-manager .page-'+this.side).css("top", "100%");
+		this.loadPage();
+		this.backgroundTransition(this.transitionData.nextPageClass);
+
+		switch(int(this.transitionData.transitionID)){
+			case 1:
+				this.$el.find('.image-manager .page-'+this.otherSide).css('z-index',1);
+				this.$el.find('.image-manager .page-'+this.side).css('z-index',2).fadeIn(1000,function(){
+					viewHandle.$el.find('.image-manager .page-'+viewHandle.otherSide).hide();
+				});
+				break;
+			case 2:
+				this.$el.find('.image-manager .page-'+this.side).show();
+				this.$el.find('.image-manager .page-'+this.otherSide).hide();
+				break;
+			case 3:
+				this.$el.find('.image-manager .blank').addClass('black').fadeIn(500, function(){
+					viewHandle.$el.find('.image-manager .page-'+viewHandle.side).show();
+					viewHandle.$el.find('.image-manager .page-'+viewHandle.otherSide).hide();
+					viewHandle.$el.find('.image-manager .blank').fadeOut(500, function(){
+						$(this).removeClass('black');
+					});
+				});
+				break;
+			case 4:
+				this.$el.find('.image-manager .blank').addClass('white').fadeIn(500, function(){
+					viewHandle.$el.find('.image-manager .page-'+viewHandle.side).show();
+					viewHandle.$el.find('.image-manager .page-'+viewHandle.otherSide).hide();
+					viewHandle.$el.find('.image-manager .blank').fadeOut(500, function(){
+						$(this).removeClass('white');
+					});
+				});
+				break;
+			case 5:
+				this.$el.find('.image-manager .page-'+this.side).show();
+				this.$el.find('.image-manager .page-'+this.side+' div').css('left','-100%').animate({left: '0%'}, 1000);
+				this.$el.find('.image-manager .page-'+this.otherSide+' div').animate({left: '100%'}, 1000, function(){
+					$(this).css('left','0%');
+					viewHandle.$el.find('.image-manager .page-'+viewHandle.otherSide).hide();
+				});
+				break;
+			case 6:
+				this.$el.find('.image-manager .page-'+this.side).show();
+				this.$el.find('.image-manager .page-'+this.side+' div').css('left','100%').animate({left: '0%'}, 1000);
+				this.$el.find('.image-manager .page-'+this.otherSide+' div').animate({left: '-100%'}, 1000, function(){
+					$(this).css('left','0%');
+					viewHandle.$el.find('.image-manager .page-'+viewHandle.otherSide).hide();
+				});
+				break;
+			case 7:
+				this.$el.find('.image-manager .page-'+this.side).show();
+				this.$el.find('.image-manager .page-'+this.side+' div').css('top','-100%').animate({top: '0%'}, 1000);
+				this.$el.find('.image-manager .page-'+this.otherSide+' div').animate({top: '100%'}, 1000, function(){
+					$(this).css('top','0%');
+					viewHandle.$el.find('.image-manager .page-'+viewHandle.otherSide).hide();
+				});
+				break;
+			case 8:
+				this.$el.find('.image-manager .page-'+this.side).show();
+				this.$el.find('.image-manager .page-'+this.side+' div').css('top','100%').animate({top: '0%'}, 1000);
+				this.$el.find('.image-manager .page-'+this.otherSide+' div').animate({top: '-100%'}, 1000, function(){
+					$(this).css('top','0%');
+					viewHandle.$el.find('.image-manager .page-'+viewHandle.otherSide).hide();
+				});
+				break;
+		}
+
+		this.$el.find('.page-manager .page-'+this.side).css("top", "100%").css("bottom", "");;
 		this.$el.find('.page-manager').animate({height: this.$el.find('.page-manager .page-'+this.side).innerHeight()+"px"}, 1000);
 		this.$el.find('.page-manager .page-'+this.side).animate({top: "0%"}, 1000);
-		this.$el.find('.page-manager .page-'+this.otherSide).animate({top: "-100%"}, 1000);
+		this.$el.find('.page-manager .page-'+this.otherSide).css("top", "").animate({bottom: "100%"}, 1000);
 
 		this.$el.find('.action-manager .page-'+this.side).show().css("left", "100%").fadeOut(750, function(){
 			viewHandle.$el.find('.action-manager .page-'+viewHandle.side).css("left", "0%").fadeIn(250);
 		});
 		this.$el.find('.action-manager .page-'+this.otherSide).fadeOut(250);
-		this.$el.find('.action-manager').animate({height: this.$el.find('.action-manager .page-'+this.side).outerHeight(true)+"px"}, 1000);
+		this.$el.find('.action-manager').animate({height: this.$el.find('.action-manager .page-'+this.side).outerHeight(true)+"px"}, 1000, function(){viewHandle.resetTransitionData();});
 
 		var boxHeight = this.blankHeight + this.$el.find('.image-manager .page-'+this.side).innerHeight() + this.$el.find('.page-manager .page-'+this.side).innerHeight() + this.$el.find('.action-manager .page-'+this.side).outerHeight(true) + this.$el.find('.inventory-container').outerHeight(true);
 		if (boxHeight % 16 > 0){
 			boxHeight += 16 - (boxHeight % 16);
 		}
 		this.$el.find(".adventure-box").animate({height: boxHeight + "px"});
-
-		//this.resizeBox();
 	},
-	loadPage: function(pageID){
-		pageModel = this.model.get("pages").get(pageID);
+	loadPage: function(){
+		this.variables.currentPage = this.transitionData.nextPageID;
+		pageModel = this.model.get("pages").get(this.transitionData.nextPageID);
+		sceneModel = this.model.get("scenes").get(pageModel.get("sceneID"));
+		if(sceneModel){
+			pageModel.get("actions").add(sceneModel.get("actions").toJSON());
+			sceneModel.get("sceneEvents").each(function(sceneEvent){
+				pageModel.get("pageEvents").add({id:'s_'+sceneEvent.id, priority:sceneEvent.get('priority'), eventID:sceneEvent.get('eventID')});
+			});
+		}
+		this.handleEvents(pageModel.get("pageEvents"));
+		if (this.transitionData.nextPageID != this.variables.currentPage){
+			this.loadPage();
+			return false;
+		}
 		this.showChildView('image'+this.side, new Adventure.ViewerImage({model: this.model.get("images").get(pageModel.get("imageID")), effect: this.model.get("effects").get(pageModel.get("effectID"))}));
-		this.showChildView('page'+this.side, new Adventure.ViewerPage({model: pageModel}));
+		this.showChildView('page'+this.side, new Adventure.ViewerPage({model: pageModel, beforeText: this.transitionData.beforePageText, afterText: this.transitionData.afterPageText}));
 		this.showChildView('actions'+this.side, new Adventure.ViewerActionList({collection: pageModel.get("actions")}));
-		this.variables.currentPage = pageID;
+		this.transitionData.nextPageClass = Adventure.pageTypes.get(pageModel.get("pageTypeID")).get("style");
 	},
 	backgroundTransition: function(nextClass){
-		var viewHandle = this;
-		this.$el.find(".adventure-background-transition").addClass(nextClass);
-		this.$el.find(".adventure-background-transition").fadeIn(400,function(){
-			viewHandle.$el.find(".adventure-background").removeClass(viewHandle.currentPageType);
-			viewHandle.$el.find(".adventure-background").addClass(nextClass);
-			viewHandle.$el.find(".adventure-background-transition").removeClass(nextClass);
-			viewHandle.$el.find(".adventure-background-transition").hide();
-			viewHandle.currentPageType = nextClass;
-		});
+		if (this.currentPageType != nextClass){
+			var viewHandle = this;
+			this.$el.find(".adventure-background-transition").addClass(nextClass);
+			this.$el.find(".adventure-background-transition").fadeIn(1000,function(){
+				viewHandle.$el.find(".adventure-background").removeClass(viewHandle.currentPageType);
+				viewHandle.$el.find(".adventure-background").addClass(nextClass);
+				viewHandle.$el.find(".adventure-background-transition").removeClass(nextClass);
+				viewHandle.$el.find(".adventure-background-transition").hide();
+				viewHandle.currentPageType = nextClass;
+			});
+		}
 	},
 	performAction: function(actionModel){
 		if(!this.transitionData.transitioning){
+			this.transitionData.randomRoll = Math.floor((Math.random() * 101));
 			if(actionModel.get("actionEvents").length){
 				this.handleEvents(actionModel.get("actionEvents"));
 			}
@@ -159,13 +245,16 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 	},
 	handleEvents: function(eventLinkCollection){
 		var viewHandle = this;
-		this.transitionData.randomRoll = Math.floor((Math.random() * 101));
 		eventLinkCollection.every(function(eventLink){
 			var eventModel = viewHandle.model.get("events").get(eventLink.get("eventID"));
-			if (viewHandle.evaluateCondition(eventModel.get("conditionID"),eventModel.get("conditionFlagID"),eventModel.get("counterValue"),eventModel.get("counterUpperValue"))){
+			if (Adventure.conditions.get(eventModel.get("conditionID")).evaluateCondition(viewHandle.variables.flags[int(eventModel.get("conditionFlagID"))] || 0, eventModel.get("counterValue"), eventModel.get("counterUpperValue"), viewHandle.transitionData.randomRoll, viewHandle.variables.currentPage, eventModel.get("conditionPageID"), viewHandle.variables.flags[int(eventModel.get("conditionOtherFlagID"))])){
 				//Append page text
-				viewHandle.transitionData.beforePageText = "";
-				viewHandle.transitionData.afterPageText = "";
+				if (eventModel.get("textBefore") != ""){
+					viewHandle.transitionData.beforePageText += eventModel.get("textBefore") + '<br><br>';
+				}
+				if (eventModel.get("textAfter") != ""){
+					viewHandle.transitionData.afterPageText += '<br><br>' + eventModel.get("textAfter");
+				}
 				//Handle event action
 				switch(int(eventModel.get("eventTypeID"))){
 					case 2:
@@ -181,9 +270,8 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 						viewHandle.variables.flags[int(eventModel.get("flagID"))] += int(eventModel.get("value"));
 						break;
 					case 6:
-						if(!viewHandle.transitionData.nextPageID){
-							viewHandle.transitionData.nextPageID = eventModel.get("pageID");
-						}
+						viewHandle.transitionData.nextPageID = eventModel.get("pageID");
+						return false;
 						break;
 					case 7:
 						viewHandle.variables.storedPage = viewHandle.variables.currentPage;
@@ -197,17 +285,17 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 						return false; //Stop executing events
 				}
 				//Handle counter bounds
-				if(eventModel.get("flagID")){
+				if(int(eventModel.get("flagID"))){
 					if(int(viewHandle.model.get("flags").get(eventModel.get("flagID")).get("isCounter"))){
 						var minimum = (viewHandle.model.get("flags").get(eventModel.get("flagID")).get("counterMinimum") != null) ? int(viewHandle.model.get("flags").get(eventModel.get("flagID")).get("counterMinimum")) : null;
 						var maximum = (viewHandle.model.get("flags").get(eventModel.get("flagID")).get("counterMaximum") != null) ? int(viewHandle.model.get("flags").get(eventModel.get("flagID")).get("counterMaximum")) : null;
 						if(int(viewHandle.model.get("flags").get(eventModel.get("flagID")).get("counterWraps")) && minimum != null && maximum != null){
 							//Wrapping
 							while(viewHandle.variables.flags[int(eventModel.get("flagID"))] < minimum){
-								viewHandle.variables.flags[int(eventModel.get("flagID"))] += maximum - minimum;
+								viewHandle.variables.flags[int(eventModel.get("flagID"))] += (maximum - minimum + 1);
 							}
 							while(viewHandle.variables.flags[int(eventModel.get("flagID"))] > maximum){
-								viewHandle.variables.flags[int(eventModel.get("flagID"))] -= maximum - minimum;
+								viewHandle.variables.flags[int(eventModel.get("flagID"))] -= (maximum - minimum + 1);
 							}
 						}else if(minimum != null && viewHandle.variables.flags[int(eventModel.get("flagID"))] < minimum){
 							viewHandle.variables.flags[int(eventModel.get("flagID"))] = minimum;
@@ -221,44 +309,6 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 			return true;
 		});
 		this.inventorySet.trigger("change");
-	},
-	evaluateCondition: function(conditionID,flagID,value,upperValue){
-		var flagValue = this.variables.flags[int(flagID)] || 0;
-		value = int(value);
-		upperValue = int(upperValue);
-		switch(int(conditionID)){
-			case 2:
-				return flagValue;
-				break;
-			case 3:
-				return !flagValue;
-				break;
-			case 4:
-				return flagValue == value;
-				break;
-			case 5:
-				return flagValue < value;
-				break;
-			case 6:
-				return flagValue <= value;
-				break;
-			case 7:
-				return flagValue > value;
-				break;
-			case 8:
-				return flagValue >= value;
-				break;
-			case 9:
-				return flagValue >= value && flagValue <= upperValue;
-				break;
-			case 10:
-				return !(flagValue >= value && flagValue <= upperValue);
-				break;
-			case 11:
-				return this.transitionData.randomRoll >= value && this.transitionData.randomRoll <= upperValue;
-				break;
-			default: return true;
-		}
 	},
 	resizeBox: function(){
 		//This resizes the box based on the window width, and constrains the dimensions to multiples of 16.
@@ -292,36 +342,10 @@ Adventure.ViewerImage = Marionette.ItemView.extend({
 });
 
 Adventure.ViewerPage = Marionette.ItemView.extend({
-	template: 'ViewerPage'/*,
-	currentPageType: "normal",
-	regions: {inventory:'.inventory-container', actionList:'.actions'},
-	initialize: function(){
-		this.model.set("filteredText",this.model.get('text').replace(/\r?\n/g,'<br>'));
-	},
-	onRender: function(){
-		var viewHandle = this;
-		this.showChildView('actionList', new Adventure.ViewerActionList({collection: this.model.get("actions")}));
-		this.showChildView('inventory', new Adventure.Inventory({collection: Adventure.viewer.inventorySet}));
-		this.renderImage();
-		if(int(this.model.get('effectID')) > 0){
-			Adventure.activeAdventure.get("effects").get(this.model.get("effectID")).applyEffect(this.$el.find(".image-container img"));
-		}
-	},
-	renderImage: function(){
-		var imageModel = Adventure.activeAdventure.get("images").get(this.model.get("imageID"));
-		if(imageModel){
-			this.$el.find(".image-container").show();
-			this.$el.find(".image-container img").attr("src",Adventure.assetPath+"uploads/"+imageModel.get("URL"));
-			this.$el.find(".image-container img").css("transform","translateX(-"+imageModel.get("centerX")+") translateY(-"+imageModel.get("centerY")+") scale("+imageModel.get("scale")+")");
-			this.$el.find(".image-container img").css("-webkit-transform","translateX(-"+imageModel.get("centerX")+") translateY(-"+imageModel.get("centerY")+") scale("+imageModel.get("scale")+")");
-			this.$el.find(".image-container img").css("-ms-transform","translateX(-"+imageModel.get("centerX")+") translateY(-"+imageModel.get("centerY")+") scale("+imageModel.get("scale")+")");
-		}else{
-			this.$el.find(".image-container").hide();
-		}
-	},
-	onDestroy: function(){
-		console.log("I regret nothing");
-	}*/
+	template: 'ViewerPage',
+	initialize: function(options){
+		this.model.set("combinedText",options.beforeText+this.model.get("filteredText")+options.afterText);
+	}
 });
 
 Adventure.ViewerActionButton = Marionette.ItemView.extend({
@@ -340,17 +364,30 @@ Adventure.ViewerActionButton = Marionette.ItemView.extend({
 });
 Adventure.ViewerActionList = Marionette.CollectionView.extend({
 	className: 'selection-list',
-	childView: Adventure.ViewerActionButton
+	childView: Adventure.ViewerActionButton,
+	viewComparator: function(model){
+		return int(model.get('priority'));
+	},
+	filter: function (child, index, collection) {
+		var requirements = child.get("actionFlagRequirements");
+		var filterPass = true;
+		if(requirements){
+			requirements.every(function(requirement){
+				if (!Adventure.conditions.get(requirement.get("conditionID")).evaluateCondition(Adventure.viewer.variables.flags[int(requirement.get("flagID"))] || 0, requirement.get("counterValue"), requirement.get("counterUpperValue"), Adventure.viewer.transitionData.randomRoll, Adventure.viewer.variables.currentPage, requirement.get("pageID"), Adventure.viewer.variables.flags[int(requirement.get("otherFlagID"))])){
+					filterPass = false;
+					return false;
+				}
+			});
+		}
+		return filterPass;
+	}
 });
 
 Adventure.InventoryItem = Marionette.ItemView.extend({
 	template: 'InventoryItem',
 	className: 'item',
-	initialize: function(){
-		if(this.model.get("description")){
-			this.$el.attr("title",this.model.get("description"));
-			this.$el.attr("alt",this.model.get("description"));
-		}
+	ui: {
+		description: '.description'
 	},
 	onRender: function(){
 		this.renderImage();
@@ -362,7 +399,12 @@ Adventure.InventoryItem = Marionette.ItemView.extend({
 	events: {
 		'click': function(event){
 			event.preventDefault();
-			//Adventure.viewer.performAction(this.model);
+			this.$el.find(".description").toggleClass("clicked");
+			return false;
+		},
+		'click @ui.description': function(event){
+			event.preventDefault();
+			this.$el.find(".description").removeClass("clicked");
 			return false;
 		}
 	},
@@ -372,8 +414,7 @@ Adventure.InventoryItem = Marionette.ItemView.extend({
 	renderImage: function(){
 		var imageModel = Adventure.activeAdventure.get("images").get(this.model.get("imageID"));
 		if(imageModel){
-			this.$el.find("img").show();
-			this.$el.find("img").attr("src",Adventure.assetPath+"uploads/"+imageModel.get("URL"));
+			this.$el.find("img").show().removeAttr('style').attr("src",Adventure.assetPath+"uploads/"+imageModel.get("URL"));
 			this.$el.find("img").css("transform","translateX(-"+imageModel.get("centerX")+") translateY(-"+imageModel.get("centerY")+") scale("+imageModel.get("scale")+")");
 			this.$el.find("img").css("-webkit-transform","translateX(-"+imageModel.get("centerX")+") translateY(-"+imageModel.get("centerY")+") scale("+imageModel.get("scale")+")");
 			this.$el.find("img").css("-ms-transform","translateX(-"+imageModel.get("centerX")+") translateY(-"+imageModel.get("centerY")+") scale("+imageModel.get("scale")+")");
@@ -389,12 +430,13 @@ Adventure.Inventory = Marionette.CollectionView.extend({
 		return Adventure.viewer.variables.flags[child.id] > 0;
 	},
 	onRender: function(){
-		this.$el.toggle(this.$el.find(".item").length > 0);
+		if(this.$el.find(".item").length == 0){
+			this.$el.hide();
+		}else if(this.$el.find(":visible").length == 0){
+			this.$el.fadeIn();
+		};
 	},
 	collectionEvents: {
 		'change': 'render'
 	}
 });
-
-//TODO:
-//		Try adding a transitional value to the inventory window size

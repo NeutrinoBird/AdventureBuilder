@@ -1,5 +1,6 @@
 Adventure.ActionModel = Backbone.Model.extend({
 	defaults: {
+		priority: 1,
 		actionTypeID: 1,
 		text: '',
 		nextPageID: 0,
@@ -31,6 +32,7 @@ Adventure.ActionModel = Backbone.Model.extend({
 	urlRoot: 'services/action.php',
 	validate: function(){
 		var validation = validate(this.form,[
+			{name:"priority",required:true,type:"tinyint"},
 			{name:"actionTypeID",required:true,type:"tinyint"},
 			{name:"text",required:true,type:"string",maxLength:500},
 			{name:"nextPageID",required:true,type:"uint"},

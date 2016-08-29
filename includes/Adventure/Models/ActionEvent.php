@@ -26,14 +26,14 @@
 			if(!$user->isAdmin){
 				$result = parent::$db->queryGetRow(
 					'SELECT 1
-					 FROM tblActions			 
+					 FROM tblActions
 					 LEFT JOIN tblPages ON tblPages.ID = tblActions.pageID
 					 LEFT JOIN tblScenes ON tblScenes.ID = tblActions.sceneID
 					 JOIN tblAdventures ON tblAdventures.ID = tblPages.adventureID
 					 					OR tblAdventures.ID = tblScenes.adventureID
 					 WHERE tblActions.ID = :actionID
 					 AND tblAdventures.userID = :userID
-					 AND tblActions.isActive = 1;', 
+					 AND tblActions.isActive = 1;',
 					[
 						'actionID'=>$actionID,
 						'userID'=>$user->ID,
@@ -50,13 +50,24 @@
 
 		private function Insert($actionID){
 			$this->actionID = $actionID;
-			$this->ID = parent::$db->queryInsertGetID(
-				'INSERT INTO tblActionEvents
-				(actionID)
-				VALUES
-				(:actionID);',
+			$result = parent::$db->queryGetRow(
+				'SELECT IFNULL(MAX(priority),0)+1 as nextPriority
+				 FROM tblActionEvents
+				 WHERE actionID = :actionID
+				 AND isActive = 1;',
 				[
 					'actionID'=>$this->actionID
+				]
+			);
+			$this->priority = $result->nextPriority;
+			$this->ID = parent::$db->queryInsertGetID(
+				'INSERT INTO tblActionEvents
+				(actionID, priority)
+				VALUES
+				(:actionID, :priority);',
+				[
+					'actionID'=>$this->actionID,
+					'priority'=>$this->priority
 				]
 			);
 		}
@@ -66,11 +77,11 @@
 			$actionEvents = parent::$db->queryGetAll(
 				'SELECT tblActionEvents.ID, tblActionEvents.actionID, tblActionEvents.eventID, tblActionEvents.priority
 				 FROM tblActionEvents
-				 JOIN tblActions ON tblActions.ID = tblActionEvents.actionID				 
+				 JOIN tblActions ON tblActions.ID = tblActionEvents.actionID
 				 LEFT JOIN tblPages ON tblPages.ID = tblActions.pageID
 				 LEFT JOIN tblScenes ON tblScenes.ID = tblActions.sceneID
 				 WHERE (tblPages.adventureID = :adventureID OR tblScenes.adventureID = :adventureID)
-				 AND tblActionEvents.isActive = 1;', 
+				 AND tblActionEvents.isActive = 1;',
 				[
 					'adventureID'=>$adventureID,
 				]
@@ -83,23 +94,23 @@
 				$actionEventSet[$actionEvent->ID]->priority = $actionEvent->priority;
 			}
 			return $actionEventSet;
-		}	
+		}
 
-		private function Load($user, $ID){			
+		private function Load($user, $ID){
 			if(is_null($user) || !is_numeric($ID))
 				return false;
 			if(!$user->isAdmin){
 				$result = parent::$db->queryGetRow(
 					'SELECT 1
 					 FROM tblActionEvents
-					 JOIN tblActions ON tblActions.ID = tblActionEvents.actionID			 
+					 JOIN tblActions ON tblActions.ID = tblActionEvents.actionID
 					 LEFT JOIN tblPages ON tblPages.ID = tblActions.pageID
 					 LEFT JOIN tblScenes ON tblScenes.ID = tblActions.sceneID
 					 JOIN tblAdventures ON tblAdventures.ID = tblPages.adventureID
 					 					OR tblAdventures.ID = tblScenes.adventureID
 					 WHERE tblActionEvents.ID = :ID
 					 AND tblAdventures.userID = :userID
-					 AND tblActionEvents.isActive = 1;', 
+					 AND tblActionEvents.isActive = 1;',
 					[
 						'ID'=>$ID,
 						'userID'=>$user->ID
@@ -113,16 +124,16 @@
 				'SELECT actionID, eventID, priority
 				 FROM tblActionEvents
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
 					'ID'=>$ID
 				]
 			);
 			if ($result){
 				$this->ID = $ID;
-				$this->actionID = $result->actionID;	
+				$this->actionID = $result->actionID;
 				$this->eventID = $result->eventID;
-				$this->priority = $result->priority;					
+				$this->priority = $result->priority;
 				return true;
 			}else{
 				return false;
@@ -137,9 +148,9 @@
 				 SET eventID = :eventID,
 				 priority = :priority
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
-					'eventID'=>$this->eventID, 
+					'eventID'=>$this->eventID,
 					'priority'=>$this->priority,
 					'ID'=>$this->ID
 				]
@@ -150,11 +161,11 @@
 			return parent::$db->query(
 				'UPDATE tblActionEvents
 				 SET isActive = 0
-				 WHERE ID = :ID;', 
+				 WHERE ID = :ID;',
 				['ID'=>$this->ID]
 			);
 		}
-			
+
 	}
 
 ?>

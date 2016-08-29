@@ -17,7 +17,7 @@ Adventure.FlagSelect = Marionette.CollectionView.extend({
 	},
 	onRender: function(){
 		this.$el.attr("name",this.getOption("name") == undefined ? "flagID" : this.getOption("name"));
-		this.$el.prepend("<option value='0'>Select Flag</option>");
+		this.$el.prepend("<option value='0'>" + (this.getOption("isOtherFlag") ? "Use Above Value" : "Select Flag") + "</option>");
 		this.$el.append("<option value='new'>New Flag...</option>");
 		if(this.getOption("selected") !== ""){
 			this.$el.val(this.getOption("selected"));
@@ -40,6 +40,8 @@ Adventure.FlagSelect = Marionette.CollectionView.extend({
 						Adventure.handleInvalidInput(response.responseJSON);
 					}
 				});
+			}else if(this.$el.val() != '0' && this.getOption("isOtherFlag") && this.getOption("valueField")){
+				this.getOption("valueField").val(0);
 			}
 		}
 	}
@@ -55,6 +57,7 @@ Adventure.FlagEdit = Marionette.LayoutView.extend({
 	},
 	onRender: function() {
 		var viewHandle = this;
+		Adventure.setupTooltips(this);
 		this.model.form = this.$el.find("form");
 		this.setImage(this.model.get("imageID"));
 		this.$el.find("[name='isCounter']").change();

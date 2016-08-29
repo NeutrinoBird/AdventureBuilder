@@ -7,7 +7,7 @@
 	try{
 		switch($_SERVER['REQUEST_METHOD']){
 			case 'POST':
-				$input = json_decode(file_get_contents('php://input'));		
+				$input = json_decode(file_get_contents('php://input'));
 				$validation = new Validation();
 				$validation->prime($input, ['actionID']);
 				$validation->addVariable('actionID',$input->actionID ?: '','uint',true);
@@ -24,13 +24,15 @@
 			case 'PUT':
 				$input = json_decode(file_get_contents('php://input'));
 				$validation = new Validation();
-				$validation->prime($input, ['ID','actionID','flagID','counterValue','counterUpperValue','conditionID']);
+				$validation->prime($input, ['ID','actionID','flagID','counterValue','counterUpperValue','conditionID','pageID','otherFlagID']);
 				$validation->addVariable('ID',$input->ID,'uint',true);
 				$validation->addVariable('actionID',$input->actionID ?: '','uint',true);
 				$validation->addVariable('flagID',$input->flagID,'uint');
 				$validation->addVariable('counterValue',$input->counterValue,'int');
 				$validation->addVariable('counterUpperValue',$input->counterUpperValue,'int');
 				$validation->addVariable('conditionID',$input->conditionID,'tinyint',true);
+				$validation->addVariable('pageID',$input->pageID,'uint');
+				$validation->addVariable('otherFlagID',$input->otherFlagID,'uint');
 				$validation->validate();
 				if($validation->result['error'] == 1){
 					$response->JSON = '{"errorMsg":"'.$validation->result['errorMsg'].'","errorFields":'.json_encode($validation->result['errorFields']).'}';
@@ -38,16 +40,16 @@
 				}else{
 					$valid = (object)$validation->result['validated'];
 					$actionFlagRequirement = new ActionFlagRequirement($userSession->user,$valid->ID);
-					$actionFlagRequirement->Update($valid->flagID, $valid->counterValue, $valid->counterUpperValue, $valid->conditionID);
+					$actionFlagRequirement->Update($valid->flagID, $valid->counterValue, $valid->counterUpperValue, $valid->conditionID, $valid->pageID, $valid->otherFlagID);
 				}
 				break;
-			case 'GET':			
+			case 'GET':
 				$input = (object)$_GET;
 				if(!isset($input->ID) || !is_numeric($input->ID)){
 					throw new Exception("Invalid ID.");
 				}
 				$actionFlagRequirement = new ActionFlagRequirement($userSession->user,$input->ID);
-				$response->JSON = json_encode($actionFlagRequirement);				
+				$response->JSON = json_encode($actionFlagRequirement);
 				break;
 			case 'DELETE':
 				$deleteID = substr($_SERVER['PATH_INFO'],1);
@@ -61,7 +63,7 @@
 				}
 				break;
 		}
-	} catch (Exception $e) {			
+	} catch (Exception $e) {
 		$response->JSON = '{"errorMsg":"'.$e->getMessage().'","errorFields":[]}';
 		$response->error = 1;
 	}

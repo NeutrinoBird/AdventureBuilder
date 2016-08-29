@@ -30,7 +30,7 @@
 					 JOIN tblAdventures ON tblAdventures.ID = tblScenes.adventureID
 					 WHERE tblScenes.ID = :sceneID
 					 AND tblAdventures.userID = :userID
-					 AND tblScenes.isActive = 1;', 
+					 AND tblScenes.isActive = 1;',
 					[
 						'sceneID'=>$sceneID,
 						'userID'=>$user->ID
@@ -43,17 +43,28 @@
 			$newSceneEvent = new SceneEvent();
 			$newSceneEvent->Insert($sceneID);
 			return $newSceneEvent;
-		}	
+		}
 
 		private function Insert($sceneID){
 			$this->sceneID = $sceneID;
-			$this->ID = parent::$db->queryInsertGetID(
-				'INSERT INTO tblSceneEvents
-				(sceneID)
-				VALUES
-				(:sceneID);',
+			$result = parent::$db->queryGetRow(
+				'SELECT IFNULL(MAX(priority),100)+1 as nextPriority
+				 FROM tblSceneEvents
+				 WHERE sceneID = :sceneID
+				 AND isActive = 1;',
 				[
 					'sceneID'=>$this->sceneID
+				]
+			);
+			$this->priority = $result->nextPriority;
+			$this->ID = parent::$db->queryInsertGetID(
+				'INSERT INTO tblSceneEvents
+				(sceneID, priority)
+				VALUES
+				(:sceneID, :priority);',
+				[
+					'sceneID'=>$this->sceneID,
+					'priority'=>$this->priority
 				]
 			);
 		}
@@ -65,7 +76,7 @@
 				 FROM tblSceneEvents
 				 JOIN tblScenes ON tblScenes.ID = tblSceneEvents.sceneID
 				 WHERE tblScenes.adventureID = :adventureID
-				 AND tblSceneEvents.isActive = 1;', 
+				 AND tblSceneEvents.isActive = 1;',
 				[
 					'adventureID'=>$adventureID,
 				]
@@ -86,12 +97,12 @@
 			if(!$user->isAdmin){
 				$result = parent::$db->queryGetRow(
 					'SELECT 1
-					 FROM tblSceneEvents			 
+					 FROM tblSceneEvents
 					 JOIN tblScenes ON tblScenes.ID = tblSceneEvents.sceneID
 					 JOIN tblAdventures ON tblAdventures.ID = tblScenes.adventureID
 					 WHERE tblSceneEvents.ID = :ID
 					 AND tblAdventures.userID = :userID
-					 AND tblSceneEvents.isActive = 1;', 
+					 AND tblSceneEvents.isActive = 1;',
 					[
 						'ID'=>$ID,
 						'userID'=>$user->ID
@@ -105,16 +116,16 @@
 				'SELECT sceneID, eventID, priority
 				 FROM tblSceneEvents
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
 					'ID'=>$ID
 				]
 			);
 			if ($result){
 				$this->ID = $ID;
-				$this->sceneID = $result->sceneID;	
+				$this->sceneID = $result->sceneID;
 				$this->eventID = $result->eventID;
-				$this->priority = $result->priority;					
+				$this->priority = $result->priority;
 				return true;
 			}else{
 				return false;
@@ -129,9 +140,9 @@
 				 SET eventID = :eventID,
 				 priority = :priority
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
-					'eventID'=>$this->eventID, 
+					'eventID'=>$this->eventID,
 					'priority'=>$this->priority,
 					'ID'=>$this->ID
 				]
@@ -142,11 +153,11 @@
 			return parent::$db->query(
 				'UPDATE tblSceneEvents
 				 SET isActive = 0
-				 WHERE ID = :ID;', 
+				 WHERE ID = :ID;',
 				['ID'=>$this->ID]
 			);
 		}
-			
+
 	}
 
 ?>

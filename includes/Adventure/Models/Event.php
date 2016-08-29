@@ -15,6 +15,8 @@
 		public $counterUpperValue;
 		public $conditionID;
 		public $conditionFlagID;
+		public $conditionPageID;
+		public $conditionOtherFlagID;
 
 		function __construct($user = NULL, $ID = 0){
 			parent::__construct();
@@ -32,6 +34,8 @@
 			$this->counterUpperValue = NULL;
 			$this->conditionID = 1;
 			$this->conditionFlagID = 0;
+			$this->conditionPageID = 0;
+			$this->conditionOtherFlagID = 0;
 			if(!is_null($user) && $ID > 0){
 				if(!$this->Load($user, $ID)){
 					throw new Exception("Event not found.");
@@ -46,7 +50,7 @@
 					 FROM tblAdventures
 					 WHERE ID = :adventureID
 					 AND userID = :userID
-					 AND isActive = 1;', 
+					 AND isActive = 1;',
 					[
 						'adventureID'=>$adventureID,
 						'userID'=>$user->ID,
@@ -77,10 +81,10 @@
 		public static function GetAllEvents($adventureID){
 			$eventSet = [];
 			$events = parent::$db->queryGetAll(
-				'SELECT ID, adventureID, eventTypeID, flagID, value, textBefore, textAfter, pageID, counterValue, counterUpperValue, conditionID, conditionFlagID
+				'SELECT ID, adventureID, eventTypeID, flagID, value, textBefore, textAfter, pageID, counterValue, counterUpperValue, conditionID, conditionFlagID, conditionPageID, conditionOtherFlagID
 				 FROM tblEvents
 				 WHERE adventureID = :adventureID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
 					'adventureID'=>$adventureID,
 				]
@@ -99,6 +103,8 @@
 				$eventSet[$event->ID]->counterUpperValue = $event->counterUpperValue;
 				$eventSet[$event->ID]->conditionID = $event->conditionID;
 				$eventSet[$event->ID]->conditionFlagID = $event->conditionFlagID;
+				$eventSet[$event->ID]->conditionPageID = $event->conditionPageID;
+				$eventSet[$event->ID]->conditionOtherFlagID = $event->conditionOtherFlagID;
 			}
 			return $eventSet;
 		}
@@ -113,7 +119,7 @@
 					 JOIN tblAdventures ON tblAdventures.ID = tblEvents.adventureID
 					 WHERE tblEvents.ID = :ID
 					 AND tblAdventures.userID = :userID
-					 AND tblEvents.isActive = 1;', 
+					 AND tblEvents.isActive = 1;',
 					[
 						'ID'=>$ID,
 						'userID'=>$user->ID
@@ -124,19 +130,19 @@
 				}
 			}
 			$result = parent::$db->queryGetRow(
-				'SELECT adventureID, eventTypeID, flagID, value, textBefore, textAfter, pageID, counterValue, counterUpperValue, conditionID, conditionFlagID
+				'SELECT adventureID, eventTypeID, flagID, value, textBefore, textAfter, pageID, counterValue, counterUpperValue, conditionID, conditionFlagID, conditionPageID, conditionOtherFlagID
 				 FROM tblEvents
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
 					'ID'=>$ID
 				]
 			);
 			if ($result){
 				$this->ID = $ID;
-				$this->adventureID = $result->adventureID;	
-				$this->eventTypeID = $result->eventTypeID;		
-				$this->flagID = $result->flagID;	
+				$this->adventureID = $result->adventureID;
+				$this->eventTypeID = $result->eventTypeID;
+				$this->flagID = $result->flagID;
 				$this->value = $result->value;
 				$this->textBefore = $result->textBefore;
 				$this->textAfter = $result->textAfter;
@@ -145,23 +151,27 @@
 				$this->counterUpperValue = $result->counterUpperValue;
 				$this->conditionID = $result->conditionID;
 				$this->conditionFlagID = $result->conditionFlagID;
+				$this->conditionPageID = $result->conditionPageID;
+				$this->conditionOtherFlagID = $result->conditionOtherFlagID;
 				return true;
 			}else{
 				return false;
 			}
 		}
 
-		public function Update($eventTypeID, $flagID, $value, $textBefore, $textAfter, $pageID, $counterValue, $counterUpperValue, $conditionID, $conditionFlagID){
-			$this->eventTypeID = $eventTypeID;	
+		public function Update($eventTypeID, $flagID, $value, $textBefore, $textAfter, $pageID, $counterValue, $counterUpperValue, $conditionID, $conditionFlagID, $conditionPageID, $conditionOtherFlagID){
+			$this->eventTypeID = $eventTypeID;
 			$this->flagID = $flagID;
-			$this->value = $value;	
-			$this->textBefore = htmlentities($textBefore);	
-			$this->textAfter = htmlentities($textAfter);	
-			$this->pageID = $pageID;	
-			$this->counterValue = $counterValue;	
+			$this->value = $value;
+			$this->textBefore = htmlentities($textBefore);
+			$this->textAfter = htmlentities($textAfter);
+			$this->pageID = $pageID;
+			$this->counterValue = $counterValue;
 			$this->counterUpperValue = $counterUpperValue;
 			$this->conditionID = $conditionID;
 			$this->conditionFlagID = $conditionFlagID;
+			$this->conditionPageID = $conditionPageID;
+			$this->conditionOtherFlagID = $conditionOtherFlagID;
 			return parent::$db->query(
 				'UPDATE tblEvents
 				 SET eventTypeID = :eventTypeID,
@@ -173,20 +183,24 @@
 				 counterValue = :counterValue,
 				 counterUpperValue = :counterUpperValue,
 				 conditionID = :conditionID,
-				 conditionFlagID = :conditionFlagID
+				 conditionFlagID = :conditionFlagID,
+				 conditionPageID = :conditionPageID,
+				 conditionOtherFlagID = :conditionOtherFlagID
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
 					'eventTypeID'=>$this->eventTypeID,
 					'flagID'=>$this->flagID,
-					'value'=>$this->value, 
-					'textBefore'=>$this->textBefore, 
-					'textAfter'=>$this->textAfter, 
-					'pageID'=>$this->pageID, 
-					'counterValue'=>$this->counterValue, 
-					'counterUpperValue'=>$this->counterUpperValue, 
-					'conditionID'=>$this->conditionID, 
-					'conditionFlagID'=>$this->conditionFlagID, 
+					'value'=>$this->value,
+					'textBefore'=>$this->textBefore,
+					'textAfter'=>$this->textAfter,
+					'pageID'=>$this->pageID,
+					'counterValue'=>$this->counterValue,
+					'counterUpperValue'=>$this->counterUpperValue,
+					'conditionID'=>$this->conditionID,
+					'conditionFlagID'=>$this->conditionFlagID,
+					'conditionPageID'=>$this->conditionPageID,
+					'conditionOtherFlagID'=>$this->conditionOtherFlagID,
 					'ID'=>$this->ID
 				]
 			);
@@ -196,11 +210,11 @@
 			return parent::$db->query(
 				'UPDATE tblEvents
 				 SET isActive = 0
-				 WHERE ID = :ID;', 
+				 WHERE ID = :ID;',
 				['ID'=>$this->ID]
 			);
 		}
-			
+
 	}
 
 ?>
