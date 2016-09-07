@@ -16,9 +16,9 @@
 		<script type="text/javascript" src="js/lib/backbone.wreqr.js"></script>
 		<script type="text/javascript" src="js/lib/backbone.marionette.min.js"></script>
 		<script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
-		<script type="text/javascript" src="js/validation.js"></script>	
-		<script type="text/javascript" src="js/adventure.js"></script>	
-		<script type="text/javascript" src="js/builder.js"></script>	
+		<script type="text/javascript" src="js/validation.js"></script>
+		<script type="text/javascript" src="js/adventure.js"></script>
+		<script type="text/javascript" src="js/builder.js"></script>
 		<?php
 			$components = ['main','adventure','page','action','actionFlagRequirement','scene','flag','image','effect','event','static'];
 			foreach($components as $component){
@@ -31,7 +31,11 @@
 				echo '<script type="text/javascript" src="js/views/'.$component.'.js"></script>';
 			}
 		?>
-
+		<script type="text/javascript">
+			$(function(){
+				Adventure.assetPath = '<?php echo preg_replace('/[^\/]+$/','',$_SERVER['PHP_SELF']); ?>';
+			});
+		</script>
 	</head>
 	<body>
 		<h1>Adventure Builder</h1>

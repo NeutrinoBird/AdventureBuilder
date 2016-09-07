@@ -38,7 +38,8 @@ form{
 	&.form-inline > .form-group{
 		margin-bottom: 10px;
 		textarea{
-			width: 100%;
+			width: 100%!important;
+			min-height: 84px;
 		}
 	}
 	.form-group{
@@ -282,7 +283,7 @@ figure{
 		margin-bottom: 20px;
 	}
 	.page-select{
-		@extend .col-xs-6;
+		@extend .col-xs-12;
 		/*@extend .col-xs-offset-1;*/
 		@extend .contentBox;
 		padding-top: 10px;
@@ -293,43 +294,49 @@ figure{
 			background-size: 10% auto;
 			background-repeat: no-repeat;
 		}
-		.selection{
+		.selections{
 			@extend .col-xs-12;
 			@extend .col-xs-offset-0;
-			@extend .col-sm-10;
-			@extend .col-sm-offset-1;
-			@extend .clickable;
-			@extend .contentBox-mini;
-			background-image: url('../img/builder/background-button.png');
-			box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px black inset;
-			padding-top: 5px;
-			padding-bottom: 5px;
-			.image-thumbnail{
-				.image-container{
-					position: relative;
-					display:block;
-					width:100%;
-					padding-bottom: 60%;
-					overflow: hidden;
-					background-color: black;
-					img{
-						position: absolute;
-						top: 50%;
-						left: 50%;
-						width: 100%;
-						vertical-align: middle;
-						-ms-transform: translateX(-50%) translateY(-50%) scale(1.0);
-						-webkit-transform: translateX(-50%) translateY(-50%) scale(1.0);
-						transform: translateX(-50%) translateY(-50%) scale(1.0);
-						-webkit-filter: none;
-						filter: none;
+			@extend .col-sm-12;
+			@extend .col-sm-offset-0;
+			.selection{
+				@extend .col-xs-6;
+				@extend .col-xs-offset-0;
+				@extend .col-sm-4;
+				@extend .col-md-3;
+				@extend .clickable;
+				@extend .contentBox-mini;
+				background-image: url('../img/builder/background-button.png');
+				box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px black inset;
+				padding-top: 5px;
+				padding-bottom: 5px;
+				.image-thumbnail{
+					.image-container{
+						position: relative;
+						display:block;
+						width:100%;
+						padding-bottom: 60%;
+						overflow: hidden;
+						background-color: black;
+						img{
+							position: absolute;
+							top: 50%;
+							left: 50%;
+							width: 100%;
+							vertical-align: middle;
+							-ms-transform: translateX(-50%) translateY(-50%) scale(1.0);
+							-webkit-transform: translateX(-50%) translateY(-50%) scale(1.0);
+							transform: translateX(-50%) translateY(-50%) scale(1.0);
+							-webkit-filter: none;
+							filter: none;
+						}
 					}
 				}
 			}
 		}
 		.form-group{
-			@extend .col-xs-12;
-			@extend .col-xs-offset-0;
+			@extend .col-xs-10;
+			@extend .col-xs-offset-1;
 			@extend .col-sm-8;
 			@extend .col-sm-offset-2;
 			margin-bottom: 5px;

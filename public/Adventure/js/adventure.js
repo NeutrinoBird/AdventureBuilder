@@ -1,6 +1,6 @@
 var Adventure = new Marionette.Application();
 Adventure.Templates = {};
-Adventure.assetPath = (typeof assetPath !== 'undefined') ? assetPath : '';
+Adventure.assetPath = (typeof Adventure.assetPath !== 'undefined') ? Adventure.assetPath : '';
 Marionette.TemplateCache.prototype.loadTemplate = function(templateId){
 	return Adventure.Templates[templateId];
 }

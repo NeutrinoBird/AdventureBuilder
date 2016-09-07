@@ -68,6 +68,7 @@ Adventure.AdventureViewingModel = Backbone.Model.extend({
 	initialize: function() {
 		var modelHandle = this;
 		Adventure.activeAdventure = this;
+		this.urlRoot = Adventure.assetPath + this.urlRoot;
 		this.fetch({
 			wait:true,
 			data:{

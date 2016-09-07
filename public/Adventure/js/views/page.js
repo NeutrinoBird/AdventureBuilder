@@ -94,7 +94,9 @@ Adventure.PageEdit = Marionette.LayoutView.extend({
 			this.$el.find(".link-select").toggle(this.linkingPages.length > 0);
 		}
 		this.listenTo(Adventure.activeAdventure.get('images'), 'change destroy', function(model){
-			viewHandle.setImage(model.id);
+			if(model.id == viewHandle.model.get("imageID")){
+				viewHandle.setImage(model.id);
+			}
 		});
 	},
 	events: {

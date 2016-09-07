@@ -109,5 +109,8 @@ Adventure.ActionList = Marionette.CollectionView.extend({
 		this.childViewOptions = {
 			pageView: options.pageView
 		};
+	},
+	collectionEvents: {
+		"sync": "render"
 	}
 });

@@ -1,7 +1,3 @@
-// @koala-prepend "lib/jquery-1.12.4.min.js"
-// @koala-prepend "lib/underscore-min.js"
-// @koala-prepend "lib/backbone-min.js"
-// @koala-prepend "lib/backbone.marionette.min.js"
 // @koala-prepend "validation.js"
 // @koala-prepend "adventure.js"
 // @koala-prepend "models/main.js"

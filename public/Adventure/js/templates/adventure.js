@@ -102,10 +102,15 @@ Adventure.Templates.AdventureEdit = `
 		</div>
 		<div class="form-group">
 			<label>Viewer Code</label>
-			<textarea class="form-control" disabled><%=hashKey%></textarea>
-		</div>
-		<div class="row">
-			<button class="full-button">Publish</button>
+			<select class="form-control dependencies" data-toggle="tooltip" title="The adventure viewer relies on jQuery, Underscore.js, Backbone.js, and Marionette.js. The viewer code will include the necessary libraries, but a conflict may occur if the website already uses one or more of these libraries. To prevent such issues, select the option that describes your website, and the viewer code will be adjusted to not include the libraries that are already in use. Note that all libraries in this list are dependent on the ones above them. For example, if your website uses Backbone.js, then it is also running Underscore.js and jQuery.">
+				<option value="1">Website does not use jQuery</option>
+				<option value="2">Website uses jQuery</option>
+				<option value="3">Website uses Underscore.js</option>
+				<option value="4">Website uses Backbone.js</option>
+				<option value="5">Website uses Marionette.js</option>
+			</select>
+			<textarea class="form-control viewer-code" readonly><script type="text/javascript" src="<%=Adventure.assetPath%>js/viewer.min.js.php" data-adventure="<%=hashKey%>"></script></textarea>
+			<button class="copy-button full-button">Copy Code to Clipboard</button>
 		</div>
 		<div class="errorRow"></div>
 		<div class="row">
@@ -113,3 +118,8 @@ Adventure.Templates.AdventureEdit = `
 		</div>
 	</form>
 `;
+/*
+	<div class="row">
+		<button class="full-button">Publish</button>
+	</div>
+*/

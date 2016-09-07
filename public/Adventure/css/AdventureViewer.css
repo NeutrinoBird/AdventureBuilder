@@ -9,19 +9,53 @@
   src: url("../fonts/prstart.eot?#iefix") format("embedded-opentype"), url("../fonts/prstart.woff") format("woff"), url("../fonts/prstart.ttf") format("truetype"), url("../fonts/prstart.svg#PressStart") format("svg");
   font-weight: normal;
   font-style: normal; }
+@keyframes adventureStart {
+  0% {
+    transform: translateY(-1000px);
+    z-index: 100; }
+  100% {
+    transform: translateY(0px);
+    z-index: 100; } }
+@keyframes overlayFadeIn {
+  0% {
+    filter: opacity(0%);
+    -webkit-filter: opacity(0%); }
+  100% {
+    filter: opacity(100%);
+    -webkit-filter: opacity(100%); } }
+@keyframes overlayFadeOut {
+  0% {
+    filter: opacity(100%);
+    -webkit-filter: opacity(100%); }
+  100% {
+    filter: opacity(0%);
+    -webkit-filter: opacity(0%); } }
 @keyframes popInInventory {
   0% {
-    transform: translate(-50%, 32px) scale(0.01, 0.8); }
+    transform: translate(-50%, 32px) scale(0.01, 0.2); }
   5% {
-    transform: translate(-50%, 32px) scale(0.8, 0.01); }
+    transform: translate(-50%, 32px) scale(0.3, 0.01); }
   10% {
-    transform: translate(-50%, 32px) scale(0.01, 0.8); }
+    transform: translate(-50%, 32px) scale(0.01, 0.5); }
   15% {
-    transform: translate(-50%, 32px) scale(0.8, 0.01); }
+    transform: translate(-50%, 32px) scale(0.5, 0.01); }
   20% {
     transform: translate(-50%, 32px) scale(0.3, 0.8); }
   100% {
     transform: translate(-50%, -16px) scale(1, 1); } }
+@keyframes popInCloseDialog {
+  0% {
+    transform: scale(0.01, 0.2); }
+  5% {
+    transform: scale(0.3, 0.01); }
+  10% {
+    transform: scale(0.01, 0.5); }
+  15% {
+    transform: scale(0.5, 0.01); }
+  20% {
+    transform: scale(0.3, 0.8); }
+  100% {
+    transform: scale(1, 1); } }
 @keyframes popOut {
   0% {
     transform: scale(1, 1); }
@@ -31,12 +65,56 @@
     transform: scale(0.01, 0.01); }
   100% {
     transform: scale(0, 0); } }
-.closing {
-  animation: popOut 1s linear 1 forwards; }
+.clickable, .adventure-start div, .adventure-container .adventure-box .adventure-manager .adventure-content .action-manager .actions .selection-list .selection .action-box, .adventure-container .adventure-box .adventure-manager .adventure-content .action-manager .actions .selection-list .selection .speech-bubble, .adventure-container .close-dialog .dialog-button {
+  cursor: pointer;
+  border-color: #000000;
+  background-color: #000000;
+  background-blend-mode: screen;
+  transform: translate(0px, 0px);
+  transition: border-color .5s, background-color .5s, box-shadow .5s, transform .5s; }
+
+.clickable:hover, .adventure-start div:hover, .adventure-container .adventure-box .adventure-manager .adventure-content .action-manager .actions .selection-list .selection .action-box:hover, .adventure-container .adventure-box .adventure-manager .adventure-content .action-manager .actions .selection-list .selection .speech-bubble:hover, .adventure-container .close-dialog .dialog-button:hover {
+  border-color: #FFFF00;
+  background-color: #888888;
+  box-shadow: 0px 3px 10px black;
+  transform: translate(0px, -5px); }
+
+.adventure-start {
+  width: 100%;
+  text-align: center; }
+  .adventure-start div {
+    display: inline-block;
+    height: 48px;
+    border: 16px solid transparent;
+    box-shadow: 0px 0px 32px black inset;
+    border-image: url("../img/viewer/border-normal.gif") 16 round;
+    background: url("../img/viewer/background-normal.gif") repeat;
+    font-family: PressStartK, PressStart, Arial;
+    text-transform: uppercase; }
+    .adventure-start div p {
+      display: inline-block;
+      color: #FFFFFF;
+      text-shadow: black 2px 2px;
+      margin: 16px;
+      vertical-align: top; }
+    .adventure-start div:before {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      background: url("../img/viewer/chest.png") 0px 0px/100% 100%;
+      content: '';
+      margin: 8px; }
+    .adventure-start div:after {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      background: url("../img/viewer/skull.png") 0px 0px/100% 100%;
+      content: '';
+      margin: 8px; }
 
 .adventure-container {
   display: block;
-  position: fixed;
+  position: absolute;
   top: 0px;
   left: 0px;
   width: 100%;
@@ -45,65 +123,61 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 14px;
   line-height: 1.42857;
-  color: #333; }
+  color: #333;
+  z-index: 10000; }
   .adventure-container * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box; }
   .adventure-container p {
     margin: 0 0 10px; }
-  .adventure-container .clickable, .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .action-box, .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .speech-bubble {
-    cursor: pointer;
-    border-color: #000000;
-    background-color: #000000;
-    background-blend-mode: screen;
-    transform: translate(0px, 0px);
-    transition: border-color .5s, background-color .5s, box-shadow .5s, transform .5s; }
-  .adventure-container .clickable:hover, .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .action-box:hover, .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .speech-bubble:hover {
-    border-color: #FFFF00;
-    background-color: #888888;
-    box-shadow: 0px 3px 10px black;
-    transform: translate(0px, -5px); }
+  .adventure-container .overlay {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background: url("../img/viewer/overlay.png") rgba(0, 0, 0, 0.3);
+    animation: overlayFadeIn 0.5s; }
   .adventure-container .adventure-box {
     display: inline-block;
     position: relative;
+    top: 48px;
     width: 100%;
     max-width: 640px;
     min-width: 160px;
     min-height: 160px;
-    box-shadow: 0px 0px 16px black; }
-    .adventure-container .adventure-box .adventure-content {
+    box-shadow: 0px 0px 16px black;
+    animation: adventureStart 0.5s ease-out; }
+    .adventure-container .adventure-box .adventure-manager .adventure-content {
       display: block;
       position: relative;
       top: 0px;
       left: 0px;
-      padding: 32px;
       z-index: 50;
+      padding: 32px;
       font-family: PressStartK, PressStart, Arial;
-      text-transform: uppercase;
+      /*text-transform: uppercase;*/
       text-align: left;
       pointer-events: none; }
-      .adventure-container .adventure-box .adventure-content .image-manager {
+      .adventure-container .adventure-box .adventure-manager .adventure-content .image-manager {
         position: relative;
         display: block;
         width: 100%;
         padding-bottom: 60%;
         margin-bottom: 16px; }
-        .adventure-container .adventure-box .adventure-content .image-manager .image-container {
+        .adventure-container .adventure-box .adventure-manager .adventure-content .image-manager .image-container {
           position: absolute;
           display: block;
           width: 100%;
           padding-bottom: 60%;
           overflow: hidden; }
-          .adventure-container .adventure-box .adventure-content .image-manager .image-container div {
+          .adventure-container .adventure-box .adventure-manager .adventure-content .image-manager .image-container div {
             position: absolute;
             width: 100%;
             height: 100%;
             overflow: hidden; }
-            .adventure-container .adventure-box .adventure-content .image-manager .image-container div img {
+            .adventure-container .adventure-box .adventure-manager .adventure-content .image-manager .image-container div img {
               position: absolute;
               top: 50%;
               left: 50%;
@@ -114,38 +188,51 @@
               transform: translateX(-50%) translateY(-50%) scale(1);
               -webkit-filter: none;
               filter: none; }
-          .adventure-container .adventure-box .adventure-content .image-manager .image-container.blank {
+          .adventure-container .adventure-box .adventure-manager .adventure-content .image-manager .image-container.blank {
             z-index: 3;
             width: 100%;
             height: 100%;
             display: none; }
-            .adventure-container .adventure-box .adventure-content .image-manager .image-container.blank.black {
+            .adventure-container .adventure-box .adventure-manager .adventure-content .image-manager .image-container.blank.black {
               background-color: black; }
-            .adventure-container .adventure-box .adventure-content .image-manager .image-container.blank.white {
+            .adventure-container .adventure-box .adventure-manager .adventure-content .image-manager .image-container.blank.white {
               background-color: white; }
-      .adventure-container .adventure-box .adventure-content .page-manager {
+      .adventure-container .adventure-box .adventure-manager .adventure-content .page-manager {
         position: relative;
         background-color: rgba(0, 0, 0, 0.3);
         color: #FFFFFF;
-        text-shadow: black 2px 2px;
+        text-shadow: blue 2px 2px;
         overflow: hidden; }
-        .adventure-container .adventure-box .adventure-content .page-manager .page-body {
+        .adventure-container .adventure-box .adventure-manager .adventure-content .page-manager .page-body {
           position: absolute;
           padding: 16px; }
-          .adventure-container .adventure-box .adventure-content .page-manager .page-body p:last-child {
+          .adventure-container .adventure-box .adventure-manager .adventure-content .page-manager .page-body p:last-child {
             margin-bottom: 0px; }
-      .adventure-container .adventure-box .adventure-content .action-manager {
+          .adventure-container .adventure-box .adventure-manager .adventure-content .page-manager .page-body .checkpoint {
+            width: 100%;
+            height: 16px;
+            background: url("../img/viewer/background-checkpoint.gif");
+            margin-bottom: 16px;
+            text-align: center; }
+            .adventure-container .adventure-box .adventure-manager .adventure-content .page-manager .page-body .checkpoint span {
+              display: inline-block;
+              height: 16px;
+              background-color: black;
+              padding: 0px 16px; }
+      .adventure-container .adventure-box .adventure-manager .adventure-content .action-manager {
         position: relative;
         overflow: hidden;
         pointer-events: auto; }
-        .adventure-container .adventure-box .adventure-content .action-manager .actions {
+        .adventure-container .adventure-box .adventure-manager .adventure-content .action-manager .actions {
           position: absolute;
           width: 100%;
           margin-top: 16px; }
-          .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection {
+          .adventure-container .adventure-box .adventure-manager .adventure-content .action-manager .actions .selection-list .selection {
             width: 83.33333%;
             margin-left: 8.33333%; }
-            .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .action-box {
+            .adventure-container .adventure-box .adventure-manager .adventure-content .action-manager .actions .selection-list .selection p {
+              display: inline; }
+            .adventure-container .adventure-box .adventure-manager .adventure-content .action-manager .actions .selection-list .selection .action-box {
               display: inline-block;
               clear: right;
               border: 3px solid black;
@@ -153,10 +240,10 @@
               box-shadow: 0px 0px 5px 0px black, 0px -1px 15px 0px #888 inset;
               padding: 5px 10px 5px 10px;
               margin-bottom: 5px; }
-              .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .action-box img {
+              .adventure-container .adventure-box .adventure-manager .adventure-content .action-manager .actions .selection-list .selection .action-box img {
                 height: 14px;
                 vertical-align: middle; }
-            .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .speech-bubble {
+            .adventure-container .adventure-box .adventure-manager .adventure-content .action-manager .actions .selection-list .selection .speech-bubble {
               display: inline-block;
               clear: right;
               background: #FFFFFF;
@@ -165,9 +252,9 @@
               box-shadow: 0px 0px 5px 0px black, 0px -1px 15px 0px #888 inset;
               padding: 5px 10px 5px 10px;
               margin-bottom: 15px; }
-              .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .speech-bubble:hover {
+              .adventure-container .adventure-box .adventure-manager .adventure-content .action-manager .actions .selection-list .selection .speech-bubble:hover {
                 background: #FFFFFF; }
-              .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .speech-bubble:before {
+              .adventure-container .adventure-box .adventure-manager .adventure-content .action-manager .actions .selection-list .selection .speech-bubble:before {
                 content: ' ';
                 position: absolute;
                 width: 0;
@@ -177,9 +264,9 @@
                 border: 10px solid;
                 border-color: black transparent transparent black;
                 transition: border-color .5s; }
-              .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .speech-bubble:hover:before {
+              .adventure-container .adventure-box .adventure-manager .adventure-content .action-manager .actions .selection-list .selection .speech-bubble:hover:before {
                 border-color: yellow transparent transparent yellow; }
-              .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .speech-bubble:after {
+              .adventure-container .adventure-box .adventure-manager .adventure-content .action-manager .actions .selection-list .selection .speech-bubble:after {
                 content: ' ';
                 position: absolute;
                 width: 0;
@@ -189,8 +276,12 @@
                 border: 6px solid;
                 border-color: #bfbfbf transparent transparent #bfbfbf;
                 transition: border-color .5s; }
-              .adventure-container .adventure-box .adventure-content .action-manager .actions .selection-list .selection .speech-bubble:hover:after {
+              .adventure-container .adventure-box .adventure-manager .adventure-content .action-manager .actions .selection-list .selection .speech-bubble:hover:after {
                 border-color: white transparent transparent white; }
+    .adventure-container .adventure-box .adventure-manager.transitioning {
+      overflow-y: hidden; }
+      .adventure-container .adventure-box .adventure-manager.transitioning .adventure-content .inventory .description {
+        display: none; }
     .adventure-container .adventure-box .adventure-background, .adventure-container .adventure-box .adventure-background-transition {
       display: block;
       position: absolute;
@@ -212,10 +303,10 @@
       z-index: 1; }
     .adventure-container .adventure-box .adventure-background-transition {
       z-index: 2; }
-    .adventure-container .adventure-box .normal {
+    .adventure-container .adventure-box .normal, .adventure-container .adventure-box .checkpoint {
       border-image: url("../img/viewer/border-normal.gif") 16 round;
       background: url("../img/viewer/background-normal.gif") repeat; }
-      .adventure-container .adventure-box .normal .close-box {
+      .adventure-container .adventure-box .normal .close-box, .adventure-container .adventure-box .checkpoint .close-box {
         background-position: 0px 0px; }
     .adventure-container .adventure-box .death {
       border-image: url("../img/viewer/border-death.gif") 16 round;
@@ -283,6 +374,7 @@
           position: absolute;
           left: 50%;
           bottom: 100%;
+          z-index: 100;
           width: 312px;
           background: rgba(0, 0, 0, 0.8);
           background-clip: content-box;
@@ -294,6 +386,25 @@
           display: none;
           animation: popInInventory .5s ease-out 1;
           text-shadow: black 2px 2px; }
+          .adventure-container .adventure-box .inventory .item .description .description-image-container {
+            width: 128px;
+            margin: 8px 84px; }
+            .adventure-container .adventure-box .inventory .item .description .description-image-container div {
+              position: relative;
+              display: block;
+              padding-bottom: 100%;
+              overflow: hidden; }
+              .adventure-container .adventure-box .inventory .item .description .description-image-container div img {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 100%;
+                vertical-align: middle;
+                -ms-transform: translateX(-50%) translateY(-50%) scale(1);
+                -webkit-transform: translateX(-50%) translateY(-50%) scale(1);
+                transform: translateX(-50%) translateY(-50%) scale(1);
+                -webkit-filter: none;
+                filter: none; }
           .adventure-container .adventure-box .inventory .item .description h3 {
             color: #FFFF00;
             text-align: center;
@@ -316,5 +427,38 @@
         font-size: 8px;
         color: white;
         text-shadow: black 0px 0px 3px, black 1px 1px, black -1px 1px, black 1px -1px, black -1px -1px; }
+  .adventure-container.closing .overlay {
+    animation: overlayFadeOut 1s linear 1 forwards; }
+  .adventure-container.closing .adventure-box {
+    animation: popOut 1s linear 1 forwards; }
+  .adventure-container .close-dialog {
+    position: absolute;
+    top: 20%;
+    z-index: 300;
+    width: 60%;
+    margin-left: 20%;
+    padding: 16px 32px;
+    background: rgba(0, 0, 0, 0.8);
+    background-clip: padding-box;
+    border: 8px solid transparent;
+    border-image: url("../img/viewer/border-inventory.gif") 8 round;
+    animation: popInCloseDialog .5s ease-out 1;
+    font-family: PressStartK, PressStart, Arial;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    text-shadow: black 2px 2px;
+    display: none; }
+    .adventure-container .close-dialog .dialog-button {
+      display: block;
+      width: 70%;
+      margin: 8px 15%;
+      padding: 5px 10px 5px 10px;
+      border: 3px solid black;
+      background-image: url("../img/builder/background-button.png");
+      text-shadow: 0px 0px;
+      color: #333; }
+      .adventure-container .close-dialog .dialog-button img {
+        height: 14px;
+        vertical-align: middle; }
 
 /*# sourceMappingURL=AdventureViewer.css.map */

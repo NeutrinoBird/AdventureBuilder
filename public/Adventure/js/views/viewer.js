@@ -17,7 +17,10 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		actionsB: '.actions.page-B'
 	},
 	ui: {
-		closeBox: '.adventure-background .close-box'
+		closeBox: '.adventure-background .close-box',
+		overlay: '.overlay',
+		closeYes: '.close-dialog .option-yes',
+		closeNo: '.close-dialog .option-no'
 	},
 	initialize: function(){
 		var viewHandle = this;
@@ -38,8 +41,11 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 			this.transitionData.nextPageID = this.variables.startingPage;
 			this.loadPage();
 			this.resetTransitionData();
+			this.$el.find('.image-manager .page-'+this.otherSide).hide();
+			this.$el.find('.action-manager .page-'+this.otherSide).hide();
 			this.$el.find('.page-manager').height(this.$el.find('.page-manager .page-'+this.side).innerHeight());
 			this.$el.find('.action-manager').height(this.$el.find('.action-manager .page-'+this.side).outerHeight(true));
+			this.trimActions();
 			this.resizeBox();
 		});
 		var viewHandle = this;
@@ -52,20 +58,32 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		var viewHandle = this;
 		this.showChildView('inventory', new Adventure.Inventory({collection: this.inventorySet}));
 		this.$el.find(".adventure-background-transition").hide();
+		this.$el.find(".adventure-box").css("top",$(window).scrollTop()+48+'px');
 		this.resizeBox();
 	},
 	events: {
 		'click @ui.closeBox': function(){
-			this.$el.find(".adventure-box").addClass("closing");
+			this.$el.find(".close-dialog").show();
+		},
+		'dblclick @ui.overlay': function(){
+			this.$el.find(".close-dialog").show();
+		},
+		'click @ui.closeYes': function(){
+			this.$el.find(".close-dialog").hide();
+			this.$el.find(".adventure-container").addClass("closing");
 			_.delay(function(viewHandle){
 				viewHandle.destroy();
 			}, 1000, this);
+		},
+		'click @ui.closeNo': function(){
+			this.$el.find(".close-dialog").hide();
 		}
 	},
 	resetVariables: function(){
 		var viewHandle = this;
 		this.variables.startingPage = this.model.get("pages").models[0].id;
 		this.variables.currentPage = 0;
+		this.variables.checkpointPage = 0;
 		this.variables.storedPage = 0;
 		this.model.get("flags").each(function(flag){
 			viewHandle.variables.flags[int(flag.id)] = int(flag.get("isCounter")) ? int(flag.get("counterDefault")) || 0 : 0;
@@ -73,6 +91,7 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 				viewHandle.inventorySet.add(flag);
 			}
 		});
+		this.savedVariables = JSON.parse(JSON.stringify(this.variables));
 	},
 	resetTransitionData: function(){
 		this.transitionData.transitioning = false;
@@ -183,14 +202,21 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		this.$el.find('.action-manager .page-'+this.side).show().css("left", "100%").fadeOut(750, function(){
 			viewHandle.$el.find('.action-manager .page-'+viewHandle.side).css("left", "0%").fadeIn(250);
 		});
+		_.delay(function(viewHandle){
+			viewHandle.trimActions();
+		}, 751, this);
 		this.$el.find('.action-manager .page-'+this.otherSide).fadeOut(250);
-		this.$el.find('.action-manager').animate({height: this.$el.find('.action-manager .page-'+this.side).outerHeight(true)+"px"}, 1000, function(){viewHandle.resetTransitionData();});
+		this.$el.find('.action-manager').animate({height: this.$el.find('.action-manager .page-'+this.side).outerHeight(true)+"px"}, 1000, function(){
+			viewHandle.resetTransitionData();
+			viewHandle.$el.find(".adventure-manager").removeClass('transitioning');
+		});
 
 		var boxHeight = this.blankHeight + this.$el.find('.image-manager .page-'+this.side).innerHeight() + this.$el.find('.page-manager .page-'+this.side).innerHeight() + this.$el.find('.action-manager .page-'+this.side).outerHeight(true) + this.$el.find('.inventory-container').outerHeight(true);
 		if (boxHeight % 16 > 0){
 			boxHeight += 16 - (boxHeight % 16);
 		}
 		this.$el.find(".adventure-box").animate({height: boxHeight + "px"});
+		this.$el.find(".adventure-manager").addClass('transitioning').animate({height: boxHeight - 16 + "px"});
 	},
 	loadPage: function(){
 		this.variables.currentPage = this.transitionData.nextPageID;
@@ -199,7 +225,7 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		if(sceneModel){
 			pageModel.get("actions").add(sceneModel.get("actions").toJSON());
 			sceneModel.get("sceneEvents").each(function(sceneEvent){
-				pageModel.get("pageEvents").add({id:'s_'+sceneEvent.id, priority:sceneEvent.get('priority'), eventID:sceneEvent.get('eventID')});
+				pageModel.get("pageEvents").add({ID:'s_'+sceneEvent.id, priority:sceneEvent.get('priority'), eventID:sceneEvent.get('eventID')});
 			});
 		}
 		this.handleEvents(pageModel.get("pageEvents"));
@@ -207,10 +233,21 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 			this.loadPage();
 			return false;
 		}
+		this.transitionData.nextPageClass = Adventure.pageTypes.get(pageModel.get("pageTypeID")).get("style");
+		if (this.transitionData.nextPageClass == 'checkpoint'){
+			this.variables.checkpointPage = this.transitionData.nextPageID;
+			this.savedVariables = JSON.parse(JSON.stringify(this.variables));
+			this.transitionData.beforePageText = Adventure.Templates.Checkpoint + this.transitionData.beforePageText;
+		}
+		if (this.transitionData.nextPageClass == 'death' || this.transitionData.nextPageClass == 'badEnding' || this.transitionData.nextPageClass == 'goodEnding'){
+			if (this.transitionData.nextPageClass != 'goodEnding'){
+				pageModel.get("actions").add({ID:'checkpoint', text:'Return to Checkpoint'});
+			}
+			pageModel.get("actions").add({ID:'restart', text:'Restart'});
+		}
 		this.showChildView('image'+this.side, new Adventure.ViewerImage({model: this.model.get("images").get(pageModel.get("imageID")), effect: this.model.get("effects").get(pageModel.get("effectID"))}));
 		this.showChildView('page'+this.side, new Adventure.ViewerPage({model: pageModel, beforeText: this.transitionData.beforePageText, afterText: this.transitionData.afterPageText}));
 		this.showChildView('actions'+this.side, new Adventure.ViewerActionList({collection: pageModel.get("actions")}));
-		this.transitionData.nextPageClass = Adventure.pageTypes.get(pageModel.get("pageTypeID")).get("style");
 	},
 	backgroundTransition: function(nextClass){
 		if (this.currentPageType != nextClass){
@@ -242,6 +279,20 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 			}
 			this.beginTransition();
 		}
+	},
+	restart: function(){
+		this.resetVariables();
+		this.transitionData.nextPageID = this.variables.startingPage;
+		this.transitionData.transitionID = 3;
+		this.transitionData.randomRoll = Math.floor((Math.random() * 101));
+		this.beginTransition();
+	},
+	returnToCheckpoint: function(){
+		this.variables = JSON.parse(JSON.stringify(this.savedVariables));
+		this.transitionData.nextPageID = this.variables.checkpointPage;
+		this.transitionData.transitionID = 3;
+		this.transitionData.randomRoll = Math.floor((Math.random() * 101));
+		this.beginTransition();
 	},
 	handleEvents: function(eventLinkCollection){
 		var viewHandle = this;
@@ -310,18 +361,27 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		});
 		this.inventorySet.trigger("change");
 	},
+	trimActions: function(){
+		this.$el.find('.action-manager .page-'+this.side+' .selection > div').each(function(){
+			$(this).css('width','100%');
+			$(this).css('width',Math.min($(this).find('p').outerWidth()+26,$(this).outerWidth())+'px');
+		});
+	},
 	resizeBox: function(){
 		//This resizes the box based on the window width, and constrains the dimensions to multiples of 16.
 		//It is intended to make the NES-inspired theme look correct, especially the border bricks.
 
 		var boxWidth = Math.min($(".adventure-container").width(), 640);
 		$(".adventure-box").width(Math.max(boxWidth - (boxWidth % 16), 160));
+		this.$el.find('.page-manager').height(this.$el.find('.page-manager .page-'+this.side).innerHeight());
+		this.$el.find('.action-manager').height(this.$el.find('.action-manager .page-'+this.side).outerHeight(true));
 		//$('.page-manager').height($('.page-manager .page-'+this.side).innerHeight());
 		var boxHeight = $(".adventure-content").innerHeight();
 		if (boxHeight % 16 > 0){
 			$(".adventure-box").height(boxHeight + 16 - (boxHeight % 16));
 		}
 		this.blankHeight = this.$el.find(".adventure-box").height() - this.$el.find('.image-manager .page-'+this.side).innerHeight() - this.$el.find('.page-manager .page-'+this.side).innerHeight() - this.$el.find('.action-manager .page-'+this.side).outerHeight(true) - this.$el.find('.inventory-container').outerHeight(true);
+		this.trimActions();
 	},
 	onDestroy: function(){
 		$(window).off('resize load',this.resizeBox);
@@ -354,7 +414,16 @@ Adventure.ViewerActionButton = Marionette.ItemView.extend({
 	events: {
 		'click': function(event){
 			event.preventDefault();
-			Adventure.viewer.performAction(this.model);
+			switch(this.model.id){
+				case 'restart':
+					Adventure.viewer.restart();
+					break;
+				case 'checkpoint':
+					Adventure.viewer.returnToCheckpoint();
+					break;
+				default:
+					Adventure.viewer.performAction(this.model);
+			}
 			return false;
 		}
 	},
@@ -371,6 +440,9 @@ Adventure.ViewerActionList = Marionette.CollectionView.extend({
 	filter: function (child, index, collection) {
 		var requirements = child.get("actionFlagRequirements");
 		var filterPass = true;
+		if (child.id == 'checkpoint' && Adventure.viewer.variables.checkpointPage == 0){
+			filterPass = false;
+		}
 		if(requirements){
 			requirements.every(function(requirement){
 				if (!Adventure.conditions.get(requirement.get("conditionID")).evaluateCondition(Adventure.viewer.variables.flags[int(requirement.get("flagID"))] || 0, requirement.get("counterValue"), requirement.get("counterUpperValue"), Adventure.viewer.transitionData.randomRoll, Adventure.viewer.variables.currentPage, requirement.get("pageID"), Adventure.viewer.variables.flags[int(requirement.get("otherFlagID"))])){

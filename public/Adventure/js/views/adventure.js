@@ -110,7 +110,9 @@ Adventure.AdventureEdit = Marionette.LayoutView.extend({
 		newSceneButton: '.scene-select button',
 		newImageButton: '.image-select button',
 		newFlagButton: '.flag-select button',
-		newEffectButton: '.effect-select button'
+		newEffectButton: '.effect-select button',
+		dependencies: '.dependencies',
+		copyButton: '.copy-button'
 	},
 	onRender: function() {
 		var viewHandle = this;
@@ -167,6 +169,16 @@ Adventure.AdventureEdit = Marionette.LayoutView.extend({
 		'click @ui.newEffectButton': function(event){
 			event.preventDefault();
 			Adventure.Main.renderEffectSelection(this.model.get('effects'));
+			return false;
+		},
+		'change @ui.dependencies': function(event){
+			var newSet = 'min.js.php' + (this.$el.find('.dependencies').val() > 1 ? '?set='+this.$el.find('.dependencies').val() : '');
+			this.$el.find('.viewer-code').val(this.$el.find('.viewer-code').val().replace(/min\.js\.php(\?set=[0-9]+)?/,newSet));
+		},
+		'click @ui.copyButton': function(event){
+			event.preventDefault();
+			this.$el.find('.viewer-code').get(0).setSelectionRange(0, this.$el.find('.viewer-code').val().length);
+			document.execCommand("copy");
 			return false;
 		}
 	},

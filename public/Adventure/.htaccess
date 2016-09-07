@@ -1,0 +1,8 @@
+#This will override the include path for this folder.
+#Use this only in an environment where editing the include path in php.ini will break other things on your website.
+
+# UNIX:
+#php_value include_path ".:/php/includes"
+
+# Windows:
+#php_value include_path ".;c:\wamp64\www\includes"

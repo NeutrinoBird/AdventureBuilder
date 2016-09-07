@@ -42,22 +42,22 @@ Adventure.ConditionModel = Backbone.Model.extend({
 				return flagValue == false;
 				break;
 			case 4:
-				return flagValue == (otherFlagValue !== undefined ? otherFlagValue : value);
+				return flagValue == ((otherFlagValue !== undefined && otherFlagValue !== null) ? otherFlagValue : value);
 				break;
 			case 5:
-				return flagValue != (otherFlagValue !== undefined ? otherFlagValue : value);
+				return flagValue != ((otherFlagValue !== undefined && otherFlagValue !== null) ? otherFlagValue : value);
 				break;
 			case 6:
-				return flagValue < (otherFlagValue !== undefined ? otherFlagValue : value);
+				return flagValue < ((otherFlagValue !== undefined && otherFlagValue !== null) ? otherFlagValue : value);
 				break;
 			case 7:
-				return flagValue <= (otherFlagValue !== undefined ? otherFlagValue : value);
+				return flagValue <= ((otherFlagValue !== undefined && otherFlagValue !== null) ? otherFlagValue : value);
 				break;
 			case 8:
-				return flagValue > (otherFlagValue !== undefined ? otherFlagValue : value);
+				return flagValue > ((otherFlagValue !== undefined && otherFlagValue !== null) ? otherFlagValue : value);
 				break;
 			case 9:
-				return flagValue >= (otherFlagValue !== undefined ? otherFlagValue : value);
+				return flagValue >= ((otherFlagValue !== undefined && otherFlagValue !== null) ? otherFlagValue : value);
 				break;
 			case 10:
 				return flagValue >= value && flagValue <= upperValue;
@@ -109,7 +109,7 @@ Adventure.ActionTypes = Backbone.Collection.extend({
 Adventure.initStatic = function(callback){
 	$.ajax({
 		type: "POST",
-		url: "services/static.php",
+		url: Adventure.assetPath+"services/static.php",
 		success: function(response){
 			Adventure.pageTypes = new Adventure.PageTypes(response.pageTypes);
 			Adventure.transitions = new Adventure.Transitions(response.transitions);
