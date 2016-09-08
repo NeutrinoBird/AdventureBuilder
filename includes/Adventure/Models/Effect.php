@@ -1,5 +1,5 @@
 <?php
-	include_once('Adventure\Models\Model.php');
+	include_once('Adventure/Models/Model.php');
 
 	class Effect extends Model{
 		public $ID;
@@ -41,7 +41,7 @@
 					 FROM tblAdventures
 					 WHERE ID = :adventureID
 					 AND userID = :userID
-					 AND isActive = 1;', 
+					 AND isActive = 1;',
 					[
 						'adventureID'=>$adventureID,
 						'userID'=>$user->ID,
@@ -75,7 +75,7 @@
 				'SELECT ID, adventureID, name, keyframes, timing, duration, delay, loops, direction, fillMode
 				 FROM tblEffects
 				 WHERE adventureID = :adventureID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
 					'adventureID'=>$adventureID,
 				]
@@ -94,7 +94,7 @@
 				$effectSet[$effect->ID]->fillMode = $effect->fillMode;
 			}
 			return $effectSet;
-		}	
+		}
 
 		private function Load($user, $ID){
 			if(is_null($user) || !is_numeric($ID))
@@ -106,7 +106,7 @@
 					 JOIN tblAdventures ON tblAdventures.ID = tblEffects.adventureID
 					 WHERE tblEffects.ID = :ID
 					 AND tblAdventures.userID = :userID
-					 AND tblEffects.isActive = 1;', 
+					 AND tblEffects.isActive = 1;',
 					[
 						'ID'=>$ID,
 						'userID'=>$user->ID
@@ -127,15 +127,15 @@
 			);
 			if ($result){
 				$this->ID = $ID;
-				$this->adventureID = $result->adventureID;	
+				$this->adventureID = $result->adventureID;
 				$this->name = $result->name;
-				$this->keyframes = $result->keyframes;		
+				$this->keyframes = $result->keyframes;
 				$this->timing = $result->timing;
 				$this->duration = $result->duration;
 				$this->delay = $result->delay;
 				$this->loops = $result->loops;
 				$this->direction = $result->direction;
-				$this->fillMode = $result->fillMode;						
+				$this->fillMode = $result->fillMode;
 				return true;
 			}else{
 				return false;
@@ -144,7 +144,7 @@
 
 		public function Update($name, $keyframes, $timing, $duration, $delay, $loops, $direction, $fillMode){
 			$this->name = htmlentities($name);
-			$this->keyframes = htmlspecialchars($keyframes);	
+			$this->keyframes = htmlspecialchars($keyframes);
 			$this->timing = htmlspecialchars($timing);
 			$this->duration = $duration;
 			$this->delay = $delay;
@@ -162,9 +162,9 @@
 				 direction = :direction,
 				 fillMode = :fillMode
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
-					'name'=>$this->name, 
+					'name'=>$this->name,
 					'keyframes'=>$this->keyframes,
 					'timing'=>$this->timing,
 					'duration'=>$this->duration,
@@ -183,17 +183,17 @@
 				 SET isActive = 0
 				 WHERE ID = :ID;
 
-				 UPDATE tblPages				 	
+				 UPDATE tblPages
 				 SET effectID = 0
 				 WHERE effectID = :ID;
 
-				 UPDATE tblActions			 	
+				 UPDATE tblActions
 				 SET effectID = 0
-				 WHERE effectID = :ID;', 
+				 WHERE effectID = :ID;',
 				['ID'=>$this->ID]
 			);
 		}
-			
+
 	}
 
 ?>

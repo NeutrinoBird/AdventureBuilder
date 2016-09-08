@@ -1,5 +1,5 @@
 <?php
-	include_once('Adventure\Models\Model.php');
+	include_once('Adventure/Models/Model.php');
 
 	class ActionEvent extends Model{
 		public $ID;

@@ -1,5 +1,5 @@
 <?php
-	include_once('Adventure\DatabaseLogin.php');
+	include_once('Adventure/DatabaseLogin.php');
 
 	class DatabaseConnection{
 		private $connection;
@@ -15,7 +15,7 @@
 
 		public function query($sql, $data = []){
 			try{
-				$statement = $this->connection->prepare($sql);	
+				$statement = $this->connection->prepare($sql);
 				$statement->execute($data);
 			}catch(PDOException $e){
 				die("Query execution failed: ".$e->getMessage());
@@ -44,7 +44,7 @@
 
 		public function queryInsertGetID($sql, $data = []){
 			try{
-				$result = $this->query($sql, $data);			
+				$result = $this->query($sql, $data);
 				return $this->connection->lastInsertId();
 			}catch(PDOException $e){
 				die("Query insert failed: ".$e->getMessage());

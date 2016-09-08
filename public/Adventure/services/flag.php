@@ -1,17 +1,18 @@
 <?php
-	include_once('Adventure\Response.php');
-	include_once('Adventure\CheckSession.php');
-	include_once('Adventure\Validation.php');
-	include_once('Adventure\Models\Flag.php');
+	include_once(dirname(__FILE__).'/includeOverride.php');
+	include_once('Adventure/Response.php');
+	include_once('Adventure/CheckSession.php');
+	include_once('Adventure/Validation.php');
+	include_once('Adventure/Models/Flag.php');
 
 	try{
 		switch($_SERVER['REQUEST_METHOD']){
 			case 'POST':
-				$input = json_decode(file_get_contents('php://input'));		
+				$input = json_decode(file_get_contents('php://input'));
 				$validation = new Validation();
 				$validation->prime($input, ['adventureID']);
 				$validation->addVariable('adventureID',$input->adventureID,'uint',true);
-				$validation->validate();		
+				$validation->validate();
 				if($validation->result['error'] == 1){
 					$response->JSON = '{"errorMsg":"'.$validation->result['errorMsg'].'","errorFields":'.json_encode($validation->result['errorFields']).'}';
 					$response->error = 1;
@@ -46,13 +47,13 @@
 					$flag->Update($valid->name, $valid->isItem, $valid->description, $valid->imageID, $valid->isCounter, $valid->counterDefault, $valid->counterMinimum, $valid->counterMaximum, $valid->counterWraps);
 				}
 				break;
-			case 'GET':			
+			case 'GET':
 				$input = (object)$_GET;
 				if(!isset($input->ID) || !is_numeric($input->ID)){
 					throw new Exception("Invalid ID.");
 				}
 				$flag = new Flag($userSession->user,$input->ID);
-				$response->JSON = json_encode($flag);				
+				$response->JSON = json_encode($flag);
 				break;
 			case 'DELETE':
 				$deleteID = substr($_SERVER['PATH_INFO'],1);
@@ -66,7 +67,7 @@
 				}
 				break;
 		}
-	} catch (Exception $e) {			
+	} catch (Exception $e) {
 		$response->JSON = '{"errorMsg":"'.$e->getMessage().'","errorFields":[]}';
 		$response->error = 1;
 	}

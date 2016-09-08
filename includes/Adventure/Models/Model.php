@@ -1,6 +1,6 @@
 <?php
-	include_once('Adventure\DatabaseConnection.php');
-	
+	include_once('Adventure/DatabaseConnection.php');
+
 	class Model{
 		protected static $db;
 		protected $tableName;
@@ -20,7 +20,7 @@
 		}
 
 		public function GetAll(){
-			return self::$db->queryGetAll('SELECT * FROM '.$tableName.';');			
+			return self::$db->queryGetAll('SELECT * FROM '.$tableName.';');
 		}
 
 		protected function SQLDate($timestamp){

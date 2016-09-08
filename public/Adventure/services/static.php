@@ -1,10 +1,10 @@
 <?php
-	//include_once('Adventure\CheckSession.php');
-	include_once('Adventure\Models\PageType.php');
-	include_once('Adventure\Models\Transition.php');
-	include_once('Adventure\Models\Condition.php');
-	include_once('Adventure\Models\EventType.php');
-	include_once('Adventure\Models\ActionType.php');
+	include_once(dirname(__FILE__).'/includeOverride.php');
+	include_once('Adventure/Models/PageType.php');
+	include_once('Adventure/Models/Transition.php');
+	include_once('Adventure/Models/Condition.php');
+	include_once('Adventure/Models/EventType.php');
+	include_once('Adventure/Models/ActionType.php');
 	$returnJSON = "";
 	$error = 0;
 

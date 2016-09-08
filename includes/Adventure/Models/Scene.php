@@ -1,11 +1,11 @@
 <?php
-	include_once('Adventure\Models\Model.php');
+	include_once('Adventure/Models/Model.php');
 
 	class Scene extends Model{
 		public $ID;
 		public $adventureID;
 		public $name;
-		
+
 		public $actions;
 		public $sceneEvents;
 
@@ -32,7 +32,7 @@
 					 FROM tblAdventures
 					 WHERE ID = :adventureID
 					 AND userID = :userID
-					 AND isActive = 1;', 
+					 AND isActive = 1;',
 					[
 						'adventureID'=>$adventureID,
 						'userID'=>$user->ID,
@@ -45,7 +45,7 @@
 			$newScene = new Scene();
 			$newScene->Insert($adventureID);
 			return $newScene;
-		}	
+		}
 
 		private function Insert($adventureID){
 			$this->adventureID = $adventureID;
@@ -66,7 +66,7 @@
 				'SELECT ID, adventureID, name
 				 FROM tblScenes
 				 WHERE adventureID = :adventureID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
 					'adventureID'=>$adventureID,
 				]
@@ -78,7 +78,7 @@
 				$sceneSet[$scene->ID]->name = $scene->name;
 			}
 			return $sceneSet;
-		}	
+		}
 
 		private function Load($user, $ID){
 			if(is_null($user) || !is_numeric($ID))
@@ -90,7 +90,7 @@
 					 JOIN tblAdventures ON tblAdventures.ID = tblScenes.adventureID
 					 WHERE tblScenes.ID = :ID
 					 AND tblAdventures.userID = :userID
-					 AND tblScenes.isActive = 1;', 
+					 AND tblScenes.isActive = 1;',
 					[
 						'ID'=>$ID,
 						'userID'=>$user->ID
@@ -104,20 +104,20 @@
 				'SELECT adventureID, name
 				 FROM tblScenes
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
 					'ID'=>$ID
 				]
 			);
 			if ($result){
-				$this->ID = $ID;	
+				$this->ID = $ID;
 				$this->name = $result->name;
-				$this->adventureID = $result->adventureID;										
+				$this->adventureID = $result->adventureID;
 				return true;
 			}else{
 				return false;
 			}
-		}	
+		}
 
 		public function Update($name){
 			$this->name = htmlentities($name);
@@ -125,9 +125,9 @@
 				'UPDATE tblScenes
 				 SET tblScenes.name = :name
 				 WHERE tblScenes.ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
-					'name'=>$this->name, 
+					'name'=>$this->name,
 					'ID'=>$this->ID
 				]
 			);
@@ -139,21 +139,21 @@
 				 SET isActive = 0
 				 WHERE ID = :ID;
 
-				 UPDATE tblPages				 	
+				 UPDATE tblPages
 				 SET sceneID = 0
 				 WHERE sceneID = :ID;
 
-				 UPDATE tblActions 
+				 UPDATE tblActions
 				 SET isActive = 0
 				 WHERE sceneID = :ID;
 
-				 UPDATE tblSceneEvents	 
+				 UPDATE tblSceneEvents
 				 SET isActive = 0
-				 WHERE sceneID = :ID;', 
+				 WHERE sceneID = :ID;',
 				['ID'=>$this->ID]
 			);
 		}
-			
+
 	}
 
 ?>

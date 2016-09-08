@@ -1,17 +1,17 @@
 <?php
-	include_once('Adventure\Models\Model.php');
-	include_once('Adventure\Models\User.php');
-	include_once('Adventure\Models\Page.php');
-	include_once('Adventure\Models\Scene.php');
-	include_once('Adventure\Models\Image.php');
-	include_once('Adventure\Models\Effect.php');
-	include_once('Adventure\Models\Flag.php');
-	include_once('Adventure\Models\Event.php');
-	include_once('Adventure\Models\Action.php');
-	include_once('Adventure\Models\ActionFlagRequirement.php');
-	include_once('Adventure\Models\SceneEvent.php');
-	include_once('Adventure\Models\PageEvent.php');
-	include_once('Adventure\Models\ActionEvent.php');
+	include_once('Adventure/Models/Model.php');
+	include_once('Adventure/Models/User.php');
+	include_once('Adventure/Models/Page.php');
+	include_once('Adventure/Models/Scene.php');
+	include_once('Adventure/Models/Image.php');
+	include_once('Adventure/Models/Effect.php');
+	include_once('Adventure/Models/Flag.php');
+	include_once('Adventure/Models/Event.php');
+	include_once('Adventure/Models/Action.php');
+	include_once('Adventure/Models/ActionFlagRequirement.php');
+	include_once('Adventure/Models/SceneEvent.php');
+	include_once('Adventure/Models/PageEvent.php');
+	include_once('Adventure/Models/ActionEvent.php');
 
 	class Adventure extends Model{
 		public $ID;

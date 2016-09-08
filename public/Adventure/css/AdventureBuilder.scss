@@ -439,7 +439,8 @@ input[type='checkbox']{
 }
 
 .scene-select{
-	@extend .col-xs-6;
+	@extend .col-xs-12;
+	@extend .col-sm-6;
 	/*@extend .col-xs-offset-1;*/
 	@extend .contentBox;
 	padding-top: 10px;
@@ -517,7 +518,8 @@ input[type='checkbox']{
 }
 
 .image-select{
-	@extend .col-xs-6;
+	@extend .col-xs-12;
+	@extend .col-sm-6;
 	/*@extend .col-xs-offset-1;*/
 	@extend .contentBox;
 	padding-top: 10px;
@@ -646,7 +648,8 @@ input[type='checkbox']{
 }
 
 .effect-select{
-	@extend .col-xs-6;
+	@extend .col-xs-12;
+	@extend .col-sm-6;
 	/*@extend .col-xs-offset-1;*/
 	@extend .contentBox;
 	padding-top: 10px;
@@ -777,7 +780,8 @@ input[type='checkbox']{
 }
 
 .flag-select{
-	@extend .col-xs-6;
+	@extend .col-xs-12;
+	@extend .col-sm-6;
 	/*@extend .col-xs-offset-1;*/
 	@extend .contentBox;
 	padding-top: 10px;
@@ -881,7 +885,8 @@ input[type='checkbox']{
 }
 
 .event-select{
-	@extend .col-xs-6;
+	@extend .col-xs-12;
+	@extend .col-sm-6;
 	/*@extend .col-xs-offset-1;*/
 	@extend .contentBox;
 	padding-top: 10px;
@@ -1005,9 +1010,23 @@ input[type='checkbox']{
 				height: 36px;
 				width: 175px;
 				margin-bottom: 8px;
-				font-size: 18px;
+				.select-image{
+					width: 16.6666%;
+				}
 				.select-description{
-					margin-top: 4px;
+					width: 83.3333%;
+					margin-top: 5px;
+					font-size: 16px;
+					color: white;
+					text-shadow: 1px 1px 0 black,
+								 0px 1px 0 black,
+								 -1px 1px 0 black,
+								 -1px 0px 0 black,
+								 -1px -1px 0 black,
+								 0px -1px 0 black,
+								 1px -1px 0 black,
+								 1px 0px 0 black,
+								 0px 0px 3px black;
 				}
 			}
 		}
@@ -1015,7 +1034,8 @@ input[type='checkbox']{
 }
 
 .action-select{
-	@extend .col-xs-6;
+	@extend .col-xs-12;
+	@extend .col-sm-6;
 	@extend .contentBox;
 	padding-top: 10px;
 	padding-bottom: 10px;
@@ -1143,7 +1163,8 @@ input[type='checkbox']{
 }
 
 .requirement-select{
-	@extend .col-xs-6;
+	@extend .col-xs-12;
+	@extend .col-sm-6;
 	/*@extend .col-xs-offset-1;*/
 	@extend .contentBox;
 	padding-top: 10px;
@@ -1238,10 +1259,12 @@ input[type='checkbox']{
 	position:fixed;
 	bottom:0%;
 	left:0%;
-	width: 130px;
 	background-image: url('../img/builder/background-adventure.png');
-	padding:10px;
+	padding:5px;
 	button{
+		display:inline-block;
+		width: 110px;
+		margin: 3px;
 		font-size: 16px;
 	}
 }

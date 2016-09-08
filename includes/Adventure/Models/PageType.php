@@ -1,5 +1,5 @@
 <?php
-	include_once('Adventure\Models\Model.php');
+	include_once('Adventure/Models/Model.php');
 
 	class PageType extends Model{
 

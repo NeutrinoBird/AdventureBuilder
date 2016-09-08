@@ -469,8 +469,12 @@ Adventure.InventoryItem = Marionette.ItemView.extend({
 		//this.$el.toggle(Adventure.viewer.variables.flags[this.model.id] > 0);
 	},
 	events: {
+		/*
 		'click': function(event){
 			event.preventDefault();
+			if(!this.$el.find(".description").hasClass("clicked")){
+				$(".inventory .description").removeClass("clicked");
+			}
 			this.$el.find(".description").toggleClass("clicked");
 			return false;
 		},
@@ -478,6 +482,17 @@ Adventure.InventoryItem = Marionette.ItemView.extend({
 			event.preventDefault();
 			this.$el.find(".description").removeClass("clicked");
 			return false;
+		},
+		*/
+		'mouseover': function(event){
+			var right = $(window).width() - this.$el.offset().left - 32;
+			if(this.$el.offset().left >= 140 || $(window).width() < 312){
+				this.$el.find(".description").css("left","50%");
+			}else if(right < 140){
+				this.$el.find(".description").css("left",100-((100/32)*(156-right))+"%");
+			}else{
+				this.$el.find(".description").css("left",(100/32)*(156-this.$el.offset().left)+"%");
+			}
 		}
 	},
 	modelEvents: {

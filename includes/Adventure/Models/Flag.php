@@ -1,5 +1,5 @@
 <?php
-	include_once('Adventure\Models\Model.php');
+	include_once('Adventure/Models/Model.php');
 
 	class Flag extends Model{
 		public $ID;
@@ -43,7 +43,7 @@
 					 FROM tblAdventures
 					 WHERE ID = :adventureID
 					 AND userID = :userID
-					 AND isActive = 1;', 
+					 AND isActive = 1;',
 					[
 						'adventureID'=>$adventureID,
 						'userID'=>$user->ID,
@@ -77,7 +77,7 @@
 				'SELECT ID, adventureID, name, isItem, description, imageID, isCounter, counterDefault, counterMinimum, counterMaximum, counterWraps
 				 FROM tblFlags
 				 WHERE adventureID = :adventureID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
 					'adventureID'=>$adventureID,
 				]
@@ -97,7 +97,7 @@
 				$flagSet[$flag->ID]->counterWraps = $flag->counterWraps;
 			}
 			return $flagSet;
-		}	
+		}
 
 		private function Load($user, $ID){
 			if(is_null($user) || !is_numeric($ID))
@@ -109,7 +109,7 @@
 					 JOIN tblAdventures ON tblAdventures.ID = tblFlags.adventureID
 					 WHERE tblFlags.ID = :ID
 					 AND tblAdventures.userID = :userID
-					 AND tblFlags.isActive = 1;', 
+					 AND tblFlags.isActive = 1;',
 					[
 						'ID'=>$ID,
 						'userID'=>$user->ID
@@ -123,18 +123,18 @@
 				'SELECT adventureID, name, isItem, description, imageID, isCounter, counterDefault, counterMinimum, counterMaximum, counterWraps
 				 FROM tblFlags
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
 					'ID'=>$ID
 				]
 			);
 			if ($result){
 				$this->ID = $ID;
-				$this->adventureID = $result->adventureID;	
+				$this->adventureID = $result->adventureID;
 				$this->name = $result->name;
 				$this->isItem = $result->isItem;
-				$this->description = $result->description;		
-				$this->imageID = $result->imageID;	
+				$this->description = $result->description;
+				$this->imageID = $result->imageID;
 				$this->isCounter = $result->isCounter;
 				$this->counterDefault = $result->counterDefault;
 				$this->counterMinimum = $result->counterMinimum;
@@ -148,14 +148,14 @@
 
 		public function Update($name, $isItem, $description, $imageID, $isCounter, $counterDefault, $counterMinimum, $counterMaximum, $counterWraps){
 			$this->name = htmlentities($name);
-			$this->isItem = $isItem;	
-			$this->description = $description;	
+			$this->isItem = $isItem;
+			$this->description = $description;
 			$this->imageID = $imageID;
-			$this->isCounter = $isCounter;	
-			$this->counterDefault = $counterDefault;	
-			$this->counterMinimum = $counterMinimum;	
-			$this->counterMaximum = $counterMaximum;	
-			$this->counterWraps = $counterWraps;	
+			$this->isCounter = $isCounter;
+			$this->counterDefault = $counterDefault;
+			$this->counterMinimum = $counterMinimum;
+			$this->counterMaximum = $counterMaximum;
+			$this->counterWraps = $counterWraps;
 			return parent::$db->query(
 				'UPDATE tblFlags
 				 SET name = :name,
@@ -168,17 +168,17 @@
 				 counterMaximum = :counterMaximum,
 				 counterWraps = :counterWraps
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
-					'name'=>$this->name, 
+					'name'=>$this->name,
 					'isItem'=>$this->isItem,
 					'description'=>$this->description,
 					'imageID'=>$this->imageID,
-					'isCounter'=>$this->isCounter, 
-					'counterDefault'=>$this->counterDefault, 
-					'counterMinimum'=>$this->counterMinimum, 
-					'counterMaximum'=>$this->counterMaximum, 
-					'counterWraps'=>$this->counterWraps, 
+					'isCounter'=>$this->isCounter,
+					'counterDefault'=>$this->counterDefault,
+					'counterMinimum'=>$this->counterMinimum,
+					'counterMaximum'=>$this->counterMaximum,
+					'counterWraps'=>$this->counterWraps,
 					'ID'=>$this->ID
 				]
 			);
@@ -190,21 +190,21 @@
 				 SET isActive = 0
 				 WHERE ID = :ID;
 
-				 UPDATE tblActionFlagRequirements				 	
+				 UPDATE tblActionFlagRequirements
 				 SET flagID = 0
 				 WHERE flagID = :ID;
 
-				 UPDATE tblEvents				 	
+				 UPDATE tblEvents
 				 SET flagID = 0
 				 WHERE flagID = :ID;
 
-				 UPDATE tblEvents				 	
+				 UPDATE tblEvents
 				 SET conditionFlagID = 0
-				 WHERE conditionFlagID = :ID;', 
+				 WHERE conditionFlagID = :ID;',
 				['ID'=>$this->ID]
 			);
 		}
-			
+
 	}
 
 ?>

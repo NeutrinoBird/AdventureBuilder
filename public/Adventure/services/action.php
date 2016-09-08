@@ -1,8 +1,9 @@
 <?php
-	include_once('Adventure\Response.php');
-	include_once('Adventure\CheckSession.php');
-	include_once('Adventure\Validation.php');
-	include_once('Adventure\Models\Action.php');
+	include_once(dirname(__FILE__).'/includeOverride.php');
+	include_once('Adventure/Response.php');
+	include_once('Adventure/CheckSession.php');
+	include_once('Adventure/Validation.php');
+	include_once('Adventure/Models/Action.php');
 
 	try{
 		switch($_SERVER['REQUEST_METHOD']){

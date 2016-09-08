@@ -1,5 +1,5 @@
 <?php
-	include_once('Adventure\Models\Model.php');
+	include_once('Adventure/Models/Model.php');
 
 	class User extends Model{
 		public $ID;
@@ -56,8 +56,8 @@
 				VALUES
 				(:username, :password, :salt, :isAdmin);',
 				[
-					'username'=>$this->username, 
-					'password'=>$passwordSalt, 
+					'username'=>$this->username,
+					'password'=>$passwordSalt,
 					'salt'=>$salt,
 					'isAdmin'=>$this->isAdmin
 				]
@@ -69,14 +69,14 @@
 				'SELECT ID, username, password, salt, isAdmin
 				 FROM tblUsers
 				 WHERE username = :username
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				['username'=>htmlentities($username, ENT_QUOTES)]
 			);
 			if ($result){
 				if($result->password == hash('sha512',$password.$result->salt)){
 					$this->ID = $result->ID;
-					$this->username = $result->username;	
-					$this->isAdmin = $result->isAdmin;				
+					$this->username = $result->username;
+					$this->isAdmin = $result->isAdmin;
 					return true;
 				}else{
 					return false;

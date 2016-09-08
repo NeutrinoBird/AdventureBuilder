@@ -1,5 +1,5 @@
 <?php
-	include_once('Adventure\Models\Model.php');
+	include_once('Adventure/Models/Model.php');
 
 	class Page extends Model{
 		public $ID;
@@ -42,7 +42,7 @@
 					 FROM tblAdventures
 					 WHERE ID = :adventureID
 					 AND userID = :userID
-					 AND isActive = 1;', 
+					 AND isActive = 1;',
 					[
 						'adventureID'=>$adventureID,
 						'userID'=>$user->ID,
@@ -76,7 +76,7 @@
 				'SELECT ID, adventureID, name, text, sceneID, pageTypeID, imageID, effectID
 				 FROM tblPages
 				 WHERE adventureID = :adventureID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
 					'adventureID'=>$adventureID,
 				]
@@ -93,7 +93,7 @@
 				$pageSet[$page->ID]->effectID = $page->effectID;
 			}
 			return $pageSet;
-		}	
+		}
 
 		private function Load($user, $ID){
 			if(is_null($user) || !is_numeric($ID))
@@ -105,7 +105,7 @@
 					 JOIN tblAdventures ON tblAdventures.ID = tblPages.adventureID
 					 WHERE tblPages.ID = :ID
 					 AND tblAdventures.userID = :userID
-					 AND tblPages.isActive = 1;', 
+					 AND tblPages.isActive = 1;',
 					[
 						'ID'=>$ID,
 						'userID'=>$user->ID
@@ -119,16 +119,16 @@
 				'SELECT adventureID, name, text, sceneID, pageTypeID, imageID, effectID
 				 FROM tblPages
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
 					'ID'=>$ID
 				]
 			);
 			if ($result){
 				$this->ID = $ID;
-				$this->adventureID = $result->adventureID;	
+				$this->adventureID = $result->adventureID;
 				$this->name = $result->name;
-				$this->text = $result->text;								
+				$this->text = $result->text;
 				$this->sceneID = $result->sceneID;
 				$this->pageTypeID = $result->pageTypeID;
 				$this->imageID = $result->imageID;
@@ -141,7 +141,7 @@
 
 		public function Update($name, $text, $sceneID, $pageTypeID, $imageID, $effectID){
 			$this->name = htmlentities($name);
-			$this->text = htmlentities($text);								
+			$this->text = htmlentities($text);
 			$this->sceneID = $sceneID;
 			$this->pageTypeID = $pageTypeID;
 			$this->imageID = $imageID;
@@ -149,19 +149,19 @@
 			return parent::$db->query(
 				'UPDATE tblPages
 				 SET name = :name,
-				 text = :text, 
-				 sceneID = :sceneID, 
-				 pageTypeID = :pageTypeID, 
-				 imageID = :imageID, 
+				 text = :text,
+				 sceneID = :sceneID,
+				 pageTypeID = :pageTypeID,
+				 imageID = :imageID,
 				 effectID = :effectID
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
-					'name'=>$this->name, 
-					'text'=>$this->text, 
-					'sceneID'=>$this->sceneID, 
-					'pageTypeID'=>$this->pageTypeID, 
-					'imageID'=>$this->imageID, 
+					'name'=>$this->name,
+					'text'=>$this->text,
+					'sceneID'=>$this->sceneID,
+					'pageTypeID'=>$this->pageTypeID,
+					'imageID'=>$this->imageID,
 					'effectID'=>$this->effectID,
 					'ID'=>$this->ID
 				]
@@ -174,35 +174,35 @@
 				 SET isActive = 0
 				 WHERE ID = :ID;
 
-				 UPDATE tblActions		 
+				 UPDATE tblActions
 				 SET isActive = 0
 				 WHERE pageID = :ID;
 
-				 UPDATE tblPageEvents			 
+				 UPDATE tblPageEvents
 				 SET isActive = 0
 				 WHERE pageID = :ID;
 
 				 UPDATE tblActionFlagRequirements
-				 JOIN tblActions ON tblActions.ID = tblActionFlagRequirements.actionID			 
+				 JOIN tblActions ON tblActions.ID = tblActionFlagRequirements.actionID
 				 SET tblActionFlagRequirements.isActive = 0
-				 WHERE tblActions.pageID = :ID;				
+				 WHERE tblActions.pageID = :ID;
 
 				 UPDATE tblActionEvents
-				 JOIN tblActions ON tblActions.ID = tblActionEvents.actionID			 
+				 JOIN tblActions ON tblActions.ID = tblActionEvents.actionID
 				 SET tblActionEvents.isActive = 0
 				 WHERE tblActions.pageID = :ID;
 
-				 UPDATE tblActions			 
+				 UPDATE tblActions
 				 SET nextPageID = 0
 				 WHERE nextPageID = :ID;
 
-				 UPDATE tblEvents			 
+				 UPDATE tblEvents
 				 SET pageID = 0
-				 WHERE pageID = :ID;', 
+				 WHERE pageID = :ID;',
 				['ID'=>$this->ID]
 			);
 		}
-			
+
 	}
 
 ?>

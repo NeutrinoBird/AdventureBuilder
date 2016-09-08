@@ -1,5 +1,5 @@
 <?php
-	include_once('Adventure\Models\Model.php');
+	include_once('Adventure/Models/Model.php');
 
 	class Image extends Model{
 		public $ID;
@@ -37,7 +37,7 @@
 					 FROM tblAdventures
 					 WHERE ID = :adventureID
 					 AND userID = :userID
-					 AND isActive = 1;', 
+					 AND isActive = 1;',
 					[
 						'adventureID'=>$adventureID,
 						'userID'=>$user->ID,
@@ -71,7 +71,7 @@
 				'SELECT ID, adventureID, URL, width, height, centerX, centerY, scale
 				 FROM tblImages
 				 WHERE adventureID = :adventureID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
 					'adventureID'=>$adventureID,
 				]
@@ -100,7 +100,7 @@
 					 JOIN tblAdventures ON tblAdventures.ID = tblImages.adventureID
 					 WHERE tblImages.ID = :ID
 					 AND tblAdventures.userID = :userID
-					 AND tblImages.isActive = 1;', 
+					 AND tblImages.isActive = 1;',
 					[
 						'ID'=>$ID,
 						'userID'=>$user->ID
@@ -114,7 +114,7 @@
 				'SELECT adventureID, URL, width, height, centerX, centerY, scale
 				 FROM tblImages
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
 					'ID'=>$ID
 				]
@@ -144,11 +144,11 @@
 				 tblImages.centerY = :centerY,
 				 tblImages.scale = :scale
 				 WHERE tblImages.ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
-					'centerX'=>$this->centerX, 
-					'centerY'=>$this->centerY, 
-					'scale'=>$this->scale, 
+					'centerX'=>$this->centerX,
+					'centerY'=>$this->centerY,
+					'scale'=>$this->scale,
 					'ID'=>$this->ID
 				]
 			);
@@ -174,8 +174,8 @@
 				default:
 					throw new Exception('An unknown error occurred.');
 			}
-			$fileInfo = pathinfo($imageFile['name']);				
-			$target_dir = $_SERVER['DOCUMENT_ROOT'].'Adventure/uploads/';
+			$fileInfo = pathinfo($imageFile['name']);
+			$target_dir = $_SERVER['DOCUMENT_ROOT'].'/Adventure/uploads/';
 			// Generate unique random name
 			do{
 				$fileName = substr(preg_replace('/[^a-zA-Z0-9]/','',$fileInfo['filename']),0,16).'_'.substr(hash('md5',date('c').rand(0,100000)),0,16).'.'.$fileInfo['extension'];
@@ -193,7 +193,7 @@
 			$imageSize = getimagesize($imageFile['tmp_name']);
 			if($imageSize === false){
 				throw new Exception('Invalid image.');
-			}			
+			}
 			// Check filesize
 			if($imageFile['size'] > 2097152){
 				throw new Exception('File too large.');
@@ -211,11 +211,11 @@
 					 width = :width,
 					 height = :height
 				 WHERE ID = :ID
-				 AND isActive = 1;', 
+				 AND isActive = 1;',
 				[
-					'URL'=>$this->URL, 
-					'width'=>$this->width, 
-					'height'=>$this->height, 
+					'URL'=>$this->URL,
+					'width'=>$this->width,
+					'height'=>$this->height,
 					'ID'=>$this->ID
 				]
 			);
@@ -227,21 +227,21 @@
 				 SET isActive = 0
 				 WHERE ID = :ID;
 
-				 UPDATE tblAdventures				 	
+				 UPDATE tblAdventures
 				 SET imageID = 0
 				 WHERE imageID = :ID;
 
-				 UPDATE tblPages				 	
+				 UPDATE tblPages
 				 SET imageID = 0
 				 WHERE imageID = :ID;
 
-				 UPDATE tblFlags				 	
+				 UPDATE tblFlags
 				 SET imageID = 0
-				 WHERE imageID = :ID;', 
+				 WHERE imageID = :ID;',
 				['ID'=>$this->ID]
 			);
 		}
-			
+
 	}
 
 ?>

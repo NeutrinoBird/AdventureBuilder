@@ -1,8 +1,9 @@
 <?php
-	include_once('Adventure\Response.php');
-	include_once('Adventure\CheckSession.php');
-	include_once('Adventure\Validation.php');
-	include_once('Adventure\Models\Image.php');
+	include_once(dirname(__FILE__).'/includeOverride.php');
+	include_once('Adventure/Response.php');
+	include_once('Adventure/CheckSession.php');
+	include_once('Adventure/Validation.php');
+	include_once('Adventure/Models/Image.php');
 	$imageUpdateResponse = false;
 
 	try{
@@ -24,15 +25,15 @@
 						$valid = (object)$validation->result['validated'];
 						$image = new Image($userSession->user,$valid->ID);
 						$image->Upload($_FILES['imageFile']);
-						$response->JSON = json_encode($image);						
-					}				
+						$response->JSON = json_encode($image);
+					}
 				}else{
 					//New blank image record
-					$input = json_decode(file_get_contents('php://input'));		
+					$input = json_decode(file_get_contents('php://input'));
 					$validation = new Validation();
 					$validation->prime($input, ['adventureID']);
 					$validation->addVariable('adventureID',$input->adventureID,'uint',true);
-					$validation->validate();		
+					$validation->validate();
 					if($validation->result['error'] == 1){
 						$response->JSON = '{"errorMsg":"'.$validation->result['errorMsg'].'","errorFields":'.json_encode($validation->result['errorFields']).'}';
 						$response->error = 1;
@@ -62,13 +63,13 @@
 					$image->Update($valid->centerX, $valid->centerY, $valid->scale);
 				}
 				break;
-			case 'GET':			
+			case 'GET':
 				$input = (object)$_GET;
 				if(!isset($input->ID) || !is_numeric($input->ID)){
 					throw new Exception("Invalid ID.");
 				}
 				$image = new Image($userSession->user,$input->ID);
-				$response->JSON = json_encode($image);				
+				$response->JSON = json_encode($image);
 				break;
 			case 'DELETE':
 				$deleteID = substr($_SERVER['PATH_INFO'],1);
@@ -82,7 +83,7 @@
 				}
 				break;
 		}
-	} catch (Exception $e) {	
+	} catch (Exception $e) {
 		if($imageUpdateResponse){
 			$response->JSON = '<textarea data-type="application/json" data-status="500">{"errorMsg":"'.$e->getMessage().'", "errorFields":"imageFile"}</textarea>';
 		}else{

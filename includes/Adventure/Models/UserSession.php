@@ -1,6 +1,6 @@
 <?php
-	include_once('Adventure\Models\Model.php');
-	include_once('Adventure\Models\User.php');
+	include_once('Adventure/Models/Model.php');
+	include_once('Adventure/Models/User.php');
 
 	class UserSession extends Model{
 		public $user;
@@ -21,7 +21,7 @@
 
 		public static function Create($user){
 			$newUserSession = new UserSession();
-			$newUserSession->Insert($user);			
+			$newUserSession->Insert($user);
 			return $newUserSession;
 		}
 
@@ -35,8 +35,8 @@
 				VALUES
 				(:userID, :hashKey, :IP, :dateExpire);',
 				[
-					'userID'=>$this->user->ID, 
-					'hashKey'=>$this->hashKey, 
+					'userID'=>$this->user->ID,
+					'hashKey'=>$this->hashKey,
 					'IP'=>$_SERVER['REMOTE_ADDR'],
 					'dateExpire'=>$this->SQLDate($this->dateExpire)
 				]
@@ -55,7 +55,7 @@
 				 JOIN tblUsers ON tblUserSessions.userID = tblUsers.ID
 				 WHERE hashKey = :hashKey
 				 AND IP = :IP
-				 AND NOW() < dateExpire;', 
+				 AND NOW() < dateExpire;',
 				[
 					'hashKey'=>$hashKey,
 					'IP'=>$_SERVER['REMOTE_ADDR']
@@ -74,13 +74,13 @@
 			}
 		}
 
-		public function Update(){			
+		public function Update(){
 			parent::$db->query(
-				'UPDATE tblUserSessions				 
+				'UPDATE tblUserSessions
 				 SET dateExpire = :dateExpire
 				 WHERE hashKey = :hashKey
 				 AND IP = :IP
-				 AND NOW() < dateExpire;', 
+				 AND NOW() < dateExpire;',
 				[
 					'dateExpire'=>$this->SQLDate(time() + 3600),
 					'hashKey'=>$this->hashKey,

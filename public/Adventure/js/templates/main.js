@@ -11,15 +11,13 @@ Adventure.Templates.StatusDisplay = `
 `;
 Adventure.Templates.OptionsMenu = `
 	<div class="options-menu">
-		<div class="row">
-			<button class="effect-button full-button">Effects Off</button>
-			<button class="new-user-button full-button">New User</button>
-		</div>
+		<button class="effect-button full-button">Effects Off</button>
+		<button class="new-user-button full-button">New User</button>
 	</div>
 `;
 Adventure.Templates.Login = `
-	<form class="create-adventure">	
-		<div class="row">											
+	<form class="create-adventure">
+		<div class="row">
 			<div class="form-label">
 				Username
 			</div>
@@ -27,7 +25,7 @@ Adventure.Templates.Login = `
 				<input type="text" name="username" value="" />
 			</div>
 		</div>
-		<div class="row">											
+		<div class="row">
 			<div class="form-label">
 				Password
 			</div>
@@ -39,12 +37,12 @@ Adventure.Templates.Login = `
 		<div class="row">
 			<button class="login-button full-button">Login</button>
 		</div>
-	</form>		
+	</form>
 `;
 Adventure.Templates.SessionLogin = `
 	<form class="create-adventure">
 		<h3>Session Expired. Please log in to continue.</h3>
-		<div class="row">											
+		<div class="row">
 			<div class="form-label">
 				Username
 			</div>
@@ -52,7 +50,7 @@ Adventure.Templates.SessionLogin = `
 				<input type="text" name="username" value="" />
 			</div>
 		</div>
-		<div class="row">											
+		<div class="row">
 			<div class="form-label">
 				Password
 			</div>
@@ -64,12 +62,12 @@ Adventure.Templates.SessionLogin = `
 		<div class="row">
 			<button class="login-button full-button">Login</button>
 		</div>
-	</form>		
+	</form>
 `;
 Adventure.Templates.NewUser = `
 	<form class="create-adventure">
 		<h3>New User</h3>
-		<div class="row">											
+		<div class="row">
 			<div class="form-label">
 				Username
 			</div>
@@ -77,7 +75,7 @@ Adventure.Templates.NewUser = `
 				<input type="text" name="username" value="" />
 			</div>
 		</div>
-		<div class="row">											
+		<div class="row">
 			<div class="form-label">
 				Password
 			</div>
@@ -90,5 +88,5 @@ Adventure.Templates.NewUser = `
 			<button class="login-button full-button">Create User</button>
 			<button class="close-button full-button">Cancel</button>
 		</div>
-	</form>		
+	</form>
 `;
