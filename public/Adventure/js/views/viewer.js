@@ -217,6 +217,8 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		}
 		this.$el.find(".adventure-box").animate({height: boxHeight + "px"});
 		this.$el.find(".adventure-manager").addClass('transitioning').animate({height: boxHeight - 16 + "px"});
+
+		$("html, body").animate({ scrollTop: this.$el.find(".adventure-box").offset().top }, 500);
 	},
 	loadPage: function(){
 		this.variables.currentPage = this.transitionData.nextPageID;
@@ -363,8 +365,10 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 	},
 	trimActions: function(){
 		this.$el.find('.action-manager .page-'+this.side+' .selection > div').each(function(){
-			$(this).css('width','100%');
-			$(this).css('width',Math.min($(this).find('p').outerWidth()+26,$(this).outerWidth())+'px');
+			if($(this).find('p').length){
+				$(this).css('width','100%');
+				$(this).css('width',Math.min($(this).find('p').outerWidth()+26,$(this).outerWidth())+'px');
+			}
 		});
 	},
 	resizeBox: function(){
@@ -466,32 +470,18 @@ Adventure.InventoryItem = Marionette.ItemView.extend({
 		if(int(this.model.get("isCounter"))){
 			this.$el.find(".quantity").html(Adventure.viewer.variables.flags[this.model.id]);
 		}
-		//this.$el.toggle(Adventure.viewer.variables.flags[this.model.id] > 0);
 	},
 	events: {
-		/*
-		'click': function(event){
-			event.preventDefault();
-			if(!this.$el.find(".description").hasClass("clicked")){
-				$(".inventory .description").removeClass("clicked");
-			}
-			this.$el.find(".description").toggleClass("clicked");
-			return false;
-		},
-		'click @ui.description': function(event){
-			event.preventDefault();
-			this.$el.find(".description").removeClass("clicked");
-			return false;
-		},
-		*/
 		'mouseover': function(event){
-			var right = $(window).width() - this.$el.offset().left - 32;
-			if(this.$el.offset().left >= 140 || $(window).width() < 312){
-				this.$el.find(".description").css("left","50%");
-			}else if(right < 140){
-				this.$el.find(".description").css("left",100-((100/32)*(156-right))+"%");
-			}else{
-				this.$el.find(".description").css("left",(100/32)*(156-this.$el.offset().left)+"%");
+			this.$el.find(".description").css("left","50%");
+			if($(".adventure-box").width() > 312){
+				var left = this.$el.offset().left - $(".adventure-box").offset().left;
+				var right = $(".adventure-box").width() - left - 32;
+				if(right < 140){
+					this.$el.find(".description").css("left",100-((100/32)*(156-right))+"%");
+				}else if(left < 140){
+					this.$el.find(".description").css("left",(100/32)*(156-left)+"%");
+				}
 			}
 		}
 	},
