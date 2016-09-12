@@ -106,10 +106,10 @@ Adventure.Templates.PageEditLite = `
 	</form>
 `;
 Adventure.Templates.PageButton = `
-	<img src="img/builder/icons/page.png" class="no-thumbnail select-image" />
-	<div class="image-thumbnail select-image">
+	<div class="page-thumbnail select-image">
 		<div class="image-container">
-			<img src="img/builder/icons/page.png" />
+			<img src="img/builder/icons/page.png" class="no-thumbnail" />
+			<img src="img/builder/icons/page.png" class="image-thumbnail" />
 		</div>
 	</div>
 	<div class="select-description">

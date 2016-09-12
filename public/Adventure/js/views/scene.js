@@ -47,6 +47,7 @@ Adventure.SceneSelect = Marionette.CollectionView.extend({
 				this.filterSelection = this.$el.val();
 				if(this.$el.val() === ''){
 					filterElements.show();
+					filterElements.filter("[data-length='0']").hide();
 				}else{
 					filterElements.hide();
 					filterElements.filter("[data-scene='"+this.$el.val()+"']").show();
@@ -179,4 +180,21 @@ Adventure.SceneEdit = Marionette.LayoutView.extend({
 			return false;
 		}
 	}
+});
+Adventure.ScenePages = Marionette.LayoutView.extend({
+	template: 'ScenePages',
+	className: 'scene-pages',
+	regions: {selections:'.selections'},
+	onRender: function() {
+		this.$el.attr("data-scene",this.model.id);
+		this.$el.attr("data-length",this.model.get('pages').length);
+		this.showChildView('selections', new Adventure.PageList({collection: this.model.get('pages')}));
+		this.$el.find(".emptySet").toggle(this.model.get('pages').length == 0);
+	},
+	modelEvents: {
+		'change': 'render'
+	}
+});
+Adventure.ScenePageSet = Marionette.CollectionView.extend({
+	childView: Adventure.ScenePages
 });

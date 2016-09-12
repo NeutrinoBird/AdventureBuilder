@@ -43,3 +43,8 @@ Adventure.Templates.SceneSelection = `
 		</div>
 	</form>
 `;
+Adventure.Templates.ScenePages = `
+	<h4><%= name %></h4>
+	<div class="selections"></div>
+	<div class="emptySet">No pages are assigned to this scene.</div>
+`;

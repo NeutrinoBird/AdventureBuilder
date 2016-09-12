@@ -367,7 +367,7 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		this.$el.find('.action-manager .page-'+this.side+' .selection > div').each(function(){
 			if($(this).find('p').length){
 				$(this).css('width','100%');
-				$(this).css('width',Math.min($(this).find('p').outerWidth()+26,$(this).outerWidth())+'px');
+				$(this).css('width',Math.min($(this).find('p').outerWidth()+27,$(this).outerWidth())+'px');
 			}
 		});
 	},
@@ -383,6 +383,8 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		var boxHeight = $(".adventure-content").innerHeight();
 		if (boxHeight % 16 > 0){
 			$(".adventure-box").height(boxHeight + 16 - (boxHeight % 16));
+		}else{
+			$(".adventure-box").height(boxHeight);
 		}
 		this.blankHeight = this.$el.find(".adventure-box").height() - this.$el.find('.image-manager .page-'+this.side).innerHeight() - this.$el.find('.page-manager .page-'+this.side).innerHeight() - this.$el.find('.action-manager .page-'+this.side).outerHeight(true) - this.$el.find('.inventory-container').outerHeight(true);
 		this.trimActions();

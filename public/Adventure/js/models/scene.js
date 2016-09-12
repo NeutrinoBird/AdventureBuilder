@@ -2,7 +2,8 @@ Adventure.SceneModel = Backbone.Model.extend({
 	defaults: {
 		name: '',
 		actions: [],
-		sceneEvents: []
+		sceneEvents: [],
+		pages: []
 	},
 	idAttribute: "ID",
 	initialize: function() {
@@ -18,6 +19,7 @@ Adventure.SceneModel = Backbone.Model.extend({
 		if(Array.isArray(this.get('sceneEvents'))){
 			this.set('sceneEvents', new Adventure.SceneEvents(this.get('sceneEvents')));
 		}
+		this.buildPageCollection();
 	},
 	handleBlankName: function(){
 		if(!this.get('name')){
@@ -36,6 +38,21 @@ Adventure.SceneModel = Backbone.Model.extend({
 	},
 	setSceneID: function(model){
 		model.set("sceneID",this.ID);
+	},
+	buildPageCollection: function(){
+		if(Array.isArray(this.get('pages'))){
+			this.set('pages', new Adventure.Pages(this.get('pages')));
+		}
+		if(Adventure.activeAdventure){
+			var scene = this;
+			Adventure.activeAdventure.get('pages').each(function(page){
+				if(page.get("sceneID") == scene.id){
+					scene.get('pages').add(page);
+				}else if(scene.get('pages').get(page.id)){
+					scene.get('pages').remove(page.id);
+				}
+			});
+		}
 	}
 });
 Adventure.Scenes = Backbone.Collection.extend({

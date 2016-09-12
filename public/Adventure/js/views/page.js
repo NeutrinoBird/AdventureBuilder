@@ -202,8 +202,8 @@ Adventure.PageButton = Marionette.ItemView.extend({
 			if (Adventure.activeAdventure.get("images").get(this.model.get("imageID"))){
 				this.$el.find(".no-thumbnail").hide();
 				this.$el.find(".image-thumbnail").show();
-				this.$el.find(".image-thumbnail img").attr("src","uploads/"+Adventure.activeAdventure.get("images").get(this.model.get("imageID")).get("URL"));
-				Adventure.activeAdventure.get('images').get(this.model.get("imageID")).applyAdjustment(this.$el.find(".image-thumbnail img"));
+				this.$el.find(".image-thumbnail").attr("src","uploads/"+Adventure.activeAdventure.get("images").get(this.model.get("imageID")).get("URL"));
+				Adventure.activeAdventure.get('images').get(this.model.get("imageID")).applyAdjustment(this.$el.find(".image-thumbnail"));
 			}
 		}
 	},

@@ -102,7 +102,7 @@ Adventure.AdventureListFramework = Marionette.LayoutView.extend({
 Adventure.AdventureEdit = Marionette.LayoutView.extend({
 	template: 'AdventureEdit',
 	className: 'adventure-edit',
-	regions: {pageList:'.page-select .selections', sceneFilter:'.page-select .scene-selectbox'},
+	regions: {unassignedPages:'.page-select .unassigned-pages', scenePages:'.page-select .assigned-pages', sceneFilter:'.page-select .scene-selectbox'},
 	ui: {
 		saveButton: '.saveClose',
 		imageButton: '.image-button',
@@ -124,8 +124,13 @@ Adventure.AdventureEdit = Marionette.LayoutView.extend({
 				viewHandle.setImage(model.id);
 			}
 		});
-		this.showChildView('pageList', new Adventure.PageList({collection: this.model.get("pages")}));
-		this.showChildView('sceneFilter', new Adventure.SceneSelect({filterBase: this.$el, filterElement: ".page-select .selection"}));
+		this.listenTo(Adventure.activeAdventure.get('pages'), 'change destroy', function(){
+			viewHandle.updateScenes();
+		});
+		this.updateScenes();
+		this.showChildView('unassignedPages', new Adventure.ScenePages({model: this.model.get("unassignedScene")}));
+		this.showChildView('scenePages', new Adventure.ScenePageSet({collection: this.model.get("scenes")}));
+		this.showChildView('sceneFilter', new Adventure.SceneSelect({filterBase: this.$el, filterElement: ".scene-pages"}));
 	},
 	events: {
 		'click @ui.saveButton': function(event){
@@ -200,5 +205,11 @@ Adventure.AdventureEdit = Marionette.LayoutView.extend({
 			this.$el.find(".image-button > .image-container > img").attr("src",'uploads/'+this.model.get("imageURL"));
 			this.model.get('images').get(imageID).applyAdjustment(this.$el.find(".image-button > .image-container > img"));
 		}
+	},
+	updateScenes: function(){
+		this.model.get('unassignedScene').buildPageCollection();
+		this.model.get('scenes').each(function(scene){
+			scene.buildPageCollection();
+		});
 	}
 });

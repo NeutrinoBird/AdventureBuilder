@@ -33,6 +33,20 @@ h2, h3{
 	margin-top: 0px;
 }
 
+h4{
+	@extend .col-xs-12;
+	color: white;
+	text-shadow: 1px 1px 0 black,
+				 0px 1px 0 black,
+				 -1px 1px 0 black,
+				 -1px 0px 0 black,
+				 -1px -1px 0 black,
+				 0px -1px 0 black,
+				 1px -1px 0 black,
+				 1px 0px 0 black,
+				 0px 0px 3px black;
+}
+
 form{
 	@extend .form-horizontal;
 	&.form-inline > .form-group{
@@ -310,7 +324,7 @@ figure{
 				box-shadow:0px 0px 5px 0px black, 0px -1px 15px 0px black inset;
 				padding-top: 5px;
 				padding-bottom: 5px;
-				.image-thumbnail{
+				.page-thumbnail{
 					.image-container{
 						position: relative;
 						display:block;
@@ -366,6 +380,9 @@ figure{
 		.full-button{
 			margin-top: 15px;
 			margin-bottom: 0px;
+		}
+		.emptySet{
+			@extend .col-xs-12;
 		}
 	}
 }

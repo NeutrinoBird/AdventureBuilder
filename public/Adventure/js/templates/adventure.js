@@ -70,7 +70,8 @@ Adventure.Templates.AdventureEdit = `
 							<label for="filterByScene">Filter by Scene</label>
 							<div class="form-field scene-selectbox"></div>
 						</div>
-						<div class="selections"></div>
+						<div class="unassigned-pages"></div>
+						<div class="assigned-pages"></div>
 						<button class="new-button full-button">New Page</button>
 					</div>
 				</div>

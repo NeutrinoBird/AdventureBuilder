@@ -6,7 +6,7 @@ Adventure.Templates.ViewerImage = '<img />';
 Adventure.Templates.ViewerPage = '<%= combinedText %>';
 Adventure.Templates.ViewerActionButton = '<div class="<%= (actionTypeID == 2) ? "speech-bubble" : "action-box" %>"><% if (actionTypeID == 3 || actionTypeID == 4){ %><img src="<%= Adventure.assetPath + "img/viewer/" + (actionTypeID == 3 ? "forward" : "back") %>-arrow.gif" /><% }else{ %><p><%= text %></p><% } %></div>';
 Adventure.Templates.InventoryItem = '<div class="item-image-container"><img /></div><div class="quantity"></div><div class="description"><div class="description-image-container"><div><img /></div></div><h3><%= name %></h3><p><%= description %></p></div>';
-Adventure.Templates.Checkpoint = '<div class="checkpoint"><span>Checkpoint</span></div>';
+Adventure.Templates.Checkpoint = '<div class="checkpoint"><span>CHECKPOINT</span></div>';
 /*
 Adventure.Templates.Viewer = `
 	<div class="adventure-container">

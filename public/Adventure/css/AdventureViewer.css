@@ -9,6 +9,12 @@
   src: url("../fonts/prstart.eot?#iefix") format("embedded-opentype"), url("../fonts/prstart.woff") format("woff"), url("../fonts/prstart.ttf") format("truetype"), url("../fonts/prstart.svg#PressStart") format("svg");
   font-weight: normal;
   font-style: normal; }
+@font-face {
+  font-family: AppleKid;
+  src: url("../fonts/apple-kid.eot");
+  src: url("../fonts/apple-kid.eot?#iefix") format("embedded-opentype"), url("../fonts/apple-kid.woff") format("woff"), url("../fonts/apple-kid.ttf") format("truetype"), url("../fonts/apple-kid.svg#PressStart") format("svg");
+  font-weight: normal;
+  font-style: normal; }
 @keyframes adventureStart {
   0% {
     transform: translateY(-1000px);
@@ -156,8 +162,6 @@
       left: 0px;
       z-index: 50;
       padding: 32px;
-      font-family: PressStartK, PressStart, Arial;
-      /*text-transform: uppercase;*/
       text-align: left;
       pointer-events: none; }
       .adventure-container .adventure-box .adventure-manager .adventure-content .image-manager {
@@ -200,8 +204,11 @@
       .adventure-container .adventure-box .adventure-manager .adventure-content .page-manager {
         position: relative;
         background-color: rgba(0, 0, 0, 0.3);
+        font-family: AppleKid, PressStartK, Arial;
+        font-size: 24pt;
+        line-height: initial;
         color: #FFFFFF;
-        text-shadow: blue 2px 2px;
+        text-shadow: blue 0.06em 0.06em;
         overflow: hidden; }
         .adventure-container .adventure-box .adventure-manager .adventure-content .page-manager .page-body {
           position: absolute;
@@ -213,6 +220,10 @@
             height: 16px;
             background: url("../img/viewer/background-checkpoint.gif");
             margin-bottom: 16px;
+            font-family: PressStartK, PressStart, Arial;
+            font-size: 14px;
+            line-height: 16px;
+            text-shadow: none;
             text-align: center; }
             .adventure-container .adventure-box .adventure-manager .adventure-content .page-manager .page-body .checkpoint span {
               display: inline-block;
@@ -229,7 +240,9 @@
           margin-top: 16px; }
           .adventure-container .adventure-box .adventure-manager .adventure-content .action-manager .actions .selection-list .selection {
             width: 83.33333%;
-            margin-left: 8.33333%; }
+            margin-left: 8.33333%;
+            font-family: PressStartK, PressStart, Arial;
+            text-transform: uppercase; }
             .adventure-container .adventure-box .adventure-manager .adventure-content .action-manager .actions .selection-list .selection p {
               display: inline; }
             .adventure-container .adventure-box .adventure-manager .adventure-content .action-manager .actions .selection-list .selection .action-box {
@@ -332,6 +345,7 @@
       margin-left: 8.33333%;
       margin-top: 8px;
       margin-bottom: 8px;
+      font-family: PressStartK, PressStart, Arial;
       border: 8px solid transparent;
       border-image: url("../img/viewer/border-inventory.gif") 8 round;
       background: black;
@@ -367,7 +381,6 @@
           right: 0px;
           font-size: 8px;
           color: white;
-          font-size: 8px;
           color: white;
           text-shadow: black 1px 1px, black -1px 1px, black 1px -1px, black -1px -1px; }
         .adventure-container .adventure-box .inventory .item .description {
@@ -409,11 +422,15 @@
             color: #FFFF00;
             text-align: center;
             margin: 8px;
+            font-family: PressStartK, PressStart, Arial;
             font-size: 14px;
             font-weight: normal;
-            text-decoration: underline; }
+            text-transform: uppercase; }
           .adventure-container .adventure-box .inventory .item .description p {
-            color: #DDDDDD;
+            font-family: AppleKid, PressStartK, Arial;
+            font-size: 24pt;
+            line-height: initial;
+            color: #FFFFFF;
             margin: 8px; }
           .adventure-container .adventure-box .inventory .item .description.clicked {
             display: block; }

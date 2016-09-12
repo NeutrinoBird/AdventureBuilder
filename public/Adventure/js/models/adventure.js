@@ -20,6 +20,7 @@ Adventure.AdventureModel = Backbone.Model.extend({
 		this.set('effects', new Adventure.Effects());
 		this.set('pages', new Adventure.Pages());
 		this.set('flags', new Adventure.Flags());
+		this.set('unassignedScene', new Adventure.SceneModel({ID: 0, name:'Unassigned'}))
 		this.form = this.attributes;
 	},
 	urlRoot: 'services/adventure.php',
