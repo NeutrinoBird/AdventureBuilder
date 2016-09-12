@@ -57,6 +57,7 @@ Adventure.SceneSelect = Marionette.CollectionView.extend({
 					this.collection.create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false,
 						success:function(model){
 							model.initSubItems();
+							model.buildPageCollection();
 							Adventure.Main.renderSceneEdit(model);
 							viewHandle.$el.val(model.id);
 							viewHandle.options.selected = model.id;
@@ -107,6 +108,7 @@ Adventure.SceneSelection = Marionette.LayoutView.extend({
 			this.collection.create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false,
 				success:function(model){
 					model.initSubItems();
+					model.buildPageCollection();
 					Adventure.Main.renderSceneEdit(model);
 				},
 				error: function(model, response, options){

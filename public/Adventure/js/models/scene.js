@@ -19,7 +19,6 @@ Adventure.SceneModel = Backbone.Model.extend({
 		if(Array.isArray(this.get('sceneEvents'))){
 			this.set('sceneEvents', new Adventure.SceneEvents(this.get('sceneEvents')));
 		}
-		this.buildPageCollection();
 	},
 	handleBlankName: function(){
 		if(!this.get('name')){
