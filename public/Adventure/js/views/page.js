@@ -8,18 +8,44 @@ Adventure.PageOption = Marionette.ItemView.extend({
 		'change': 'render'
 	}
 });
+Adventure.PageOptionGroup = Marionette.CollectionView.extend({
+	tagName: 'optgroup',
+	childView: Adventure.PageOption,
+	initialize: function() {
+		this.$el.attr('label',this.model.get('name'));
+		this.collection = this.model.get('pages');
+		if(this.collection.length == 0){
+			this.$el.hide();
+		}
+	},
+	collectionEvents: {
+		'change': 'render'
+	}
+});
 Adventure.PageSelect = Marionette.CollectionView.extend({
 	tagName: 'select',
 	className: 'form-control',
 	childView: Adventure.PageOption,
 	initialize: function() {
 		if(!this.getOption("collection")){
-			this.collection = Adventure.activeAdventure.get('pages');
+			var viewHandle = this;
 			this.$el.attr("name",this.getOption("name") == undefined ? "pageID" : this.getOption("name"));
+			this.childView = Adventure.PageOptionGroup;
+			this.collection = new Adventure.Scenes();
+			this.setupPageGroups();
+			this.listenTo(Adventure.activeAdventure.get('scenes'), 'change destroy', function(){
+				viewHandle.setupPageGroups();
+				viewHandle.render();
+			});
+			this.listenTo(Adventure.activeAdventure.get('pages'), 'change destroy', function(){
+				viewHandle.setupPageGroups();
+				viewHandle.render();
+			});
 		}
 	},
 	onRender: function(){
 		if(!this.getOption("justExisting")){
+			this.$el.find('[value="0"],[value="new"]').remove();
 			if(!this.getOption("noSame")){
 				this.$el.prepend("<option value='0'>Same Page</option>");
 			}
@@ -36,9 +62,8 @@ Adventure.PageSelect = Marionette.CollectionView.extend({
 		'change': function(event){
 			if(this.$el.val() == 'new'){
 				var pageSelectView = this;
-				this.collection.create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false,
+				Adventure.activeAdventure.get('pages').create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false,
 					success:function(model){
-						model.initSubItems();
 						Adventure.Main.renderPageEditLite(model);
 						pageSelectView.$el.val(model.id);
 						pageSelectView.options.selected = model.id;
@@ -49,6 +74,13 @@ Adventure.PageSelect = Marionette.CollectionView.extend({
 				});
 			}
 		}
+	},
+	setupPageGroups: function(){
+		var viewHandle = this;
+		this.collection.reset(Adventure.activeAdventure.get('unassignedScene'));
+		Adventure.activeAdventure.get('scenes').each(function(scene){
+			viewHandle.collection.push(scene);
+		});
 	}
 });
 Adventure.PageEdit = Marionette.LayoutView.extend({
@@ -114,7 +146,6 @@ Adventure.PageEdit = Marionette.LayoutView.extend({
 			if(!this.getOption("lite")){
 				this.model.get("actions").create({pageID:this.model.id},{wait: true, validate: false,
 					success:function(model){
-						model.initSubItems();
 						Adventure.Main.renderActionEdit(model);
 					},
 					error: function(model, response, options){

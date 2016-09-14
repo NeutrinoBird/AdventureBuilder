@@ -147,7 +147,6 @@ Adventure.AdventureEdit = Marionette.LayoutView.extend({
 			event.preventDefault();
 			this.model.get("pages").create({adventureID:this.model.id},{wait: true, validate: false,
 				success:function(model){
-					model.initSubItems();
 					Adventure.Main.renderPageEdit(model);
 				},
 				error: function(model, response, options){

@@ -11,19 +11,26 @@ Adventure.PageModel = Backbone.Model.extend({
 	},
 	idAttribute: "ID",
 	initialize: function() {
-		this.initSubItems();
+		this.set('actions', new Adventure.Actions(this.get('actions')));
+		this.set('pageEvents', new Adventure.PageEvents(this.get('pageEvents')));
 		this.form = this.attributes;
 		this.handleBlankName();
 		this.on('sync', this.handleBlankName);
-		this.set("filteredText",this.get('text').replace(/\r?\n/g,'<br>'));
+		if(this.get('text')){
+			this.set("filteredText",this.get('text').replace(/\r?\n/g,'<br>'));
+		}else{
+			this.set("filteredText",'');
+		}
 	},
-	initSubItems: function(){
-		if(Array.isArray(this.get('actions'))){
-			this.set('actions', new Adventure.Actions(this.get('actions')));
+	parse: function(response) {
+		var collections = ['actions','pageEvents'];
+		for(i=0;i<collections.length;i++){
+			if (response[collections[i]] != undefined){
+				this.get(collections[i]).add(response[collections[i]]);
+				delete response[collections[i]];
+			}
 		}
-		if(Array.isArray(this.get('pageEvents'))){
-			this.set('pageEvents', new Adventure.PageEvents(this.get('pageEvents')));
-		}
+		return response;
 	},
 	handleBlankName: function(){
 		if(!this.get('name')){

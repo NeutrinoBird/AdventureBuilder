@@ -11,18 +11,21 @@ Adventure.ActionModel = Backbone.Model.extend({
 	},
 	idAttribute: "ID",
 	initialize: function() {
-		this.initSubItems();
+		this.set('actionFlagRequirements', new Adventure.ActionFlagRequirements(this.get('actionFlagRequirements')));
+		this.set('actionEvents', new Adventure.ActionEvents(this.get('actionEvents')));
 		this.form = this.attributes;
 		this.handleBlankName();
 		this.on('sync', this.handleBlankName);
 	},
-	initSubItems: function(){
-		if(Array.isArray(this.get('actionFlagRequirements'))){
-			this.set('actionFlagRequirements', new Adventure.ActionFlagRequirements(this.get('actionFlagRequirements')));
+	parse: function(response) {
+		var collections = ['actionFlagRequirements','actionEvents'];
+		for(i=0;i<collections.length;i++){
+			if (response[collections[i]] != undefined){
+				this.get(collections[i]).add(response[collections[i]]);
+				delete response[collections[i]];
+			}
 		}
-		if(Array.isArray(this.get('actionEvents'))){
-			this.set('actionEvents', new Adventure.ActionEvents(this.get('actionEvents')));
-		}
+		return response;
 	},
 	handleBlankName: function(){
 		if(!this.get('text')){

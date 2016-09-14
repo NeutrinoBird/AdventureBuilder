@@ -7,18 +7,22 @@ Adventure.SceneModel = Backbone.Model.extend({
 	},
 	idAttribute: "ID",
 	initialize: function() {
-		this.initSubItems();
+		this.set('actions', new Adventure.Actions(this.get('actions')));
+		this.set('sceneEvents', new Adventure.SceneEvents(this.get('sceneEvents')));
+		this.set('pages', new Adventure.Pages(this.get('pages')));
 		this.form = this.attributes;
 		this.handleBlankName();
 		this.on('sync', this.handleBlankName);
 	},
-	initSubItems: function(){
-		if(Array.isArray(this.get('actions'))){
-			this.set('actions', new Adventure.Actions(this.get('actions')));
+	parse: function(response) {
+		var collections = ['actions','sceneEvents'];
+		for(i=0;i<collections.length;i++){
+			if (response[collections[i]] != undefined){
+				this.get(collections[i]).add(response[collections[i]]);
+				delete response[collections[i]];
+			}
 		}
-		if(Array.isArray(this.get('sceneEvents'))){
-			this.set('sceneEvents', new Adventure.SceneEvents(this.get('sceneEvents')));
-		}
+		return response;
 	},
 	handleBlankName: function(){
 		if(!this.get('name')){
@@ -39,9 +43,6 @@ Adventure.SceneModel = Backbone.Model.extend({
 		model.set("sceneID",this.ID);
 	},
 	buildPageCollection: function(){
-		if(Array.isArray(this.get('pages'))){
-			this.set('pages', new Adventure.Pages(this.get('pages')));
-		}
 		if(Adventure.activeAdventure){
 			var scene = this;
 			Adventure.activeAdventure.get('pages').each(function(page){

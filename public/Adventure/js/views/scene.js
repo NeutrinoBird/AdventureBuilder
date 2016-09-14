@@ -56,7 +56,6 @@ Adventure.SceneSelect = Marionette.CollectionView.extend({
 				if(this.$el.val() == 'new'){
 					this.collection.create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false,
 						success:function(model){
-							model.initSubItems();
 							model.buildPageCollection();
 							Adventure.Main.renderSceneEdit(model);
 							viewHandle.$el.val(model.id);
@@ -107,7 +106,6 @@ Adventure.SceneSelection = Marionette.LayoutView.extend({
 			event.preventDefault();
 			this.collection.create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false,
 				success:function(model){
-					model.initSubItems();
 					model.buildPageCollection();
 					Adventure.Main.renderSceneEdit(model);
 				},
@@ -150,7 +148,6 @@ Adventure.SceneEdit = Marionette.LayoutView.extend({
 			event.preventDefault();
 			this.model.get("actions").create({sceneID:this.model.id},{wait: true, validate: false,
 				success:function(model){
-					model.initSubItems();
 					Adventure.Main.renderActionEdit(model);
 				},
 				error: function(model, response, options){
