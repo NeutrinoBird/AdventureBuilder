@@ -91,8 +91,10 @@
   .adventure-start div {
     display: inline-block;
     height: 48px;
-    border: 16px solid transparent;
+    border: 16px solid rgba(0, 0, 0, 0.05);
     box-shadow: 0px 0px 32px black inset;
+    -webkit-border-image: url("../img/viewer/border-normal.gif") 16 round;
+    -o-border-image: url("../img/viewer/border-normal.gif") 16 round;
     border-image: url("../img/viewer/border-normal.gif") 16 round;
     background: url("../img/viewer/background-normal.gif") repeat;
     font-family: PressStartK, PressStart, Arial;
@@ -145,6 +147,47 @@
     width: 100%;
     background: url("../img/viewer/overlay.png") rgba(0, 0, 0, 0.3);
     animation: overlayFadeIn 0.5s; }
+  .adventure-container .loader {
+    position: absolute;
+    top: 30%;
+    width: 100%; }
+    .adventure-container .loader .loading {
+      width: 50%;
+      margin-left: 25%;
+      background: rgba(0, 0, 0, 0.5);
+      background-clip: padding-box;
+      border: 8px solid rgba(0, 0, 0, 0.005);
+      -webkit-border-image: url("../img/viewer/border-inventory.gif") 8 round;
+      -o-border-image: url("../img/viewer/border-inventory.gif") 8 round;
+      border-image: url("../img/viewer/border-inventory.gif") 8 round;
+      font-family: PressStartK, PressStart, Arial;
+      text-transform: uppercase;
+      color: #FFFFFF;
+      text-shadow: black 2px 2px;
+      text-align: center;
+      padding: 10px; }
+      .adventure-container .loader .loading p {
+        width: 80%;
+        margin-left: 10%; }
+      .adventure-container .loader .loading .progress-bar {
+        position: relative;
+        height: 20px;
+        width: 80%;
+        margin-left: 10%;
+        overflow: hidden;
+        background-color: black;
+        border: 2px solid black; }
+        .adventure-container .loader .loading .progress-bar .progress {
+          position: relative;
+          left: 0px;
+          top: 0px;
+          height: 20px;
+          width: 0%;
+          background-color: red; }
+      .adventure-container .loader .loading .images {
+        width: 0px;
+        height: 0px;
+        overflow: hidden; }
   .adventure-container .adventure-box {
     display: inline-block;
     position: relative;
@@ -302,7 +345,7 @@
       left: 0px;
       width: 100%;
       height: 100%;
-      border: 16px solid transparent;
+      border: 16px solid rgba(0, 0, 0, 0.005);
       box-shadow: 0px 0px 32px black inset; }
       .adventure-container .adventure-box .adventure-background .close-box, .adventure-container .adventure-box .adventure-background-transition .close-box {
         position: absolute;
@@ -316,25 +359,33 @@
       z-index: 1; }
     .adventure-container .adventure-box .adventure-background-transition {
       z-index: 2; }
-    .adventure-container .adventure-box .normal, .adventure-container .adventure-box .checkpoint {
+    .adventure-container .adventure-box .adventure-background.normal, .adventure-container .adventure-box .adventure-background.checkpoint, .adventure-container .adventure-box .adventure-background-transition.normal, .adventure-container .adventure-box .adventure-background-transition.checkpoint {
+      -webkit-border-image: url("../img/viewer/border-normal.gif") 16 round;
+      -o-border-image: url("../img/viewer/border-normal.gif") 16 round;
       border-image: url("../img/viewer/border-normal.gif") 16 round;
       background: url("../img/viewer/background-normal.gif") repeat; }
-      .adventure-container .adventure-box .normal .close-box, .adventure-container .adventure-box .checkpoint .close-box {
+      .adventure-container .adventure-box .adventure-background.normal .close-box, .adventure-container .adventure-box .adventure-background.checkpoint .close-box, .adventure-container .adventure-box .adventure-background-transition.normal .close-box, .adventure-container .adventure-box .adventure-background-transition.checkpoint .close-box {
         background-position: 0px 0px; }
-    .adventure-container .adventure-box .death {
+    .adventure-container .adventure-box .adventure-background.death, .adventure-container .adventure-box .adventure-background-transition.death {
+      -webkit-border-image: url("../img/viewer/border-death.gif") 16 round;
+      -o-border-image: url("../img/viewer/border-death.gif") 16 round;
       border-image: url("../img/viewer/border-death.gif") 16 round;
       background: url("../img/viewer/background-death.gif") repeat; }
-      .adventure-container .adventure-box .death .close-box {
+      .adventure-container .adventure-box .adventure-background.death .close-box, .adventure-container .adventure-box .adventure-background-transition.death .close-box {
         background-position: -32px 0px; }
-    .adventure-container .adventure-box .badEnding {
+    .adventure-container .adventure-box .adventure-background.badEnding, .adventure-container .adventure-box .adventure-background-transition.badEnding {
+      -webkit-border-image: url("../img/viewer/border-badEnding.gif") 16 round;
+      -o-border-image: url("../img/viewer/border-badEnding.gif") 16 round;
       border-image: url("../img/viewer/border-badEnding.gif") 16 round;
       background: url("../img/viewer/background-badEnding.gif") repeat; }
-      .adventure-container .adventure-box .badEnding .close-box {
+      .adventure-container .adventure-box .adventure-background.badEnding .close-box, .adventure-container .adventure-box .adventure-background-transition.badEnding .close-box {
         background-position: -64px 0px; }
-    .adventure-container .adventure-box .goodEnding {
+    .adventure-container .adventure-box .adventure-background.goodEnding, .adventure-container .adventure-box .adventure-background-transition.goodEnding {
+      -webkit-border-image: url("../img/viewer/border-goodEnding.gif") 16 round;
+      -o-border-image: url("../img/viewer/border-goodEnding.gif") 16 round;
       border-image: url("../img/viewer/border-goodEnding.gif") 16 round;
       background: url("../img/viewer/background-goodEnding.gif") repeat; }
-      .adventure-container .adventure-box .goodEnding .close-box {
+      .adventure-container .adventure-box .adventure-background.goodEnding .close-box, .adventure-container .adventure-box .adventure-background-transition.goodEnding .close-box {
         background-position: -96px 0px; }
     .adventure-container .adventure-box .inventory {
       position: relative;
@@ -346,7 +397,9 @@
       margin-top: 8px;
       margin-bottom: 8px;
       font-family: PressStartK, PressStart, Arial;
-      border: 8px solid transparent;
+      border: 8px solid rgba(0, 0, 0, 0.005);
+      -webkit-border-image: url("../img/viewer/border-inventory.gif") 8 round;
+      -o-border-image: url("../img/viewer/border-inventory.gif") 8 round;
       border-image: url("../img/viewer/border-inventory.gif") 8 round;
       background: black;
       background-clip: content-box;
@@ -391,7 +444,9 @@
           width: 312px;
           background: rgba(0, 0, 0, 0.8);
           background-clip: content-box;
-          border: 8px solid transparent;
+          border: 8px solid rgba(0, 0, 0, 0.005);
+          -webkit-border-image: url("../img/viewer/border-inventory.gif") 8 round;
+          -o-border-image: url("../img/viewer/border-inventory.gif") 8 round;
           border-image: url("../img/viewer/border-inventory.gif") 8 round;
           -ms-transform: translate(-50%, -16px);
           -webkit-transform: translate(-50%, -16px);
@@ -457,7 +512,9 @@
     padding: 16px 32px;
     background: rgba(0, 0, 0, 0.8);
     background-clip: padding-box;
-    border: 8px solid transparent;
+    border: 8px solid rgba(0, 0, 0, 0.005);
+    -webkit-border-image: url("../img/viewer/border-inventory.gif") 8 round;
+    -o-border-image: url("../img/viewer/border-inventory.gif") 8 round;
     border-image: url("../img/viewer/border-inventory.gif") 8 round;
     animation: popInCloseDialog .5s ease-out 1;
     font-family: PressStartK, PressStart, Arial;

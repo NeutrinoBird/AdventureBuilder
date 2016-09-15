@@ -75,6 +75,8 @@ form{
 	clear: both;
     font-size: 20px;
     border: 8px solid transparent;
+    -webkit-border-image: url('../img/viewer/border-inventory.gif') 8 round;
+   	-o-border-image: url('../img/viewer/border-inventory.gif') 8 round;
 	border-image: url('../img/viewer/border-inventory.gif') 8 round;
 	background: black;
 	background-clip: content-box;

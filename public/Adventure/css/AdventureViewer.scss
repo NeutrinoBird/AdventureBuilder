@@ -96,8 +96,10 @@
 		@extend .clickable;
 		display: inline-block;
 		height: 48px;
-		border: 16px solid transparent;
+		border: 16px solid rgba(0,0,0,0.05);
 		box-shadow: 0px 0px 32px black inset;
+		-webkit-border-image: url("../img/viewer/border-normal.gif") 16 round;
+    	-o-border-image: url("../img/viewer/border-normal.gif") 16 round;
 		border-image: url("../img/viewer/border-normal.gif") 16 round;
 		background: url("../img/viewer/background-normal.gif") repeat;
 		font-family: PressStartK, PressStart, Arial;
@@ -157,6 +159,53 @@
 		width: 100%;
 		background: url('../img/viewer/overlay.png') rgba(0,0,0,0.3);
 		animation: overlayFadeIn 0.5s;
+	}
+	.loader{
+		position:absolute;
+		top: 30%;
+		width: 100%;
+		.loading{
+			width: 50%;
+			margin-left: 25%;
+			background: rgba(0,0,0,0.5);
+			background-clip: padding-box;
+			border: 8px solid rgba(0,0,0,0.005);
+			-webkit-border-image: url("../img/viewer/border-inventory.gif") 8 round;
+	    	-o-border-image: url("../img/viewer/border-inventory.gif") 8 round;
+			border-image: url("../img/viewer/border-inventory.gif") 8 round;
+			font-family: PressStartK, PressStart, Arial;
+			text-transform: uppercase;
+			color: #FFFFFF;
+			text-shadow: black 2px 2px;
+			text-align:center;
+			padding: 10px;
+			p{
+				width: 80%;
+				margin-left: 10%;
+			}
+			.progress-bar{
+				position: relative;
+				height: 20px;
+				width: 80%;
+				margin-left: 10%;
+				overflow: hidden;
+				background-color: black;
+				border:2px solid black;
+				.progress{
+					position: relative;
+					left: 0px;
+					top: 0px;
+					height: 20px;
+					width: 0%;
+					background-color: red;
+				}
+			}
+			.images{
+				width: 0px;
+				height: 0px;
+				overflow: hidden;
+			}
+		}
 	}
 	.adventure-box{
 		display: inline-block;
@@ -348,7 +397,7 @@
 			left:0px;
 			width:100%;
 			height:100%;
-			border: 16px solid transparent;
+			border: 16px solid rgba(0,0,0,0.005);
 			box-shadow: 0px 0px 32px black inset;
 			.close-box{
 				position: absolute;
@@ -366,32 +415,42 @@
 		.adventure-background-transition{
 			z-index: 2;
 		}
-		.normal, .checkpoint{
-			border-image: url('../img/viewer/border-normal.gif') 16 round;
-			background: url('../img/viewer/background-normal.gif') repeat;
-			.close-box{
-				background-position: 0px 0px;
+		.adventure-background, .adventure-background-transition{
+			&.normal, &.checkpoint{
+				-webkit-border-image: url('../img/viewer/border-normal.gif') 16 round;
+	    		-o-border-image: url('../img/viewer/border-normal.gif') 16 round;
+				border-image: url('../img/viewer/border-normal.gif') 16 round;
+				background: url('../img/viewer/background-normal.gif') repeat;
+				.close-box{
+					background-position: 0px 0px;
+				}
 			}
-		}
-		.death{
-			border-image: url('../img/viewer/border-death.gif') 16 round;
-			background: url('../img/viewer/background-death.gif') repeat;
-			.close-box{
-				background-position: -32px 0px;
+			&.death{
+				-webkit-border-image: url('../img/viewer/border-death.gif') 16 round;
+	    		-o-border-image: url('../img/viewer/border-death.gif') 16 round;
+				border-image: url('../img/viewer/border-death.gif') 16 round;
+				background: url('../img/viewer/background-death.gif') repeat;
+				.close-box{
+					background-position: -32px 0px;
+				}
 			}
-		}
-		.badEnding{
-			border-image: url('../img/viewer/border-badEnding.gif') 16 round;
-			background: url('../img/viewer/background-badEnding.gif') repeat;
-			.close-box{
-				background-position: -64px 0px;
+			&.badEnding{
+				-webkit-border-image: url('../img/viewer/border-badEnding.gif') 16 round;
+	    		-o-border-image: url('../img/viewer/border-badEnding.gif') 16 round;
+				border-image: url('../img/viewer/border-badEnding.gif') 16 round;
+				background: url('../img/viewer/background-badEnding.gif') repeat;
+				.close-box{
+					background-position: -64px 0px;
+				}
 			}
-		}
-		.goodEnding{
-			border-image: url('../img/viewer/border-goodEnding.gif') 16 round;
-			background: url('../img/viewer/background-goodEnding.gif') repeat;
-			.close-box{
-				background-position: -96px 0px;
+			&.goodEnding{
+				-webkit-border-image: url('../img/viewer/border-goodEnding.gif') 16 round;
+	    		-o-border-image: url('../img/viewer/border-goodEnding.gif') 16 round;
+				border-image: url('../img/viewer/border-goodEnding.gif') 16 round;
+				background: url('../img/viewer/background-goodEnding.gif') repeat;
+				.close-box{
+					background-position: -96px 0px;
+				}
 			}
 		}
 		.inventory{
@@ -404,7 +463,9 @@
 			margin-top: 8px;
 			margin-bottom: 8px;
 			font-family: PressStartK, PressStart, Arial;
-			border: 8px solid transparent;
+			border: 8px solid rgba(0,0,0,0.005);
+			-webkit-border-image: url('../img/viewer/border-inventory.gif') 8 round;
+    		-o-border-image: url('../img/viewer/border-inventory.gif') 8 round;
 			border-image: url('../img/viewer/border-inventory.gif') 8 round;
 			background: black;
 			background-clip: content-box;
@@ -455,7 +516,9 @@
 					width: 312px;
 					background: rgba(0,0,0,0.8);
 					background-clip: content-box;
-					border: 8px solid transparent;
+					border: 8px solid rgba(0,0,0,0.005);
+					-webkit-border-image: url("../img/viewer/border-inventory.gif") 8 round;
+    				-o-border-image: url("../img/viewer/border-inventory.gif") 8 round;
 					border-image: url("../img/viewer/border-inventory.gif") 8 round;
 					-ms-transform: translate(-50%,-16px);
 					-webkit-transform: translate(-50%,-16px);
@@ -541,7 +604,9 @@
 		padding: 16px 32px;
 		background: rgba(0,0,0,0.8);
 		background-clip: padding-box;
-		border: 8px solid transparent;
+		border: 8px solid rgba(0,0,0,0.005);
+		-webkit-border-image: url("../img/viewer/border-inventory.gif") 8 round;
+    	-o-border-image: url("../img/viewer/border-inventory.gif") 8 round;
 		border-image: url("../img/viewer/border-inventory.gif") 8 round;
 		animation: popInCloseDialog .5s ease-out 1;
 		font-family: PressStartK, PressStart, Arial;

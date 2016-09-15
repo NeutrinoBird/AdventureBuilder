@@ -14,7 +14,8 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		pageB: '.page-body.page-B',
 		inventory:'.inventory-container',
 		actionsA: '.actions.page-A',
-		actionsB: '.actions.page-B'
+		actionsB: '.actions.page-B',
+		loader: '.loader'
 	},
 	ui: {
 		closeBox: '.adventure-background .close-box',
@@ -38,14 +39,7 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 			this.resetVariables();
 			this.resetTransitionData();
 			this.$el.prepend(this.model.get("effects").assembleKeyframes());
-			this.transitionData.nextPageID = this.variables.startingPage;
-			this.loadPage();
-			this.resetTransitionData();
-			this.$el.find('.image-manager .page-'+this.otherSide).hide();
-			this.$el.find('.action-manager .page-'+this.otherSide).hide();
-			this.$el.find('.page-manager').height(this.$el.find('.page-manager .page-'+this.side).innerHeight());
-			this.$el.find('.action-manager').height(this.$el.find('.action-manager .page-'+this.side).outerHeight(true));
-			this.trimActions();
+			this.showChildView('loader', new Adventure.Loading({images: this.model.get("images")}));
 			this.resizeBox();
 		});
 		var viewHandle = this;
@@ -53,6 +47,20 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 			viewHandle.resizeBox();
 		});
 		this.render();
+		this.$el.find(".adventure-box").hide();
+	},
+	loadComplete: function(){
+		this.$el.find(".adventure-box").show();
+		this.$el.find(".loader").fadeOut();
+		this.transitionData.nextPageID = this.variables.startingPage;
+		this.loadPage();
+		this.resetTransitionData();
+		this.$el.find('.image-manager .page-'+this.otherSide).hide();
+		this.$el.find('.action-manager .page-'+this.otherSide).hide();
+		this.$el.find('.page-manager').height(this.$el.find('.page-manager .page-'+this.side).innerHeight());
+		this.$el.find('.action-manager').height(this.$el.find('.action-manager .page-'+this.side).outerHeight(true));
+		this.trimActions();
+		this.resizeBox();
 	},
 	onRender: function(){
 		var viewHandle = this;
@@ -517,5 +525,63 @@ Adventure.Inventory = Marionette.CollectionView.extend({
 	},
 	collectionEvents: {
 		'change': 'render'
+	}
+});
+Adventure.LoadingImage = Marionette.ItemView.extend({
+	template: false,
+	tagName: 'img',
+	initialize: function(){
+		this.$el.attr('src',Adventure.assetPath+"uploads/"+this.model.get("URL"));
+	},
+	events: {
+		'load': function(event){
+			this.getOption('loader').onImageLoaded(this.model);
+		}
+	}
+});
+Adventure.LoadingImages = Marionette.CollectionView.extend({
+	childView: Adventure.LoadingImage,
+	initialize: function(options){
+		this.childViewOptions = {
+			loader: options.loader
+		};
+	}
+});
+Adventure.Loading = Marionette.LayoutView.extend({
+	template: 'Loading',
+	imageQueue: [],
+	loadingSet: new Adventure.Images,
+	totalImages: 1,
+	imagesLoaded: 0,
+	regions: {
+		images: '.images'
+	},
+	initialize: function(options){
+		var viewHandle = this;
+		options.images.each(function(image){
+			viewHandle.imageQueue.push(image);
+		});
+		this.totalImages = this.imageQueue.length;
+		for (var i = 0; i < 10; i++){
+			this.loadImage();
+		}
+	},
+	onRender: function(){
+		this.showChildView('images', new Adventure.LoadingImages({collection: this.loadingSet, loader: this}));
+	},
+	loadImage: function(){
+		if(this.imageQueue.length > 0){
+			this.loadingSet.add(this.imageQueue.pop());
+		}
+	},
+	onImageLoaded: function(image){
+		this.loadingSet.remove(image.id);
+		this.imagesLoaded++;
+		this.$el.find(".progress").css('width',100*(this.imagesLoaded/this.totalImages)+'%');
+		if(this.imagesLoaded < this.totalImages){
+			this.loadImage();
+		}else{
+			Adventure.viewer.loadComplete();
+		}
 	}
 });
