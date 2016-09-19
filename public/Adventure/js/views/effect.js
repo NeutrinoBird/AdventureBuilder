@@ -18,29 +18,46 @@ Adventure.EffectSelect = Marionette.CollectionView.extend({
 	onRender: function(){
 		this.$el.attr("name","effectID");
 		this.$el.prepend("<option value='0'>No Effect</option>");
-		this.$el.append("<option value='new'>New Effect...</option>");
 		if(this.getOption("selected") !== ""){
 			this.$el.val(this.getOption("selected"));
 			if(!this.$el.find(":selected").length){
 				this.$el.val(0);
 			}
 		}
+	}
+});
+Adventure.EffectSelectPlus = Marionette.LayoutView.extend({
+	template: 'SelectWithNewButton',
+	className: 'select-plus',
+	regions: {
+		selectContainer:'.select-container'
+	},
+	ui: {
+		newButton: 'button'
+	},
+	initialize: function(options){
+		this.selectBox = new Adventure.EffectSelect(this.options);
+		this.selectBox.$el.removeClass("form-control");
+	},
+	onRender: function(){
+		this.showChildView('selectContainer', this.selectBox);
 	},
 	events: {
-		'change': function(event){
-			var viewHandle = this;
-			if(this.$el.val() == 'new'){
-				this.collection.create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false,
-					success: function(model){
-						Adventure.Main.renderEffectEdit(model);
-						viewHandle.$el.val(model.id);
-						viewHandle.options.selected = model.id;
-					},
-					error: function(model, response, options){
-						Adventure.handleInvalidInput(response.responseJSON);
-					}
-				});
-			}
+		'click @ui.newButton': function(event){
+			event.preventDefault();
+			var effectSelectView = this;
+			Adventure.activeAdventure.get('effects').create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false,
+				success:function(model){
+					Adventure.Main.renderEffectEdit(model);
+					effectSelectView.selectBox.$el.val(model.id);
+					effectSelectView.options.selected = model.id;
+					effectSelectView.selectBox.options.selected = model.id;
+				},
+				error: function(model, response, options){
+					Adventure.handleInvalidInput(response.responseJSON);
+				}
+			});
+			return false;
 		}
 	}
 });

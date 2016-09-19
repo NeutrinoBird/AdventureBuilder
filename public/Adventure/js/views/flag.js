@@ -18,7 +18,6 @@ Adventure.FlagSelect = Marionette.CollectionView.extend({
 	onRender: function(){
 		this.$el.attr("name",this.getOption("name") == undefined ? "flagID" : this.getOption("name"));
 		this.$el.prepend("<option value='0'>" + (this.getOption("isOtherFlag") ? "Use Above Value" : "Select Flag") + "</option>");
-		this.$el.append("<option value='new'>New Flag...</option>");
 		if(this.getOption("selected") !== ""){
 			this.$el.val(this.getOption("selected"));
 			if(!this.$el.find(":selected").length){
@@ -29,20 +28,44 @@ Adventure.FlagSelect = Marionette.CollectionView.extend({
 	events: {
 		'change': function(event){
 			var viewHandle = this;
-			if(this.$el.val() == 'new'){
-				this.collection.create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false,
-					success:function(model){
-						Adventure.Main.renderFlagEdit(model);
-						viewHandle.$el.val(model.id);
-						viewHandle.options.selected = model.id;
-					},
-					error: function(model, response, options){
-						Adventure.handleInvalidInput(response.responseJSON);
-					}
-				});
-			}else if(this.$el.val() != '0' && this.getOption("isOtherFlag") && this.getOption("valueField")){
+			if(this.$el.val() != '0' && this.getOption("isOtherFlag") && this.getOption("valueField")){
 				this.getOption("valueField").val(0);
 			}
+		}
+	}
+});
+Adventure.FlagSelectPlus = Marionette.LayoutView.extend({
+	template: 'SelectWithNewButton',
+	className: 'select-plus',
+	regions: {
+		selectContainer:'.select-container'
+	},
+	ui: {
+		newButton: 'button'
+	},
+	initialize: function(options){
+		this.selectBox = new Adventure.FlagSelect(this.options);
+		this.selectBox.$el.removeClass("form-control");
+	},
+	onRender: function(){
+		this.showChildView('selectContainer', this.selectBox);
+	},
+	events: {
+		'click @ui.newButton': function(event){
+			event.preventDefault();
+			var flagSelectView = this;
+			Adventure.activeAdventure.get('flags').create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false,
+				success:function(model){
+					Adventure.Main.renderFlagEdit(model);
+					flagSelectView.selectBox.$el.val(model.id);
+					flagSelectView.options.selected = model.id;
+					flagSelectView.selectBox.options.selected = model.id;
+				},
+				error: function(model, response, options){
+					Adventure.handleInvalidInput(response.responseJSON);
+				}
+			});
+			return false;
 		}
 	}
 });

@@ -25,10 +25,10 @@ Adventure.ActionFlagRequirementEdit = Marionette.LayoutView.extend({
 	onRender: function() {
 		Adventure.setupTooltips(this);
 		this.model.form = this.$el.find("form");
-		this.showChildView('flagSelect', new Adventure.FlagSelect({selected: this.model.get("flagID")}));
-		this.showChildView('otherFlagSelect', new Adventure.FlagSelect({selected: this.model.get("otherFlagID"), name: 'otherFlagID', isOtherFlag: true, valueField: this.$el.find('[name="counterValue"]')}));
+		this.showChildView('flagSelect', new Adventure.FlagSelectPlus({selected: this.model.get("flagID")}));
+		this.showChildView('otherFlagSelect', new Adventure.FlagSelectPlus({selected: this.model.get("otherFlagID"), name: 'otherFlagID', isOtherFlag: true, valueField: this.$el.find('[name="counterValue"]')}));
 		this.showChildView('conditionSelect', new Adventure.ConditionSelect({selected: this.model.get("conditionID"), onChange: this.hideFields}));
-		this.showChildView('pageSelect', new Adventure.PageSelect({selected: this.model.get("pageID"), noSame: true}));
+		this.showChildView('pageSelect', new Adventure.PageSelectPlus({selected: this.model.get("pageID"), noSame: true}));
 		this.hideFields();
 	},
 	events: {

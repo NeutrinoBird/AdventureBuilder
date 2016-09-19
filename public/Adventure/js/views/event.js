@@ -12,41 +12,65 @@ Adventure.EventSelect = Marionette.CollectionView.extend({
 	tagName: 'select',
 	className: 'form-control',
 	childView: Adventure.EventOption,
+	filter: function (child, index, collection) {
+		return child.get("isActive") == 1;
+	},
 	initialize: function() {
 		this.collection = Adventure.activeAdventure.get('events');
 	},
 	onRender: function(){
 		this.$el.attr("name","eventID");
 		this.$el.prepend("<option value='0'>Select Event</option>");
-		this.$el.append("<option value='new'>New Event...</option>");
 		if(this.getOption("selected") !== ""){
 			this.$el.val(this.getOption("selected"));
 			if(!this.$el.find(":selected").length){
 				this.$el.val(0);
+			}else if(this.getOption("selected") != 0){
+				this.$el.find('[value="0"]').remove();
 			}
 		}
 	},
 	events: {
 		'change': function(event){
 			var viewHandle = this;
-			switch(this.$el.val()){
-				case '':
-					break;
-				case 'new':
-					this.collection.create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false,
-						success:function(model){
-							viewHandle.getOption("parentView").showChildView('eventEdit',new Adventure.EventEdit({model: model}));
-							viewHandle.$el.val(model.id);
-							viewHandle.options.selected = model.id;
-						},
-						error: function(model, response, options){
-							Adventure.handleInvalidInput(response.responseJSON);
-						}
-					});
-					break;
-				default:
-					this.getOption("parentView").showChildView('eventEdit',new Adventure.EventEdit({model: this.collection.get(this.$el.val())}));
+			if(this.$el.val() != ''){
+				this.getOption("parentView").showChildView('eventEdit',new Adventure.EventEdit({model: this.collection.get(this.$el.val())}));
 			}
+		}
+	}
+});
+Adventure.EventSelectPlus = Marionette.LayoutView.extend({
+	template: 'SelectWithNewButton',
+	className: 'select-plus',
+	regions: {
+		selectContainer:'.select-container'
+	},
+	ui: {
+		newButton: 'button'
+	},
+	initialize: function(options){
+		this.selectBox = new Adventure.EventSelect(this.options);
+		this.selectBox.$el.removeClass("form-control");
+	},
+	onRender: function(){
+		this.showChildView('selectContainer', this.selectBox);
+	},
+	events: {
+		'click @ui.newButton': function(event){
+			event.preventDefault();
+			var eventSelectView = this;
+			Adventure.activeAdventure.get('events').create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false,
+				success:function(model){
+					eventSelectView.getOption("parentView").showChildView('eventEdit',new Adventure.EventEdit({model: model}));
+					eventSelectView.selectBox.$el.val(model.id);
+					eventSelectView.options.selected = model.id;
+					eventSelectView.selectBox.options.selected = model.id;
+				},
+				error: function(model, response, options){
+					Adventure.handleInvalidInput(response.responseJSON);
+				}
+			});
+			return false;
 		}
 	}
 });
@@ -83,12 +107,12 @@ Adventure.EventEdit = Marionette.LayoutView.extend({
 		Adventure.setupTooltips(this);
 		this.model.form = this.$el;
 		this.showChildView('eventTypeSelect', new Adventure.EventTypeSelect({selected: this.model.get("eventTypeID"), onChange: this.hideEventTypeFields}));
-		this.showChildView('flagSelect', new Adventure.FlagSelect({selected: this.model.get("flagID")}));
-		this.showChildView('pageSelect', new Adventure.PageSelect({selected: this.model.get("pageID")}));
+		this.showChildView('flagSelect', new Adventure.FlagSelectPlus({selected: this.model.get("flagID")}));
+		this.showChildView('pageSelect', new Adventure.PageSelectPlus({selected: this.model.get("pageID")}));
 		this.showChildView('conditionSelect', new Adventure.ConditionSelect({selected: this.model.get("conditionID"), onChange: this.hideConditionFields}));
-		this.showChildView('conditionFlagSelect', new Adventure.FlagSelect({selected: this.model.get("conditionFlagID"), name: 'conditionFlagID'}));
-		this.showChildView('conditionOtherFlagSelect', new Adventure.FlagSelect({selected: this.model.get("conditionOtherFlagID"), name: 'conditionOtherFlagID', isOtherFlag: true, valueField: this.$el.find('[name="counterValue"]')}));
-		this.showChildView('conditionPageSelect', new Adventure.PageSelect({selected: this.model.get("conditionPageID"), name: 'conditionPageID', noSame: true}));
+		this.showChildView('conditionFlagSelect', new Adventure.FlagSelectPlus({selected: this.model.get("conditionFlagID"), name: 'conditionFlagID'}));
+		this.showChildView('conditionOtherFlagSelect', new Adventure.FlagSelectPlus({selected: this.model.get("conditionOtherFlagID"), name: 'conditionOtherFlagID', isOtherFlag: true, valueField: this.$el.find('[name="counterValue"]')}));
+		this.showChildView('conditionPageSelect', new Adventure.PageSelectPlus({selected: this.model.get("conditionPageID"), name: 'conditionPageID', noSame: true}));
 		this.hideEventTypeFields();
 		this.hideConditionFields();
 	}
@@ -118,7 +142,10 @@ Adventure.EventLinkList = Marionette.CollectionView.extend({
 		return int(model.get('priority'));
 	},
 	collectionEvents: {
-		"sync": "render"
+		"sync": "render",
+		"change destroy": function(){
+			Adventure.activeAdventure.get("events").cleanup();
+		}
 	}
 });
 Adventure.EventLinkEdit = Marionette.LayoutView.extend({
@@ -133,7 +160,7 @@ Adventure.EventLinkEdit = Marionette.LayoutView.extend({
 		var viewHandle = this;
 		Adventure.setupTooltips(this);
 		this.model.form = this.$el.find(".event-link");
-		this.showChildView('eventSelect', new Adventure.EventSelect({selected: this.model.get("eventID"),parentView: this}));
+		this.showChildView('eventSelect', new Adventure.EventSelectPlus({selected: this.model.get("eventID"),parentView: this}));
 		if(this.model.get("eventID") > 0){
 			this.showChildView('eventEdit',new Adventure.EventEdit({model: Adventure.activeAdventure.get('events').get(this.model.get("eventID"))}));
 		}

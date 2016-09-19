@@ -12,7 +12,8 @@ Adventure.EventModel = Backbone.Model.extend({
 		counterUpperValue: null,
 		conditionFlagID: 0,
 		conditionPageID: 0,
-		conditionOtherFlagID: 0
+		conditionOtherFlagID: 0,
+		isActive: 1
 	},
 	idAttribute: "ID",
 	initialize: function(){
@@ -112,7 +113,37 @@ Adventure.EventModel = Backbone.Model.extend({
 	}
 });
 Adventure.Events = Backbone.Collection.extend({
-	model: Adventure.EventModel
+	model: Adventure.EventModel,
+	cleanup: function(){
+		var unusedEvents = [];
+		this.each(function(Event){
+			unusedEvents.push(Event.id);
+		});
+		Adventure.activeAdventure.get("scenes").each(function(Scene){
+			Scene.get("sceneEvents").each(function(SceneEvent){
+				if(unusedEvents.indexOf(SceneEvent.get('eventID'),0) >= 0){
+					unusedEvents.splice(unusedEvents.indexOf(SceneEvent.get('eventID'),0),1);
+				}
+			});
+		});
+		Adventure.activeAdventure.get("pages").each(function(Page){
+			Page.get("pageEvents").each(function(PageEvent){
+				if(unusedEvents.indexOf(PageEvent.get('eventID'),0) >= 0){
+					unusedEvents.splice(unusedEvents.indexOf(PageEvent.get('eventID'),0),1);
+				}
+			});
+			Page.get("actions").each(function(Action){
+				Action.get("actionEvents").each(function(ActionEvent){
+					if(unusedEvents.indexOf(ActionEvent.get('eventID'),0) >= 0){
+						unusedEvents.splice(unusedEvents.indexOf(ActionEvent.get('eventID'),0),1);
+					}
+				});
+			});
+		});
+		_.each(unusedEvents,function(eventID,index,list){
+			this.get(eventID).set("isActive",0);
+		}, this);
+	}
 });
 
 Adventure.SceneEventModel = Backbone.Model.extend({

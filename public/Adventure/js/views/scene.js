@@ -28,9 +28,8 @@ Adventure.SceneSelect = Marionette.CollectionView.extend({
 			this.$el.val(this.filterSelection);
 			this.$el.change();
 		}else{
-			this.$el.find("[value='0'],[value='new']").remove();
+			this.$el.find("[value='0']").remove();
 			this.$el.prepend("<option value='0'>Select Scene</option>");
-			this.$el.append("<option value='new'>New Scene...</option>");
 			if(this.getOption("selected") !== ""){
 				this.$el.val(this.getOption("selected"));
 				if(!this.$el.find(":selected").length){
@@ -52,25 +51,47 @@ Adventure.SceneSelect = Marionette.CollectionView.extend({
 					filterElements.hide();
 					filterElements.filter("[data-scene='"+this.$el.val()+"']").show();
 				}
-			}else{
-				if(this.$el.val() == 'new'){
-					this.collection.create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false,
-						success:function(model){
-							model.buildPageCollection();
-							Adventure.Main.renderSceneEdit(model);
-							viewHandle.$el.val(model.id);
-							viewHandle.options.selected = model.id;
-						},
-						error: function(model, response, options){
-							Adventure.handleInvalidInput(response.responseJSON);
-						}
-					});
-				}
 			}
 		}
 	},
 	collectionEvents: {
 		'change': 'render'
+	}
+});
+Adventure.SceneSelectPlus = Marionette.LayoutView.extend({
+	template: 'SelectWithNewButton',
+	className: 'select-plus',
+	regions: {
+		selectContainer:'.select-container'
+	},
+	ui: {
+		newButton: 'button'
+	},
+	initialize: function(options){
+		this.selectBox = new Adventure.SceneSelect(this.options);
+		this.selectBox.$el.removeClass("form-control");
+	},
+	onRender: function(){
+		this.showChildView('selectContainer', this.selectBox);
+	},
+	events: {
+		'click @ui.newButton': function(event){
+			event.preventDefault();
+			var sceneSelectView = this;
+			Adventure.activeAdventure.get('scenes').create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false,
+				success:function(model){
+					model.buildPageCollection();
+					Adventure.Main.renderSceneEdit(model);
+					sceneSelectView.selectBox.$el.val(model.id);
+					sceneSelectView.options.selected = model.id;
+					sceneSelectView.selectBox.options.selected = model.id;
+				},
+				error: function(model, response, options){
+					Adventure.handleInvalidInput(response.responseJSON);
+				}
+			});
+			return false;
+		}
 	}
 });
 Adventure.SceneButton = Marionette.ItemView.extend({

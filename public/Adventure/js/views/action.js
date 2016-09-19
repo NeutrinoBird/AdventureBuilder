@@ -24,8 +24,8 @@ Adventure.ActionEdit = Marionette.LayoutView.extend({
 		Adventure.setupTooltips(this);
 		this.model.form = this.$el.find("form");
 		this.showChildView('actionTypeSelect', new Adventure.ActionTypeSelect({selected: this.model.get("actionTypeID"), onChange: this.hideTextField}));
-		this.showChildView('pageSelect', new Adventure.PageSelect({name: "nextPageID", selected: this.model.get("nextPageID")}));
-		this.showChildView('effectSelect', new Adventure.EffectSelect({selected: this.model.get("effectID")}));
+		this.showChildView('pageSelect', new Adventure.PageSelectPlus({name: "nextPageID", selected: this.model.get("nextPageID")}));
+		this.showChildView('effectSelect', new Adventure.EffectSelectPlus({selected: this.model.get("effectID")}));
 		this.showChildView('transitionSelect', new Adventure.TransitionSelect({selected: this.model.get("transitionID")}));
 		this.showChildView('requirementSelection', new Adventure.ActionFlagRequirementList({collection: this.model.get('actionFlagRequirements')}));
 		this.showChildView('eventSelection', new Adventure.EventLinkList({collection: this.model.get('actionEvents')}));

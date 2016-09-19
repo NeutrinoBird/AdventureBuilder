@@ -24,8 +24,8 @@ Adventure.PageOptionGroup = Marionette.CollectionView.extend({
 });
 Adventure.PageSelect = Marionette.CollectionView.extend({
 	tagName: 'select',
-	className: 'form-control',
 	childView: Adventure.PageOption,
+	className: 'form-control',
 	initialize: function() {
 		if(!this.getOption("collection")){
 			var viewHandle = this;
@@ -44,34 +44,14 @@ Adventure.PageSelect = Marionette.CollectionView.extend({
 		}
 	},
 	onRender: function(){
-		if(!this.getOption("justExisting")){
-			this.$el.find('[value="0"],[value="new"]').remove();
-			if(!this.getOption("noSame")){
-				this.$el.prepend("<option value='0'>Same Page</option>");
-			}
-			this.$el.append("<option value='new'>New Page...</option>");
+		if(!(this.getOption("justExisting") || this.getOption("noSame"))){
+			this.$el.find('[value="0"]').remove();
+			this.$el.prepend("<option value='0'>Same Page</option>");
 		}
 		if(this.getOption("selected") !== ""){
 			this.$el.val(this.getOption("selected"));
 			if(!this.$el.find(":selected").length){
 				this.$el.val(this.$el.find("option:first").val());
-			}
-		}
-	},
-	events: {
-		'change': function(event){
-			if(this.$el.val() == 'new'){
-				var pageSelectView = this;
-				Adventure.activeAdventure.get('pages').create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false,
-					success:function(model){
-						Adventure.Main.renderPageEditLite(model);
-						pageSelectView.$el.val(model.id);
-						pageSelectView.options.selected = model.id;
-					},
-					error: function(model, response, options){
-						Adventure.handleInvalidInput(response.responseJSON);
-					}
-				});
 			}
 		}
 	},
@@ -81,6 +61,41 @@ Adventure.PageSelect = Marionette.CollectionView.extend({
 		Adventure.activeAdventure.get('scenes').each(function(scene){
 			viewHandle.collection.push(scene);
 		});
+	}
+});
+Adventure.PageSelectPlus = Marionette.LayoutView.extend({
+	template: 'SelectWithNewButton',
+	className: 'select-plus',
+	regions: {
+		selectContainer:'.select-container'
+	},
+	ui: {
+		newButton: 'button'
+	},
+	initialize: function(options){
+		this.selectBox = new Adventure.PageSelect(this.options);
+		this.selectBox.$el.removeClass("form-control");
+	},
+	onRender: function(){
+		this.showChildView('selectContainer', this.selectBox);
+	},
+	events: {
+		'click @ui.newButton': function(event){
+			event.preventDefault();
+			var pageSelectView = this;
+			Adventure.activeAdventure.get('pages').create({adventureID:Adventure.activeAdventure.id},{wait: true, validate: false,
+				success:function(model){
+					Adventure.Main.renderPageEditLite(model);
+					pageSelectView.selectBox.$el.val(model.id);
+					pageSelectView.options.selected = model.id;
+					pageSelectView.selectBox.options.selected = model.id;
+				},
+				error: function(model, response, options){
+					Adventure.handleInvalidInput(response.responseJSON);
+				}
+			});
+			return false;
+		}
 	}
 });
 Adventure.PageEdit = Marionette.LayoutView.extend({
@@ -116,9 +131,9 @@ Adventure.PageEdit = Marionette.LayoutView.extend({
 		this.model.form = this.$el.find("form");
 		this.setImage(this.model.get("imageID"));
 		this.$el.find('.header-key').hide();
-		this.showChildView('sceneSelect', new Adventure.SceneSelect({selected: this.model.get("sceneID")}));
+		this.showChildView('sceneSelect', new Adventure.SceneSelectPlus({selected: this.model.get("sceneID")}));
 		this.showChildView('pageTypeSelect', new Adventure.PageTypeSelect({selected: this.model.get("pageTypeID")}));
-		this.showChildView('effectSelect', new Adventure.EffectSelect({selected: this.model.get("effectID")}));
+		this.showChildView('effectSelect', new Adventure.EffectSelectPlus({selected: this.model.get("effectID")}));
 		if(!this.getOption("lite")){
 			this.showChildView('actionSelection', new Adventure.ActionList({collection: this.model.get('actions'), pageView: this}));
 			this.showChildView('eventSelection', new Adventure.EventLinkList({collection: this.model.get('pageEvents')}));

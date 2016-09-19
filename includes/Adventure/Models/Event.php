@@ -79,6 +79,23 @@
 		}
 
 		public static function GetAllEvents($adventureID){
+			$cleanup = parent::$db->query(
+				'UPDATE tblEvents as e1
+				JOIN (
+					SELECT tblEvents.ID
+					FROM tblEvents
+					LEFT JOIN tblSceneEvents ON tblSceneEvents.eventID = tblEvents.ID AND tblSceneEvents.isActive = 1
+					LEFT JOIN tblActionEvents ON tblActionEvents.eventID = tblEvents.ID AND tblActionEvents.isActive = 1
+					LEFT JOIN tblPageEvents ON tblPageEvents.eventID = tblEvents.ID AND tblPageEvents.isActive = 1
+					WHERE tblEvents.adventureID = :adventureID
+					GROUP BY tblEvents.ID
+					HAVING COUNT(tblSceneEvents.ID) + COUNT(tblActionEvents.ID) + COUNT(tblPageEvents.ID) = 0
+				) e2 ON e2.ID = e1.ID
+				SET e1.isActive = 0;',
+				[
+					'adventureID'=>(int)$adventureID
+				]
+			);
 			$eventSet = [];
 			$events = parent::$db->queryGetAll(
 				'SELECT ID, adventureID, eventTypeID, flagID, value, textBefore, textAfter, pageID, counterValue, counterUpperValue, conditionID, conditionFlagID, conditionPageID, conditionOtherFlagID

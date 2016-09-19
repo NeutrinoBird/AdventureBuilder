@@ -406,9 +406,7 @@ Adventure.ViewerImage = Marionette.ItemView.extend({
 	template: 'ViewerImage',
 	onRender: function(){
 		this.$el.find("img").attr("src",Adventure.assetPath+"uploads/"+this.model.get("URL"));
-		this.$el.find("img").css("transform","translateX(-"+this.model.get("centerX")+") translateY(-"+this.model.get("centerY")+") scale("+this.model.get("scale")+")");
-		this.$el.find("img").css("-webkit-transform","translateX(-"+this.model.get("centerX")+") translateY(-"+this.model.get("centerY")+") scale("+this.model.get("scale")+")");
-		this.$el.find("img").css("-ms-transform","translateX(-"+this.model.get("centerX")+") translateY(-"+this.model.get("centerY")+") scale("+this.model.get("scale")+")");
+		this.model.applyAdjustment(this.$el.find("img"));
 		if(this.getOption('effect')){
 			this.getOption('effect').applyEffect(this.$el.find("img"));
 		}

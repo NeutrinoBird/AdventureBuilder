@@ -21,9 +21,7 @@ Adventure.ImageModel = Backbone.Model.extend({
 		}
 	},
 	applyAdjustment: function(element){
-		element.css("transform","translateX(-"+this.get("centerX")+") translateY(-"+this.get("centerY")+") scale("+this.get("scale")+")");
-		element.css("-webkit-transform","translateX(-"+this.get("centerX")+") translateY(-"+this.get("centerY")+") scale("+this.get("scale")+")");
-		element.css("-ms-transform","translateX(-"+this.get("centerX")+") translateY(-"+this.get("centerY")+") scale("+this.get("scale")+")");
+		element.css("transform","translate(-"+this.get("centerX")+",-"+this.get("centerY")+") scale("+this.get("scale")+")");
 	}
 });
 Adventure.Images = Backbone.Collection.extend({

@@ -45,7 +45,6 @@ Adventure.saveEventResponseHandlers = function(viewHandle,successFunction){
 }
 Adventure.deleteDialog = function(viewHandle, itemName){
 	if(confirm("Are you sure you want to delete this "+itemName+"?")){
-		//viewHandle.model.trigger('destroy',viewHandle.model);
 		Adventure.Main.initiateRemoval(viewHandle);
 		viewHandle.model.destroy();
 	}

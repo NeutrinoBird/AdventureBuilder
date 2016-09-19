@@ -62,7 +62,7 @@ Adventure.Templates.EventLink = `
 			</div>
 			<div class="form-group">
 				<label>Event</label>
-				<div class="form-field event-selectbox" data-toggle="tooltip" title="Create a new event, or choose an existing event action to add to this collection."></div>
+				<div class="form-field event-selectbox" data-toggle="tooltip" title="Create a new event, or choose an existing event you have used in the adventure. Multiple objects can reference the same event. If an event is modified, it will be modified for each object that references the event."></div>
 			</div>
 		</div>
 		<div class="event-form"></div>

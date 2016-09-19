@@ -90,3 +90,7 @@ Adventure.Templates.NewUser = `
 		</div>
 	</form>
 `;
+Adventure.Templates.SelectWithNewButton = `
+	<div class="select-container"></div>
+	<button>+</button>
+`;
