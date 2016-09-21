@@ -2,7 +2,7 @@ Adventure.Templates.SceneEdit = `
 	<form class="form-inline">
 		<div class="form-group">
 			<label for="sceneName<%= ID %>">Name</label>
-			<input class="form-control" name="name" ID="sceneName<%= ID %>" type="text" maxlength="50" placeholder="Scene Name" value="<%= name %>" data-toggle="tooltip" title="The name of the scene, for internal reference. Actions and events added below will be applied to each page in this scene. You can assign pages to scenes in the page editor." />
+			<input class="form-control" name="name" ID="sceneName<%= ID %>" type="text" maxlength="50" placeholder="Scene Name" value="<%= _.xcape(name) %>" data-toggle="tooltip" title="The name of the scene, for internal reference. Actions and events added below will be applied to each page in this scene. You can assign pages to scenes in the page editor." />
 		</div>
 		<div class="action-select">
 			<div class="row">
@@ -28,7 +28,7 @@ Adventure.Templates.SceneEdit = `
 Adventure.Templates.SceneButton = `
 	<img src="img/builder/icons/scene.png" class="select-image" />
 	<div class="select-description">
-		<p><%= name %></p>
+		<p><%= _.xcape(name) %></p>
 	</div>
 `;
 Adventure.Templates.SceneSelection = `
@@ -44,7 +44,7 @@ Adventure.Templates.SceneSelection = `
 	</form>
 `;
 Adventure.Templates.ScenePages = `
-	<h4><%= name %></h4>
+	<h4><%= _.xcape(name) %></h4>
 	<div class="selections"></div>
 	<div class="emptySet">No pages are assigned to this scene.</div>
 `;

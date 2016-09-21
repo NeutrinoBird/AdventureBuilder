@@ -205,11 +205,15 @@ Adventure.ScenePages = Marionette.LayoutView.extend({
 	template: 'ScenePages',
 	className: 'scene-pages',
 	regions: {selections:'.selections'},
-	onRender: function() {
+	initialize: function(){
 		this.$el.attr("data-scene",this.model.id);
+		this.listenTo(this.model.get('pages'),'add change',this.render);
+	},
+	onRender: function(){
 		this.$el.attr("data-length",this.model.get('pages').length);
 		this.showChildView('selections', new Adventure.PageList({collection: this.model.get('pages')}));
 		this.$el.find(".emptySet").toggle(this.model.get('pages').length == 0);
+		Adventure.activeAdventure.trigger('filterRequest');
 	},
 	modelEvents: {
 		'change': 'render'

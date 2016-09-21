@@ -74,6 +74,14 @@ Adventure.setupTooltips = function(viewHandle){
 	viewHandle.$el.find('[data-toggle="tooltip"]').tooltip();
 }
 
+_.xcape = function(string){
+	//This function escapes strings that may already contain escaped characters.
+	//If you've ever ended up with something like &amp;quot;, you'd understand.
+	var stringCleaner = document.createElement("textarea");
+	stringCleaner.innerHTML = string;
+	return _.escape(_.unescape(stringCleaner.value));
+}
+
 $(function(){
 	Adventure.Options = new Adventure.OptionsMenu();
 	Adventure.Status = new Adventure.StatusDisplay();

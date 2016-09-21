@@ -11,9 +11,9 @@ Adventure.Templates.Adventure = `
 	}
 	%>
 	<div class="select-description">
-		<h2><%= title %></h2>
-		<p>By: <%= author %></p>
-		<p><%= description %></p>
+		<h2><%= _.xcape(title) %></h2>
+		<p>By: <%= _.xcape(author) %></p>
+		<p><%= _.xcape(description) %></p>
 		<button class="full-button test-button">Test</button>
 	</div>
 `;
@@ -47,7 +47,7 @@ Adventure.Templates.AdventureEdit = `
 	<form class="form-inline">
 		<div class="form-group">
 			<label for="adventureTitle<%= ID %>">Title</label>
-			<input class="form-control" name="title" ID="adventureTitle<%= ID %>" type="text" maxlength="100" placeholder="Adventure Title" value="<%= title %>" data-toggle="tooltip" title="The name of the adventure. This is purely for internal use, and will not be seen by others." />
+			<input class="form-control" name="title" ID="adventureTitle<%= ID %>" type="text" maxlength="100" placeholder="Adventure Title" value="<%= _.xcape(title) %>" data-toggle="tooltip" title="The name of the adventure. This is purely for internal use, and will not be seen by others." />
 		</div>
 		<div class="form-group">
 			<label for="adventureDescription<%= ID %>">Description</label>

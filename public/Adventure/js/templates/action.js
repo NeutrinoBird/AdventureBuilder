@@ -2,7 +2,7 @@ Adventure.Templates.ActionEdit = `
 	<form class="form-inline">
 		<div class="form-group">
 			<label for="actionPriority<%= ID %>">Priority</label>
-			<input class="form-control" name="priority" ID="actionPriority<%= ID %>" type="text" maxlength="3" placeholder="Priority Number" value="<%= priority %>" data-toggle="tooltip" title="Determines the order in which actions are displayed, with the lowest values displayed at the top of the list. Actions for the page and scene are combined, and sorted by this value." />
+			<input class="form-control" name="priority" ID="actionPriority<%= ID %>" type="text" maxlength="3" placeholder="Priority Number" value="<%= _.xcape(priority) %>" data-toggle="tooltip" title="Determines the order in which actions are displayed, with the lowest values displayed at the top of the list. Actions for the page and scene are combined, and sorted by this value." />
 		</div>
 		<div class="form-group">
 			<label>Type</label>
@@ -51,7 +51,7 @@ Adventure.Templates.ActionButton = `
 		<% if (actionTypeID == 3 || actionTypeID == 4){ %>
 			<img src="img/viewer/<%= actionTypeID == 3 ? 'forward' : 'back' %>-arrow.gif" />
 		<% }else{ %>
-			<p><%= text %></p>
+			<p><%= _.xcape(text) %></p>
 		<% } %>
 	</div>
 	<div class="page-jump">

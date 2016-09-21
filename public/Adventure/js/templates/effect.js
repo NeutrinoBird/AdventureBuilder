@@ -2,7 +2,7 @@ Adventure.Templates.EffectEdit = `
 	<form class="form-inline">
 		<div class="form-group">
 			<label for="effectName<%= ID %>">Name</label>
-			<input class="form-control" name="name" ID="effectName<%= ID %>" type="text" maxlength="50" placeholder="Effect Name" value="<%= name %>" data-toggle="tooltip" title="The name of the effect, for internal use." />
+			<input class="form-control" name="name" ID="effectName<%= ID %>" type="text" maxlength="50" placeholder="Effect Name" value="<%= _.xcape(name) %>" data-toggle="tooltip" title="The name of the effect, for internal use." />
 		</div>
 		<div class="form-group">
 			<label for="effectKeyframes<%= ID %>">Keyframes</label>
@@ -10,27 +10,27 @@ Adventure.Templates.EffectEdit = `
 		</div>
 		<div class="form-group">
 			<label for="effectTiming<%= ID %>">Timing</label>
-			<input class="form-control" name="timing" ID="effectTiming<%= ID %>" type="text" maxlength="40" placeholder="CSS Timing Function" value="<%= timing %>" data-html="true" title="The CSS3 timing function for the effect animation." />
+			<input class="form-control" name="timing" ID="effectTiming<%= ID %>" type="text" maxlength="40" placeholder="CSS Timing Function" value="<%= _.xcape(timing) %>" data-html="true" title="The CSS3 timing function for the effect animation." />
 		</div>
 		<div class="form-group">
 			<label for="effectDuration<%= ID %>">Duration</label>
-			<input class="form-control" name="duration" ID="effectDuration<%= ID %>" type="text" maxlength="5" placeholder="Duration in seconds" value="<%= duration %>" data-html="true" title="The duration, in seconds, of the effect." />
+			<input class="form-control" name="duration" ID="effectDuration<%= ID %>" type="text" maxlength="5" placeholder="Duration in seconds" value="<%= _.xcape(duration) %>" data-html="true" title="The duration, in seconds, of the effect." />
 		</div>
 		<div class="form-group">
 			<label for="effectDelay<%= ID %>">Delay</label>
-			<input class="form-control" name="delay" ID="effectDelay<%= ID %>" type="text" maxlength="5" placeholder="Delay in seconds" value="<%= delay %>" data-html="true" title="The time, in seconds, that will elapse before the animation begins." />
+			<input class="form-control" name="delay" ID="effectDelay<%= ID %>" type="text" maxlength="5" placeholder="Delay in seconds" value="<%= _.xcape(delay) %>" data-html="true" title="The time, in seconds, that will elapse before the animation begins." />
 		</div>
 		<div class="form-group">
 			<label for="effectLoops<%= ID %>">Loops</label>
-			<input class="form-control" name="loops" ID="effectLoops<%= ID %>" type="text" maxlength="5" placeholder="# of loops (0 = ∞)" value="<%= loops %>" data-html="true" title="The number of times the animation will loop before it ends. Enter 0 for an infinite loop." />
+			<input class="form-control" name="loops" ID="effectLoops<%= ID %>" type="text" maxlength="5" placeholder="# of loops (0 = ∞)" value="<%= _.xcape(loops) %>" data-html="true" title="The number of times the animation will loop before it ends. Enter 0 for an infinite loop." />
 		</div>
 		<div class="form-group">
 			<label for="effectDirection<%= ID %>">Direction</label>
-			<input class="form-control" name="direction" ID="effectDirection<%= ID %>" type="text" maxlength="20" placeholder="CSS Animation Direction" value="<%= direction %>" data-html="true" title="The CSS3 animation direction (normal, reverse, alternate, alternate-reverse)." />
+			<input class="form-control" name="direction" ID="effectDirection<%= ID %>" type="text" maxlength="20" placeholder="CSS Animation Direction" value="<%= _.xcape(direction) %>" data-html="true" title="The CSS3 animation direction (normal, reverse, alternate, alternate-reverse)." />
 		</div>
 		<div class="form-group">
 			<label for="effectFillMode<%= ID %>">Fill Mode</label>
-			<input class="form-control" name="fillMode" ID="effectFillMode<%= ID %>" type="text" maxlength="20" placeholder="CSS Animation Fill Mode" value="<%= fillMode %>" data-html="true" title="The CSS3 fill mode, which defines the behavior before and after the animation (none, forwards, backwards, both)" />
+			<input class="form-control" name="fillMode" ID="effectFillMode<%= ID %>" type="text" maxlength="20" placeholder="CSS Animation Fill Mode" value="<%= _.xcape(fillMode) %>" data-html="true" title="The CSS3 fill mode, which defines the behavior before and after the animation (none, forwards, backwards, both)" />
 		</div>
 
 		<div class="row">
@@ -58,7 +58,7 @@ Adventure.Templates.EffectEdit = `
 Adventure.Templates.EffectButton = `
 	<img src="img/builder/icons/effect.png" class="select-image" />
 	<div class="select-description">
-		<p><%= name %></p>
+		<p><%= _.xcape(name) %></p>
 	</div>
 `;
 Adventure.Templates.EffectSelection = `

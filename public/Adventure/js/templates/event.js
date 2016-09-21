@@ -9,7 +9,7 @@ Adventure.Templates.EventEdit = `
 	</div>
 	<div class="form-group value-group">
 		<label for="eventValue<%= ID %>">Value</label>
-		<input class="form-control" name="value" ID="eventValue<%= ID %>" type="text" maxlength="10" placeholder="Counter Value" value="<%= value %>" data-toggle="tooltip" title="The value that the counter will be set to or incremented by." />
+		<input class="form-control" name="value" ID="eventValue<%= ID %>" type="text" maxlength="10" placeholder="Counter Value" value="<%= _.xcape(value) %>" data-toggle="tooltip" title="The value that the counter will be set to or incremented by." />
 	</div>
 	<div class="form-group page-group">
 		<label>Page</label>
@@ -17,11 +17,11 @@ Adventure.Templates.EventEdit = `
 	</div>
 	<div class="form-group">
 		<label for="eventTextBefore<%= ID %>">Text Before</label>
-		<input class="form-control" name="textBefore" ID="eventTextBefore<%= ID %>" type="text" maxlength="200" placeholder="Text Before Page Text" value="<%= textBefore %>" data-toggle="tooltip" title="If text is provided here, then it will be added to the page text, on a new line before the main text body. Multiple events can provide additional text, and they will be ordered in same order that the events are processed." />
+		<input class="form-control" name="textBefore" ID="eventTextBefore<%= ID %>" type="text" maxlength="200" placeholder="Text Before Page Text" value="<%= _.xcape(textBefore) %>" data-toggle="tooltip" title="If text is provided here, then it will be added to the page text, on a new line before the main text body. Multiple events can provide additional text, and they will be ordered in same order that the events are processed." />
 	</div>
 	<div class="form-group">
 		<label for="eventTextAfter<%= ID %>">Text After</label>
-		<input class="form-control" name="textAfter" ID="eventTextAfter<%= ID %>" type="text" maxlength="200" placeholder="Text After Page Text" value="<%= textAfter %>" data-toggle="tooltip" title="If text is provided here, then it will be added to the page text, on a new line after the main text body. Multiple events can provide additional text, and they will be ordered in same order that the events are processed." />
+		<input class="form-control" name="textAfter" ID="eventTextAfter<%= ID %>" type="text" maxlength="200" placeholder="Text After Page Text" value="<%= _.xcape(textAfter) %>" data-toggle="tooltip" title="If text is provided here, then it will be added to the page text, on a new line after the main text body. Multiple events can provide additional text, and they will be ordered in same order that the events are processed." />
 	</div>
 	<div class="form-group">
 		<label>Condition</label>
@@ -36,7 +36,7 @@ Adventure.Templates.EventEdit = `
 			</div>
 			<div class="form-group counterValue-group">
 				<label for="eventCounterValue<%= ID %>">Value</label>
-				<input class="form-control" name="counterValue" ID="eventCounterValue<%= ID %>" type="text" maxlength="10" placeholder="Counter Value" value="<%= counterValue %>" data-toggle="tooltip" title="The value that the chosen flag/counter will be compared to. If the condition uses a range, this value is the lower bound. For a random roll, a random number is generated when an action is selected, and is shared by all random number conditions that occur until the next action selection." />
+				<input class="form-control" name="counterValue" ID="eventCounterValue<%= ID %>" type="text" maxlength="10" placeholder="Counter Value" value="<%= _.xcape(counterValue) %>" data-toggle="tooltip" title="The value that the chosen flag/counter will be compared to. If the condition uses a range, this value is the lower bound. For a random roll, a random number is generated when an action is selected, and is shared by all random number conditions that occur until the next action selection." />
 			</div>
 			<div class="form-group condition-otherFlag-group">
 				<label>Other Flag</label>
@@ -44,7 +44,7 @@ Adventure.Templates.EventEdit = `
 			</div>
 			<div class="form-group counterUpperValue-group">
 				<label for="eventCounterUpperValue<%= ID %>">Maximum</label>
-				<input class="form-control" name="counterUpperValue" ID="eventCounterUpperValue<%= ID %>" type="text" maxlength="10" placeholder="Counter Maximum" value="<%= counterUpperValue %>" data-toggle="tooltip" title="The upper bound of the value range. For a random roll, a random number is generated when an action is selected, and is shared by all random number conditions that occur until the next action selection." />
+				<input class="form-control" name="counterUpperValue" ID="eventCounterUpperValue<%= ID %>" type="text" maxlength="10" placeholder="Counter Maximum" value="<%= _.xcape(counterUpperValue) %>" data-toggle="tooltip" title="The upper bound of the value range. For a random roll, a random number is generated when an action is selected, and is shared by all random number conditions that occur until the next action selection." />
 			</div>
 			<div class="form-group condition-page-group">
 				<label>Page</label>
@@ -58,7 +58,7 @@ Adventure.Templates.EventLink = `
 		<div class="event-link">
 			<div class="form-group">
 				<label for="eventPriority<%= ID %>">Priority</label>
-				<input class="form-control" name="priority" ID="eventPriority<%= ID %>" type="text" maxlength="3" placeholder="Priority Number" value="<%= priority %>" data-toggle="tooltip" title="Determines the order in which events are processed, with priority given to events with lower values. A page's events are combined with those from its scene, sorted by this value, and processed upon landing on the page. Action events are processed before a page change." />
+				<input class="form-control" name="priority" ID="eventPriority<%= ID %>" type="text" maxlength="3" placeholder="Priority Number" value="<%= _.xcape(priority) %>" data-toggle="tooltip" title="Determines the order in which events are processed, with priority given to events with lower values. A page's events are combined with those from its scene, sorted by this value, and processed upon landing on the page. Action events are processed before a page change." />
 			</div>
 			<div class="form-group">
 				<label>Event</label>
@@ -77,7 +77,7 @@ Adventure.Templates.EventLink = `
 Adventure.Templates.EventButton = `
 	<img src="img/builder/icons/event.png" class="select-image" />
 	<div class="select-description">
-		<p><%= name %></p>
+		<p><%= _.xcape(name) %></p>
 	</div>
 `;
 Adventure.Templates.EventSelection = `

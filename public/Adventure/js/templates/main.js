@@ -3,7 +3,7 @@ Adventure.Templates.Layer = `
 			<div ID="overlay-<%= ID %>" class="overlay"></div>
 			<div ID="view-<%= ID %>" class="layer-view"></div>
 `;
-Adventure.Templates.Option = "<%= name %>";
+Adventure.Templates.Option = "<%= _.xcape(name) %>";
 Adventure.Templates.StatusDisplay = `
 			<img class="success" src="img/builder/icons/thumb.png">
 			<img class="error" src="img/builder/icons/x.png">

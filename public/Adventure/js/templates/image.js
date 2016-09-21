@@ -19,15 +19,15 @@ Adventure.Templates.ImageEdit = `
 	<form class="form-inline">
 		<div class="form-group">
 			<label for="imageCenterX<%= ID %>">Center X%</label>
-			<input class="form-control" name="centerX" ID="imageCenterX<%= ID %>" type="text" maxlength="10" placeholder="X-Percent of Center" value="<%= centerX %>" data-toggle="tooltip" title="The position of the horizontal center, in a percentage distance from left to right." />
+			<input class="form-control" name="centerX" ID="imageCenterX<%= ID %>" type="text" maxlength="10" placeholder="X-Percent of Center" value="<%= _.xcape(centerX) %>" data-toggle="tooltip" title="The position of the horizontal center, in a percentage distance from left to right." />
 		</div>
 		<div class="form-group">
 			<label for="imageCenterY<%= ID %>">Center Y%</label>
-			<input class="form-control" name="centerY" ID="imageCenterY<%= ID %>" type="text" maxlength="10" placeholder="Y-Percent of Center" value="<%= centerY %>" data-toggle="tooltip" title="The position of the vertical center, in a percentage distance from top to bottom." />
+			<input class="form-control" name="centerY" ID="imageCenterY<%= ID %>" type="text" maxlength="10" placeholder="Y-Percent of Center" value="<%= _.xcape(centerY) %>" data-toggle="tooltip" title="The position of the vertical center, in a percentage distance from top to bottom." />
 		</div>
 		<div class="form-group">
 			<label for="imageScale<%= ID %>">Scale</label>
-			<input class="form-control" name="scale" ID="imageScale<%= ID %>" type="text" maxlength="10" placeholder="Decimal scale (1 = 100%)" value="<%= scale %>" data-toggle="tooltip" title="Image size, expressed as a decimal value. 1 = full size, 0.5 = half size, 2 = double size, etc." />
+			<input class="form-control" name="scale" ID="imageScale<%= ID %>" type="text" maxlength="10" placeholder="Decimal scale (1 = 100%)" value="<%= _.xcape(scale) %>" data-toggle="tooltip" title="Image size, expressed as a decimal value. 1 = full size, 0.5 = half size, 2 = double size, etc." />
 		</div>
 		<input name="URL" type="hidden" value="<%= URL %>" />
 		<input name="width" type="hidden" value="<%= width %>" />

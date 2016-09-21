@@ -180,8 +180,13 @@ figure{
 			font-size: 24px;
 		}
 		label{
-			@extend .col-xs-4;
+			@extend .col-xs-12;
+			@extend .col-sm-4;
 			padding-top:2px;
+		}
+		.form-control{
+			@extend .col-xs-12;
+			@extend .col-sm-8;
 		}
 		.checkbox{
 			label{

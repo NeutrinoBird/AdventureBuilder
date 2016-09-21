@@ -186,6 +186,11 @@ Adventure.AdventureEdit = Marionette.LayoutView.extend({
 			return false;
 		}
 	},
+	modelEvents: {
+		'filterRequest': function(){
+			this.$el.find(".scene-filter").change();
+		}
+	},
 	setImage: function(imageID){
 		if (imageID == 0 || imageID == '' || imageID == null || !this.model.get('images').get(imageID)){
 			this.$el.find(".image-button > .image-container > img").attr("src",'img/builder/icons/image.png').removeAttr('style');

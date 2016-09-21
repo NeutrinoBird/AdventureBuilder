@@ -2,7 +2,7 @@ Adventure.Templates.PageEdit = `
 	<form class="form-inline">
 		<div class="form-group">
 			<label for="pageName<%= ID %>">Name</label>
-			<input class="form-control" name="name" ID="pageName<%= ID %>" type="text" maxlength="50" placeholder="Page Name" value="<%= name %>" data-toggle="tooltip" title="The internal name for the page. Refer to this name when linking from actions or events." />
+			<input class="form-control" name="name" ID="pageName<%= ID %>" type="text" maxlength="50" placeholder="Page Name" value="<%= _.xcape(name) %>" data-toggle="tooltip" title="The internal name for the page. Refer to this name when linking from actions or events." />
 		</div>
 		<div class="form-group">
 			<label for="pageText<%= ID %>">Text</label>
@@ -71,7 +71,7 @@ Adventure.Templates.PageEditLite = `
 	<form class="form-inline">
 		<div class="form-group">
 			<label for="pageName<%= ID %>">Name</label>
-			<input class="form-control" name="name" ID="pageName<%= ID %>" type="text" maxlength="50" placeholder="Page Name" value="<%= name %>" data-toggle="tooltip" title="The internal name for the page. Refer to this name when linking from actions or events." />
+			<input class="form-control" name="name" ID="pageName<%= ID %>" type="text" maxlength="50" placeholder="Page Name" value="<%= _.xcape(name) %>" data-toggle="tooltip" title="The internal name for the page. Refer to this name when linking from actions or events." />
 		</div>
 		<div class="form-group">
 			<label for="pageText<%= ID %>">Text</label>
@@ -113,6 +113,6 @@ Adventure.Templates.PageButton = `
 		</div>
 	</div>
 	<div class="select-description">
-		<p><%= name %></p>
+		<p><%= _.xcape(name) %></p>
 	</div>
 `;

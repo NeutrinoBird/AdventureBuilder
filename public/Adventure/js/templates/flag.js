@@ -3,7 +3,7 @@ Adventure.Templates.FlagEdit = `
 
 		<div class="form-group">
 			<label for="flagName<%= ID %>">Name</label>
-			<input class="form-control" name="name" ID="flagName<%= ID %>" type="text" maxlength="50" placeholder="Flag Name" value="<%= name %>" data-toggle="tooltip" title="The name of the flag. If the flag is an item, this will be displayed to the player if inspected in the inventory." />
+			<input class="form-control" name="name" ID="flagName<%= ID %>" type="text" maxlength="50" placeholder="Flag Name" value="<%= _.xcape(name) %>" data-toggle="tooltip" title="The name of the flag. If the flag is an item, this will be displayed to the player if inspected in the inventory." />
 		</div>
 
 		<div class="checkbox">
@@ -40,15 +40,15 @@ Adventure.Templates.FlagEdit = `
 			<div>
 				<div class="form-group">
 					<label for="flagDefault<%= ID %>">Default</label>
-					<input class="form-control" name="counterDefault" ID="flagDefault<%= ID %>" type="text" maxlength="10" placeholder="Default Value" value="<%= counterDefault %>" data-toggle="tooltip" title="When the adventure begins, the value of the counter will be set to this value." />
+					<input class="form-control" name="counterDefault" ID="flagDefault<%= ID %>" type="text" maxlength="10" placeholder="Default Value" value="<%= _.xcape(counterDefault) %>" data-toggle="tooltip" title="When the adventure begins, the value of the counter will be set to this value." />
 				</div>
 				<div class="form-group">
 					<label for="flagMinimum<%= ID %>">Minimum</label>
-					<input class="form-control" name="counterMinimum" ID="flagMinimum<%= ID %>" type="text" maxlength="10" placeholder="Minimum Value" value="<%= counterMinimum %>" data-toggle="tooltip" title="The minimum value of the counter." />
+					<input class="form-control" name="counterMinimum" ID="flagMinimum<%= ID %>" type="text" maxlength="10" placeholder="Minimum Value" value="<%= _.xcape(counterMinimum) %>" data-toggle="tooltip" title="The minimum value of the counter." />
 				</div>
 				<div class="form-group">
 					<label for="flagMaximum<%= ID %>">Maximum</label>
-					<input class="form-control" name="counterMaximum" ID="flagMaximum<%= ID %>" type="text" maxlength="10" placeholder="Maximum Value" value="<%= counterMaximum %>" data-toggle="tooltip" title="The maximum value of the counter." />
+					<input class="form-control" name="counterMaximum" ID="flagMaximum<%= ID %>" type="text" maxlength="10" placeholder="Maximum Value" value="<%= _.xcape(counterMaximum) %>" data-toggle="tooltip" title="The maximum value of the counter." />
 				</div>
 				<div class="checkbox">
 					<label>
@@ -73,7 +73,7 @@ Adventure.Templates.FlagButton = `
 		</div>
 	</div>
 	<div class="select-description">
-		<p><%= name %></p>
+		<p><%= _.xcape(name) %></p>
 	</div>
 `;
 Adventure.Templates.FlagSelection = `

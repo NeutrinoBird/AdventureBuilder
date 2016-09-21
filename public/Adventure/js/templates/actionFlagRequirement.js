@@ -10,7 +10,7 @@ Adventure.Templates.ActionFlagRequirementEdit = `
 		</div>
 		<div class="form-group counterValue-group">
 			<label for="reqCounterValue<%= ID %>">Value</label>
-			<input class="form-control" name="counterValue" ID="reqCounterValue<%= ID %>" type="text" maxlength="10" placeholder="Counter Value" value="<%= counterValue %>" data-toggle="tooltip" title="The value that the chosen flag/counter will be compared to. If the condition uses a range, this value is the lower bound. For a random roll, a random number is generated when an action is selected, and is shared by all random number conditions that occur until the next action selection." />
+			<input class="form-control" name="counterValue" ID="reqCounterValue<%= ID %>" type="text" maxlength="10" placeholder="Counter Value" value="<%= _.xcape(counterValue) %>" data-toggle="tooltip" title="The value that the chosen flag/counter will be compared to. If the condition uses a range, this value is the lower bound. For a random roll, a random number is generated when an action is selected, and is shared by all random number conditions that occur until the next action selection." />
 		</div>
 		<div class="form-group otherFlagID-group">
 			<label>Other Flag</label>
@@ -18,7 +18,7 @@ Adventure.Templates.ActionFlagRequirementEdit = `
 		</div>
 		<div class="form-group counterUpperValue-group">
 			<label for="reqCounterUpperValue<%= ID %>">Maximum</label>
-			<input class="form-control" name="counterUpperValue" ID="reqCounterUpperValue<%= ID %>" type="text" maxlength="10" placeholder="Counter Maximum" value="<%= counterUpperValue %>" data-toggle="tooltip" title="The upper bound of the value range. For a random roll, a random number is generated when an action is selected, and is shared by all random number conditions that occur until the next action selection." />
+			<input class="form-control" name="counterUpperValue" ID="reqCounterUpperValue<%= ID %>" type="text" maxlength="10" placeholder="Counter Maximum" value="<%= _.xcape(counterUpperValue) %>" data-toggle="tooltip" title="The upper bound of the value range. For a random roll, a random number is generated when an action is selected, and is shared by all random number conditions that occur until the next action selection." />
 		</div>
 		<div class="form-group pageID-group">
 			<label>Page</label>
@@ -34,6 +34,6 @@ Adventure.Templates.ActionFlagRequirementEdit = `
 Adventure.Templates.ActionFlagRequirementButton = `
 	<img src="img/builder/icons/requirement.png" class="select-image" />
 	<div class="select-description">
-		<p><%= name %></p>
+		<p><%= _.xcape(name) %></p>
 	</div>
 `;
