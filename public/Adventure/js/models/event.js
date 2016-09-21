@@ -154,7 +154,6 @@ Adventure.SceneEventModel = Backbone.Model.extend({
 	},
 	idAttribute: "ID",
 	initialize: function(){
-		//this.updateName();
 		this.on('sync', this.updateName);
 	},
 	updateName: function(){
@@ -191,7 +190,6 @@ Adventure.PageEventModel = Backbone.Model.extend({
 	},
 	idAttribute: "ID",
 	initialize: function(){
-		//this.updateName();
 		this.on('sync', this.updateName);
 	},
 	updateName: function(){
@@ -228,7 +226,6 @@ Adventure.ActionEventModel = Backbone.Model.extend({
 	},
 	idAttribute: "ID",
 	initialize: function(){
-		//this.updateName();
 		this.on('sync', this.updateName);
 	},
 	updateName: function(){

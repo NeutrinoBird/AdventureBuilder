@@ -364,7 +364,6 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 							viewHandle.variables.flags[int(eventModel.get("flagID"))] = maximum;
 						}
 					}
-					//viewHandle.model.get("flags").get(eventModel.get("flagID")).trigger('change');
 				}
 			}
 			return true;
@@ -387,7 +386,6 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		$(".adventure-box").width(Math.max(boxWidth - (boxWidth % 16), 160));
 		this.$el.find('.page-manager').height(this.$el.find('.page-manager .page-'+this.side).innerHeight());
 		this.$el.find('.action-manager').height(this.$el.find('.action-manager .page-'+this.side).outerHeight(true));
-		//$('.page-manager').height($('.page-manager .page-'+this.side).innerHeight());
 		var boxHeight = $(".adventure-content").innerHeight();
 		if (boxHeight % 16 > 0){
 			$(".adventure-box").height(boxHeight + 16 - (boxHeight % 16));

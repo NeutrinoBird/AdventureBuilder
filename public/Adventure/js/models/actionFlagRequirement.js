@@ -10,7 +10,6 @@ Adventure.ActionFlagRequirementModel = Backbone.Model.extend({
 	},
 	idAttribute: "ID",
 	initialize: function(){
-		//this.updateName();
 		this.on('sync', this.updateName);
 		this.form = this.attributes;
 	},

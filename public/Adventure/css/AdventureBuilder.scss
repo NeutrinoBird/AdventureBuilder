@@ -1123,11 +1123,6 @@ input[type='checkbox']{
 		}
 	}
 	.selection{
-		/*@extend .col-xs-12;
-		@extend .col-xs-offset-0;
-		@extend .col-sm-10;
-		@extend .col-sm-offset-1;
-		@extend .contentBox-mini;*/
 		position:relative;
 		margin-bottom: 20px;
 		p{
@@ -1319,13 +1314,6 @@ input[type='checkbox']{
 		font-size: 16px;
 	}
 }
-/*
-.outOfFocus .overlay-view{
-	-webkit-filter: blur(2px);
-    -moz-filter: blur(2px);
-    filter: blur(2px);
-}
-*/
 .layer{
 	.overlay{
 		position:fixed;

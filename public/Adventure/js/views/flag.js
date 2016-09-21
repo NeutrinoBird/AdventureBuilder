@@ -142,7 +142,7 @@ Adventure.FlagButton = Marionette.ItemView.extend({
 			event.preventDefault();
 			Adventure.Main.renderFlagEdit(this.model);
 			return false;
-		}//TODO: Add flag button icons for flags with images
+		}
 	},
 	modelEvents: {
 		'change': 'render'
