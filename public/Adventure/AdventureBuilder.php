@@ -20,7 +20,7 @@
 		<script type="text/javascript" src="js/adventure.js"></script>
 		<script type="text/javascript" src="js/builder.js"></script>
 		<?php
-			$components = ['main','adventure','page','action','actionFlagRequirement','scene','flag','image','effect','event','static'];
+			$components = ['main','adventure','page','action','actionFlagRequirement','scene','flag','image','effect','event','eventFlagRequirement','static'];
 			foreach($components as $component){
 				echo '<script type="text/javascript" src="js/models/'.$component.'.js"></script>';
 			}
