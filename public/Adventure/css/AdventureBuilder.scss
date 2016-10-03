@@ -434,7 +434,9 @@ label{
 }
 
 button{
-
+	-webkit-appearance: none;
+	-webkit-border-radius: 0px;
+	border-radius: 0px;
 }
 
 button img{
@@ -473,6 +475,7 @@ input[type='checkbox']{
 		select{
 			@extend .btn;
 			@extend .btn-default;
+			height: 32px;
 			&:hover, &:active, &:focus, &:active:focus{
 				background-color: white;
 			}
@@ -989,6 +992,17 @@ input[type='checkbox']{
 		background-image: url('../img/builder/icons/event.png');
 		background-size: 8% auto;
 		background-repeat: no-repeat;
+		.requirement-select{
+			@extend .col-sm-12;
+			@extend .col-md-10;
+			@extend .col-md-offset-1;
+			.select-image{
+				@extend .col-md-1;
+			}
+			.select-description{
+				@extend .col-md-11;
+			}
+		}
 	}
 	.row{
 		margin-bottom: 20px;
@@ -1055,18 +1069,23 @@ input[type='checkbox']{
 				margin-bottom: 8px;
 			}
 			button{
-				@extend h3;
+				/*@extend h3;*/
 				display:inline-block;
 				vertical-align: middle;
 				height: 36px;
 				width: 175px;
 				margin-bottom: 8px;
+				padding: 1px 6px;
+				background-image: url('../img/builder/background-button.png');
 				.select-image{
-					width: 16.6666%;
+					width: 26px;
+					margin: 0;
+					padding: 0;
 				}
 				.select-description{
-					width: 83.3333%;
-					margin-top: 5px;
+					width: 132px;
+					margin: 3px 0 0 0;
+    				padding: 0 15px;
 					font-size: 16px;
 					color: white;
 					text-shadow: 1px 1px 0 black,

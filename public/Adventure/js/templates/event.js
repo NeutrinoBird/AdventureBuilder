@@ -23,33 +23,11 @@ Adventure.Templates.EventEdit = `
 		<label for="eventTextAfter<%= ID %>">Text After</label>
 		<input class="form-control" name="textAfter" ID="eventTextAfter<%= ID %>" type="text" maxlength="200" placeholder="Text After Page Text" value="<%= _.xcape(textAfter) %>" data-toggle="tooltip" title="If text is provided here, then it will be added to the page text, on a new line after the main text body. Multiple events can provide additional text, and they will be ordered in same order that the events are processed." />
 	</div>
-	<div class="form-group">
-		<label>Condition</label>
-		<div class="form-field condition-selectbox" data-toggle="tooltip" title="If a condition is selected, then it must evaluate as true in order for the event to occur. Otherwise, processing will proceed to the next event in queue."></div>
-	</div>
-	<div class="form-group condition-group">
-		<label>Condition Variables</label>
-		<div>
-			<div class="form-group condition-flag-group">
-				<label>Flag</label>
-				<div class="form-field condition-flag-selectbox" data-toggle="tooltip" title="The value of the chosen flag/counter will be evaluated by the above condition."></div>
-			</div>
-			<div class="form-group counterValue-group">
-				<label for="eventCounterValue<%= ID %>">Value</label>
-				<input class="form-control" name="counterValue" ID="eventCounterValue<%= ID %>" type="text" maxlength="10" placeholder="Counter Value" value="<%= _.xcape(counterValue) %>" data-toggle="tooltip" title="The value that the chosen flag/counter will be compared to. If the condition uses a range, this value is the lower bound. For a random roll, a random number is generated when an action is selected, and is shared by all random number conditions that occur until the next action selection." />
-			</div>
-			<div class="form-group condition-otherFlag-group">
-				<label>Other Flag</label>
-				<div class="form-field other-flag-selectbox" data-toggle="tooltip" title="A flag whose value will be compared to the first flag instead of the above value field."></div>
-			</div>
-			<div class="form-group counterUpperValue-group">
-				<label for="eventCounterUpperValue<%= ID %>">Maximum</label>
-				<input class="form-control" name="counterUpperValue" ID="eventCounterUpperValue<%= ID %>" type="text" maxlength="10" placeholder="Counter Maximum" value="<%= _.xcape(counterUpperValue) %>" data-toggle="tooltip" title="The upper bound of the value range. For a random roll, a random number is generated when an action is selected, and is shared by all random number conditions that occur until the next action selection." />
-			</div>
-			<div class="form-group condition-page-group">
-				<label>Page</label>
-				<div class="form-field condition-page-selectbox" data-toggle="tooltip" title="The page referenced by the above condition. The ID of this page is compared to the page the player is currently on, not the target page of an action or event."></div>
-			</div>
+	<div class="requirement-select">
+		<div class="row">
+			<h3>Requirements</h3>
+			<div class="selections"></div>
+			<button class="new-requirement-button full-button">New Requirement</button>
 		</div>
 	</div>
 `;

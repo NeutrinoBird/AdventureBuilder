@@ -230,8 +230,8 @@ CREATE TABLE tblActionFlagRequirements(
 	counterValue INT NULL,
 	counterUpperValue INT NULL,
 	pageID INT UNSIGNED NOT NULL DEFAULT 0,
-	dateCreated DATETIME NOT NULL DEFAULT NOW(),
 	otherFlagID INT UNSIGNED NOT NULL DEFAULT 0,
+	dateCreated DATETIME NOT NULL DEFAULT NOW(),
 	isActive TINYINT(1) NOT NULL DEFAULT 1,
 	PRIMARY KEY(ID),
 	FOREIGN KEY (actionID) REFERENCES tblActions(ID),
@@ -260,7 +260,8 @@ INSERT INTO tblEventTypes (name, involvesFlag, involvesValue, involvesPage) VALU
 	('Jump to Page', 0, 0, 1),
 	('Store Current Page', 0, 0, 0),
 	('Jump to Stored Page', 0, 0, 0),
-	('Stop Executing Events', 0, 0, 0);
+	('Stop Executing Events', 0, 0, 0),
+	('Create Checkpoint', 0, 0, 0);
 
 CREATE TABLE tblEvents(
 	ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -271,12 +272,6 @@ CREATE TABLE tblEvents(
 	textBefore VARCHAR(200) NULL,
 	textAfter VARCHAR(200) NULL,
 	pageID INT UNSIGNED NOT NULL DEFAULT 0,
-	conditionID TINYINT UNSIGNED NOT NULL DEFAULT 1,
-	conditionFlagID INT UNSIGNED NOT NULL DEFAULT 0,
-	counterValue INT NULL,
-	counterUpperValue INT NULL,
-	conditionPageID INT UNSIGNED NOT NULL DEFAULT 0,
-	conditionOtherFlagID INT UNSIGNED NOT NULL DEFAULT 0,
 	dateCreated DATETIME NOT NULL DEFAULT NOW(),
 	isActive TINYINT(1) NOT NULL DEFAULT 1,
 	PRIMARY KEY(ID),
@@ -291,6 +286,25 @@ CREATE TABLE tblEvents(
 );
 INSERT INTO tblEvents (ID,adventureID,isActive)
 VALUES (0,0,0);
+
+CREATE TABLE tblEventFlagRequirements(
+	ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	eventID INT UNSIGNED NOT NULL,
+	conditionID TINYINT UNSIGNED NOT NULL DEFAULT 1,
+	flagID INT UNSIGNED NOT NULL DEFAULT 0,
+	counterValue INT NULL,
+	counterUpperValue INT NULL,
+	pageID INT UNSIGNED NOT NULL DEFAULT 0,
+	otherFlagID INT UNSIGNED NOT NULL DEFAULT 0,
+	dateCreated DATETIME NOT NULL DEFAULT NOW(),
+	isActive TINYINT(1) NOT NULL DEFAULT 1,
+	PRIMARY KEY(ID),
+	FOREIGN KEY (eventID) REFERENCES tblEvents(ID),
+	FOREIGN KEY (conditionID) REFERENCES tblConditions(ID),
+	FOREIGN KEY (flagID) REFERENCES tblFlags(ID),
+	FOREIGN KEY (pageID) REFERENCES tblPages(ID),
+	FOREIGN KEY (otherFlagID) REFERENCES tblFlags(ID)
+);
 
 CREATE TABLE tblActionEvents(
 	ID INT UNSIGNED NOT NULL AUTO_INCREMENT,

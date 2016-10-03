@@ -80,10 +80,10 @@ Adventure.EventEdit = Marionette.LayoutView.extend({
 		eventTypeSelect:'.eventtype-selectbox',
 		flagSelect:'.flag-selectbox',
 		pageSelect:'.page-selectbox',
-		conditionSelect:'.condition-selectbox',
-		conditionFlagSelect:'.condition-flag-selectbox',
-		conditionOtherFlagSelect:'.other-flag-selectbox',
-		conditionPageSelect:'.condition-page-selectbox'
+		requirementSelection:'.requirement-select .selections'
+	},
+	ui: {
+		newRequirementButton: '.new-requirement-button'
 	},
 	initialize: function(){
 		var viewHandle = this;
@@ -93,15 +93,6 @@ Adventure.EventEdit = Marionette.LayoutView.extend({
 			viewHandle.$el.find(".value-group").toggle(eventType.get("involvesValue") == 1);
 			viewHandle.$el.find(".page-group").toggle(eventType.get("involvesPage") == 1);
 		}
-		this.hideConditionFields = function(){
-			var condition = Adventure.conditions.get(viewHandle.$el.find("[name='conditionID']").val());
-			viewHandle.$el.find(".condition-group").toggle(condition.ID != 1);
-			viewHandle.$el.find(".condition-flag-group").toggle(condition.get("involvesFlag") == 1);
-			viewHandle.$el.find(".condition-otherFlag-group").toggle(condition.get("involvesCounter") == 1 && condition.get("involvesRange") == 0);
-			viewHandle.$el.find(".counterValue-group").toggle(condition.get("involvesCounter") == 1);
-			viewHandle.$el.find(".counterUpperValue-group").toggle(condition.get("involvesRange") == 1);
-			viewHandle.$el.find(".condition-page-group").toggle(condition.get("involvesPage") == 1);
-		}
 	},
 	onRender: function() {
 		Adventure.setupTooltips(this);
@@ -109,12 +100,22 @@ Adventure.EventEdit = Marionette.LayoutView.extend({
 		this.showChildView('eventTypeSelect', new Adventure.EventTypeSelect({selected: this.model.get("eventTypeID"), onChange: this.hideEventTypeFields}));
 		this.showChildView('flagSelect', new Adventure.FlagSelectPlus({selected: this.model.get("flagID")}));
 		this.showChildView('pageSelect', new Adventure.PageSelectPlus({selected: this.model.get("pageID")}));
-		this.showChildView('conditionSelect', new Adventure.ConditionSelect({selected: this.model.get("conditionID"), onChange: this.hideConditionFields}));
-		this.showChildView('conditionFlagSelect', new Adventure.FlagSelectPlus({selected: this.model.get("conditionFlagID"), name: 'conditionFlagID'}));
-		this.showChildView('conditionOtherFlagSelect', new Adventure.FlagSelectPlus({selected: this.model.get("conditionOtherFlagID"), name: 'conditionOtherFlagID', isOtherFlag: true, valueField: this.$el.find('[name="counterValue"]')}));
-		this.showChildView('conditionPageSelect', new Adventure.PageSelectPlus({selected: this.model.get("conditionPageID"), name: 'conditionPageID', noSame: true}));
+		this.showChildView('requirementSelection', new Adventure.EventFlagRequirementList({collection: this.model.get('eventFlagRequirements')}));
 		this.hideEventTypeFields();
-		this.hideConditionFields();
+	},
+	events: {
+		'click @ui.newRequirementButton': function(event){
+			event.preventDefault();
+			this.model.get("eventFlagRequirements").create({eventID:this.model.id},{wait: true, validate: false,
+				success:function(model){
+					Adventure.Main.renderEventFlagRequirementEdit(model);
+				},
+				error: function(model, response, options){
+					Adventure.handleInvalidInput(response.responseJSON);
+				}
+			});
+			return false;
+		}
 	}
 });
 

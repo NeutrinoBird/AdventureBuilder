@@ -1,7 +1,13 @@
 Adventure.ActionEdit = Marionette.LayoutView.extend({
 	template: 'ActionEdit',
 	className: 'action-edit',
-	regions: {actionTypeSelect:'.actionType-selectbox',pageSelect:'.page-selectbox',effectSelect:'.effect-selectbox',transitionSelect:'.transition-selectbox',requirementSelection:'.requirement-select .selections',eventSelection:'.event-select .selections'},
+	regions: {
+		actionTypeSelect:'.actionType-selectbox',
+		pageSelect:'.page-selectbox',
+		effectSelect:'.effect-selectbox',
+		transitionSelect:'.transition-selectbox',
+		requirementSelection:'.requirement-select .selections',
+		eventSelection:'.event-select .selections'},
 	ui: {
 		newRequirementButton: '.new-requirement-button',
 		newEventButton: '.new-event-button',

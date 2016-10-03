@@ -7,18 +7,24 @@ Adventure.EventModel = Backbone.Model.extend({
 		textBefore: '',
 		textAfter: '',
 		pageID: 0,
-		conditionID: 1,
-		counterValue: null,
-		counterUpperValue: null,
-		conditionFlagID: 0,
-		conditionPageID: 0,
-		conditionOtherFlagID: 0,
-		isActive: 1
+		isActive: 1,
+		eventFlagRequirements: []
 	},
 	idAttribute: "ID",
 	initialize: function(){
+		this.set('eventFlagRequirements', new Adventure.EventFlagRequirements(this.get('eventFlagRequirements')));
 		this.updateName();
 		this.on('sync', this.updateName);
+	},
+	parse: function(response) {
+		var collections = ['eventFlagRequirements'];
+		for(i=0;i<collections.length;i++){
+			if (response[collections[i]] != undefined){
+				this.get(collections[i]).add(response[collections[i]]);
+				delete response[collections[i]];
+			}
+		}
+		return response;
 	},
 	updateName: function(){
 		var flagName = (this.get("flagID") == 0) ? "(Undefined)" : Adventure.activeAdventure.get('flags').get(this.get("flagID")).get("name");
@@ -60,27 +66,34 @@ Adventure.EventModel = Backbone.Model.extend({
 				break;
 			case 9:
 				newName = 'Stop Executing Events';
+				break;
+			case 10:
+				newName = 'Create Checkpoint';
 		}
-		if (int(this.get("conditionID")) > 1){
-			flagName = (this.get("conditionFlagID") == 0) ? "(Undefined)" : Adventure.activeAdventure.get('flags').get(this.get("conditionFlagID")).get("name");
-			var otherFlagName = (!int(this.get("conditionOtherFlagID"))) ? "" : Adventure.activeAdventure.get('flags').get(this.get("conditionOtherFlagID")).get("name");
-			newName += " if ";
-			switch(int(this.get("conditionID"))){
-				case 2: newName += flagName+' Active';	break;
-				case 3: newName += flagName+' Inactive'; break;
-				case 4: newName += flagName+' = '+(otherFlagName ? otherFlagName : this.get("counterValue")); break;
-				case 5: newName += flagName+' != '+(otherFlagName ? otherFlagName : this.get("counterValue")); break;
-				case 6: newName += flagName+' < '+(otherFlagName ? otherFlagName : this.get("counterValue")); break;
-				case 7: newName += flagName+' <= '+(otherFlagName ? otherFlagName : this.get("counterValue")); break;
-				case 8: newName += flagName+' > '+(otherFlagName ? otherFlagName : this.get("counterValue")); break;
-				case 9: newName += flagName+' >= '+(otherFlagName ? otherFlagName : this.get("counterValue")); break;
-				case 10: newName += flagName+' between '+this.get("counterValue")+' and '+this.get("counterUpperValue"); break;
-				case 11: newName += flagName+' not between '+this.get("counterValue")+' and '+this.get("counterUpperValue"); break;
-				case 12: newName += 'Random number between '+this.get("counterValue")+' and '+this.get("counterUpperValue"); break;
-				case 13: newName += 'Page = '+Adventure.activeAdventure.get('pages').get(this.get("conditionPageID")).get("name"); break;
-				case 14: newName += 'Page != '+Adventure.activeAdventure.get('pages').get(this.get("conditionPageID")).get("name"); break;
+		var firstRequirement = true;
+		this.get("eventFlagRequirements").each(function(requirement){
+			if (int(requirement.get("conditionID")) > 1){
+				flagName = (requirement.get("flagID") == 0) ? "(Undefined)" : Adventure.activeAdventure.get('flags').get(requirement.get("flagID")).get("name");
+				var otherFlagName = (!int(requirement.get("otherFlagID"))) ? "" : Adventure.activeAdventure.get('flags').get(requirement.get("otherFlagID")).get("name");
+				newName += firstRequirement ? " if " : " and ";
+				firstRequirement = false;
+				switch(int(requirement.get("conditionID"))){
+					case 2: newName += flagName+' Active';	break;
+					case 3: newName += flagName+' Inactive'; break;
+					case 4: newName += flagName+' = '+(otherFlagName ? otherFlagName : requirement.get("counterValue")); break;
+					case 5: newName += flagName+' != '+(otherFlagName ? otherFlagName : requirement.get("counterValue")); break;
+					case 6: newName += flagName+' < '+(otherFlagName ? otherFlagName : requirement.get("counterValue")); break;
+					case 7: newName += flagName+' <= '+(otherFlagName ? otherFlagName : requirement.get("counterValue")); break;
+					case 8: newName += flagName+' > '+(otherFlagName ? otherFlagName : requirement.get("counterValue")); break;
+					case 9: newName += flagName+' >= '+(otherFlagName ? otherFlagName : requirement.get("counterValue")); break;
+					case 10: newName += flagName+' between '+requirement.get("counterValue")+' and '+requirement.get("counterUpperValue"); break;
+					case 11: newName += flagName+' not between '+requirement.get("counterValue")+' and '+requirement.get("counterUpperValue"); break;
+					case 12: newName += 'Random number between '+requirement.get("counterValue")+' and '+requirement.get("counterUpperValue"); break;
+					case 13: newName += 'Page = '+Adventure.activeAdventure.get('pages').get(requirement.get("pageID")).get("name"); break;
+					case 14: newName += 'Page != '+Adventure.activeAdventure.get('pages').get(requirement.get("pageID")).get("name"); break;
+				}
 			}
-		}
+		});
 		this.set("name",newName);
 	},
 	urlRoot: 'services/event.php',
@@ -88,23 +101,13 @@ Adventure.EventModel = Backbone.Model.extend({
 		var FlagRequired = int(Adventure.eventTypes.get(this.form.find("[name='eventTypeID']").val()).get("involvesFlag"));
 		var ValueRequired = int(Adventure.eventTypes.get(this.form.find("[name='eventTypeID']").val()).get("involvesValue"));
 		var PageRequired = int(Adventure.eventTypes.get(this.form.find("[name='eventTypeID']").val()).get("involvesPage"));
-		var conditionFlagRequired = (int(this.form.find("[name='conditionID']").val()) > 1 && int(this.form.find("[name='conditionID']").val()) < 11);
-		var counterRequired = int(Adventure.conditions.get(this.form.find("[name='conditionID']").val()).get("involvesCounter"));
-		var rangeRequired = int(Adventure.conditions.get(this.form.find("[name='conditionID']").val()).get("involvesRange"));
-		var pageRequired = int(Adventure.conditions.get(this.form.find("[name='conditionID']").val()).get("involvesPage"));
 		var validation = validate(this.form,[
 			{name:"eventTypeID",required:true,type:"tinyint"},
 			{name:"flagID",required:FlagRequired,type:"uint"},
 			{name:"value",required:ValueRequired,type:"int"},
 			{name:"textBefore",required:false,type:"string",maxLength:200},
 			{name:"textAfter",required:false,type:"string",maxLength:200},
-			{name:"pageID",required:PageRequired,type:"uint"},
-			{name:"conditionID",required:true,type:"tinyint"},
-			{name:"conditionFlagID",required:conditionFlagRequired,type:"uint"},
-			{name:"counterValue",required:counterRequired,type:"int"},
-			{name:"counterUpperValue",required:rangeRequired,type:"int"},
-			{name:"conditionPageID",required:pageRequired,type:"uint"},
-			{name:"conditionOtherFlagID",required:(counterRequired && !rangeRequired),type:"uint"}
+			{name:"pageID",required:PageRequired,type:"uint"}
 		]);
 		if (validation.error){
 			Adventure.handleInvalidInput(validation);

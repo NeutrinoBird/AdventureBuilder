@@ -7,6 +7,7 @@
 	include_once('Adventure/Models/Effect.php');
 	include_once('Adventure/Models/Flag.php');
 	include_once('Adventure/Models/Event.php');
+	include_once('Adventure/Models/EventFlagRequirement.php');
 	include_once('Adventure/Models/Action.php');
 	include_once('Adventure/Models/ActionFlagRequirement.php');
 	include_once('Adventure/Models/SceneEvent.php');
@@ -139,14 +140,15 @@
 				//Load sub-items
 				$this->pages = Page::GetAllPages($this->ID);
 				$this->scenes = Scene::GetAllScenes($this->ID);
+				$this->events = Event::GetAllEvents($this->ID);
 				//The following sub-items will be immediately converted to indexed arrays for JSON parsing, as they don't require nesting
 				$this->images = array_merge(Image::GetAllImages($this->ID));
 				$this->effects = array_merge(Effect::GetAllEffects($this->ID));
 				$this->flags = array_merge(Flag::GetAllFlags($this->ID));
-				$this->events = array_merge(Event::GetAllEvents($this->ID));
 				//The following are sub-sub-items, and will be nested
 				$actions = Action::GetAllActions($this->ID);
 				$actionFlagRequirements = ActionFlagRequirement::GetAllActionFlagRequirements($this->ID);
+				$eventFlagRequirements = EventFlagRequirement::GetAllEventFlagRequirements($this->ID);
 				$sceneEvents = SceneEvent::GetAllSceneEvents($this->ID);
 				$pageEvents = PageEvent::GetAllPageEvents($this->ID);
 				$actionEvents = ActionEvent::GetAllActionEvents($this->ID);
@@ -163,6 +165,9 @@
 				foreach ($actionFlagRequirements as $actionFlagRequirement){
 					array_push($actions[$actionFlagRequirement->actionID]->actionFlagRequirements,$actionFlagRequirement);
 				}
+				foreach ($eventFlagRequirements as $eventFlagRequirement){
+					array_push($this->events[$eventFlagRequirement->eventID]->eventFlagRequirements,$eventFlagRequirement);
+				}
 				foreach ($actions as $action){
 					if(intval($action->pageID) > 0){
 						array_push($this->pages[$action->pageID]->actions,$action);
@@ -173,6 +178,7 @@
 				//Convert arrays from associative to indexed (for JSON parsing)
 				$this->pages = array_merge($this->pages);
 				$this->scenes = array_merge($this->scenes);
+				$this->events = array_merge($this->events);
 				return true;
 			}else{
 				return false;

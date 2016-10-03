@@ -44,8 +44,8 @@ Adventure.MainView = Marionette.CollectionView.extend({
 	renderActionFlagRequirementEdit: function(actionFlagRequirementModel){
 		this.addLayer(new Adventure.ActionFlagRequirementEdit({model: actionFlagRequirementModel}));
 	},
-	renderActionFlagRequirementEventEdit: function(actionFlagRequirementEventModel){
-		this.addLayer(new Adventure.ActionFlagRequirementEventEdit({model: actionFlagRequirementEventModel}));
+	renderEventFlagRequirementEdit: function(eventFlagRequirementModel){
+		this.addLayer(new Adventure.EventFlagRequirementEdit({model: eventFlagRequirementModel}));
 	},
 	renderSceneSelection: function(sceneCollection){
 		this.addLayer(new Adventure.SceneSelection({collection: sceneCollection}));

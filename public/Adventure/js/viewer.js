@@ -14,6 +14,7 @@
 // @koala-prepend "models/image.js"
 // @koala-prepend "models/effect.js"
 // @koala-prepend "models/event.js"
+// @koala-prepend "models/eventFlagRequirement.js"
 // @koala-prepend "models/static.js"
 // @koala-prepend "views/viewer.js"
 // @koala-prepend "templates/viewer.js"

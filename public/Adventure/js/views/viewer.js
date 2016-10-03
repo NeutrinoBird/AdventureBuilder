@@ -110,6 +110,7 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		this.transitionData.beforePageText = "";
 		this.transitionData.afterPageText = "";
 		this.transitionData.randomRoll = 0;
+		this.transitionData.setCheckpoint = false;
 	},
 	beginTransition: function(){
 		this.resizeBox();
@@ -233,7 +234,9 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		pageModel = this.model.get("pages").get(this.transitionData.nextPageID);
 		sceneModel = this.model.get("scenes").get(pageModel.get("sceneID"));
 		if(sceneModel){
-			pageModel.get("actions").add(sceneModel.get("actions").toJSON());
+			sceneModel.get("actions").each(function(action){
+				pageModel.get("actions").add(action);
+			});
 			sceneModel.get("sceneEvents").each(function(sceneEvent){
 				pageModel.get("pageEvents").add({ID:'s_'+sceneEvent.id, priority:sceneEvent.get('priority'), eventID:sceneEvent.get('eventID')});
 			});
@@ -244,7 +247,7 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 			return false;
 		}
 		this.transitionData.nextPageClass = Adventure.pageTypes.get(pageModel.get("pageTypeID")).get("style");
-		if (this.transitionData.nextPageClass == 'checkpoint'){
+		if (this.transitionData.nextPageClass == 'checkpoint' || this.transitionData.setCheckpoint){
 			this.variables.checkpointPage = this.transitionData.nextPageID;
 			this.savedVariables = JSON.parse(JSON.stringify(this.variables));
 			this.transitionData.beforePageText = Adventure.Templates.Checkpoint + this.transitionData.beforePageText;
@@ -308,7 +311,18 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 		var viewHandle = this;
 		eventLinkCollection.every(function(eventLink){
 			var eventModel = viewHandle.model.get("events").get(eventLink.get("eventID"));
-			if (Adventure.conditions.get(eventModel.get("conditionID")).evaluateCondition(viewHandle.variables.flags[int(eventModel.get("conditionFlagID"))] || 0, eventModel.get("counterValue"), eventModel.get("counterUpperValue"), viewHandle.transitionData.randomRoll, viewHandle.variables.currentPage, eventModel.get("conditionPageID"), viewHandle.variables.flags[int(eventModel.get("conditionOtherFlagID"))])){
+			var allowEvent = true;
+			if(eventModel.get("eventFlagRequirements")){
+				eventModel.get("eventFlagRequirements").every(function(requirement){
+					requirement.updateName();
+					if (!Adventure.conditions.get(requirement.get("conditionID")).evaluateCondition(viewHandle.variables.flags[int(requirement.get("flagID"))] || 0, requirement.get("counterValue"), requirement.get("counterUpperValue"), viewHandle.transitionData.randomRoll, viewHandle.variables.currentPage, requirement.get("pageID"), viewHandle.variables.flags[int(requirement.get("otherFlagID"))])){
+						allowEvent = false;
+						return false;
+					}
+					return true;
+				});
+			}
+			if (allowEvent){
 				//Append page text
 				if (eventModel.get("textBefore") != ""){
 					viewHandle.transitionData.beforePageText += eventModel.get("textBefore") + '<br><br>';
@@ -344,6 +358,9 @@ Adventure.Viewer = Marionette.LayoutView.extend({
 						break;
 					case 9:
 						return false; //Stop executing events
+						break;
+					case 10:
+						viewHandle.transitionData.setCheckpoint = true;
 				}
 				//Handle counter bounds
 				if(int(eventModel.get("flagID"))){
@@ -459,6 +476,7 @@ Adventure.ViewerActionList = Marionette.CollectionView.extend({
 					filterPass = false;
 					return false;
 				}
+				return true;
 			});
 		}
 		return filterPass;

@@ -22,7 +22,7 @@ Adventure.Templates.ActionFlagRequirementEdit = `
 		</div>
 		<div class="form-group pageID-group">
 			<label>Page</label>
-			<div class="form-field page-selectbox" data-toggle="tooltip" title="The page referenced by the above condition. The ID of this page is compared to the page the player is currently on, not the target page of an action or event."></div>
+			<div class="form-field page-selectbox" data-toggle="tooltip" title="The page referenced by the above condition. The ID of this page is compared to the page the player is currently on, not the target page of an action or action."></div>
 		</div>
 		<div class="errorRow"></div>
 		<div class="row">

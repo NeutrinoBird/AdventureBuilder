@@ -3,45 +3,45 @@
 	include_once('Adventure/Response.php');
 	include_once('Adventure/CheckSession.php');
 	include_once('Adventure/Validation.php');
-	include_once('Adventure/Models/Event.php');
+	include_once('Adventure/Models/EventFlagRequirement.php');
 
 	try{
 		switch($_SERVER['REQUEST_METHOD']){
 			case 'POST':
 				$input = json_decode(file_get_contents('php://input'));
 				$validation = new Validation();
-				$validation->prime($input, ['adventureID']);
-				$validation->addVariable('adventureID',$input->adventureID,'uint',true);
+				$validation->prime($input, ['eventID']);
+				$validation->addVariable('eventID',$input->eventID ?: '','uint',true);
 				$validation->validate();
 				if($validation->result['error'] == 1){
 					$response->JSON = '{"errorMsg":"'.$validation->result['errorMsg'].'","errorFields":'.json_encode($validation->result['errorFields']).'}';
 					$response->error = 1;
 				}else{
 					$valid = (object)$validation->result['validated'];
-					$newEvent = Event::Create($userSession->user,$valid->adventureID);
-					$response->JSON = json_encode($newEvent);
+					$newEventFlagRequirement = EventFlagRequirement::Create($userSession->user,$valid->eventID);
+					$response->JSON = json_encode($newEventFlagRequirement);
 				}
 				break;
 			case 'PUT':
 				$input = json_decode(file_get_contents('php://input'));
 				$validation = new Validation();
-				$validation->prime($input, ['ID','adventureID','eventTypeID','flagID','value','textBefore','textAfter','pageID']);
+				$validation->prime($input, ['ID','eventID','flagID','counterValue','counterUpperValue','conditionID','pageID','otherFlagID']);
 				$validation->addVariable('ID',$input->ID,'uint',true);
-				$validation->addVariable('adventureID',$input->adventureID,'uint',true);
-				$validation->addVariable('eventTypeID',$input->eventTypeID,'tinyint',true);
+				$validation->addVariable('eventID',$input->eventID ?: '','uint',true);
 				$validation->addVariable('flagID',$input->flagID,'uint');
-				$validation->addVariable('value',$input->value,'int');
-				$validation->addVariable('textBefore',$input->textBefore,'string',false,200);
-				$validation->addVariable('textAfter',$input->textAfter,'string',false,200);
+				$validation->addVariable('counterValue',$input->counterValue,'int');
+				$validation->addVariable('counterUpperValue',$input->counterUpperValue,'int');
+				$validation->addVariable('conditionID',$input->conditionID,'tinyint',true);
 				$validation->addVariable('pageID',$input->pageID,'uint');
+				$validation->addVariable('otherFlagID',$input->otherFlagID,'uint');
 				$validation->validate();
 				if($validation->result['error'] == 1){
 					$response->JSON = '{"errorMsg":"'.$validation->result['errorMsg'].'","errorFields":'.json_encode($validation->result['errorFields']).'}';
 					$response->error = 1;
 				}else{
 					$valid = (object)$validation->result['validated'];
-					$event = new Event($userSession->user,$valid->ID);
-					$event->Update($valid->eventTypeID, $valid->flagID, $valid->value, $valid->textBefore, $valid->textAfter, $valid->pageID);
+					$eventFlagRequirement = new EventFlagRequirement($userSession->user,$valid->ID);
+					$eventFlagRequirement->Update($valid->flagID, $valid->counterValue, $valid->counterUpperValue, $valid->conditionID, $valid->pageID, $valid->otherFlagID);
 				}
 				break;
 			case 'GET':
@@ -49,8 +49,8 @@
 				if(!isset($input->ID) || !is_numeric($input->ID)){
 					throw new Exception("Invalid ID.");
 				}
-				$event = new Event($userSession->user,$input->ID);
-				$response->JSON = json_encode($event);
+				$eventFlagRequirement = new EventFlagRequirement($userSession->user,$input->ID);
+				$response->JSON = json_encode($eventFlagRequirement);
 				break;
 			case 'DELETE':
 				$deleteID = substr($_SERVER['PATH_INFO'],1);
@@ -58,8 +58,8 @@
 					$response->JSON = '{"errorMsg":"'.$validation->result['errorMsg'].'","errorFields":'.json_encode($validation->result['errorFields']).'}';
 					$response->error = 1;
 				}else{
-					$event = new Event($userSession->user,$deleteID);
-					$event->Delete();
+					$eventFlagRequirement = new EventFlagRequirement($userSession->user,$deleteID);
+					$eventFlagRequirement->Delete();
 					$response->JSON = '{"ID":'.$deleteID.'}';
 				}
 				break;
